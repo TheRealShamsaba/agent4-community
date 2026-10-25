@@ -29,16 +29,9 @@ import {
   Upload,
   Wand2
 } from "lucide-react";
-import {
-  appendRecordingChunk,
-  clearPendingFilmUpload,
-  clearRecordingSession,
-  loadPendingFilmUpload,
-  loadRecoveredRecording,
-  savePendingFilmUpload,
-  startRecordingSession,
-  updateRecordingSession
-} from "../film-upload-cache.js";
+import { filmCacheForActor } from "../film-upload-cache.js";
+import { createActorStorage } from "../actor-storage.js";
+import { getActiveActor } from "../room-actor.js";
 import { dueLabel, formatDate, isOverdue, localIsoDate } from "../format.js";
 import { ConfirmDialog, FilmNotice, ListFailure, ProcessingPanel } from "./FilmRoomStates.jsx";
 
@@ -174,24 +167,18 @@ function actionMeta(action) {
    component writes its own place back to localStorage and picks it up on the
    next mount. Anything here is a convenience, so every access is guarded: a
    private window simply forgets where you were. */
-function readSession() {
-  try {
-    const parsed = JSON.parse(localStorage.getItem(SESSION_KEY) || "{}");
-    return parsed && typeof parsed === "object" ? parsed : {};
-  } catch {
-    return {};
+function filmSessionForActor(actorId) {
+  const storage = createActorStorage(SESSION_KEY, actorId, () => window.localStorage);
+  function readSession() {
+    const parsed = storage.read({});
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
   }
-}
-
-function writeSession(patch) {
-  try {
-    localStorage.setItem(SESSION_KEY, JSON.stringify({ ...readSession(), ...patch }));
-  } catch { /* storage is full or blocked; the session is a convenience only */ }
-}
-
-function readDrafts(meetingId) {
-  const drafts = readSession().drafts;
-  return drafts && meetingId && drafts.id === meetingId ? drafts : null;
+  function writeSession(patch) { storage.write({ ...readSession(), ...patch }); }
+  function readDrafts(meetingId) {
+    const drafts = readSession().drafts;
+    return drafts && meetingId && drafts.id === meetingId ? drafts : null;
+  }
+  return { readSession, writeSession, readDrafts };
 }
 
 /* --------------------------------------------------------- speech-only copy --- */
@@ -318,6 +305,12 @@ function RecapDocument({ text }) {
 }
 
 export function FilmRoom({ compact = null, onBack = null, onOpenClient = null, clients = [], onChanged = null, startCreating = false, initialMeetingId = "", onBusy = null }) {
+  const actorId = useRef(getActiveActor().id).current;
+  const privateCache = useRef(null);
+  if (!privateCache.current) privateCache.current = { ...filmCacheForActor(actorId), ...filmSessionForActor(actorId) };
+  const { readSession, writeSession, readDrafts, appendRecordingChunk, clearPendingFilmUpload, clearRecordingSession,
+    loadPendingFilmUpload, loadRecoveredRecording, savePendingFilmUpload, startRecordingSession, updateRecordingSession } = privateCache.current;
+
   const restoredRef = useRef(null);
   if (!restoredRef.current) restoredRef.current = readSession();
   const restored = restoredRef.current;
@@ -333,7 +326,7 @@ export function FilmRoom({ compact = null, onBack = null, onOpenClient = null, c
   const [clientChoice, setClientChoice] = useState(restored.clientChoice || "");
   const [clientName, setClientName] = useState(restored.clientName || "");
   const [projectName, setProjectName] = useState(restored.projectName || "");
-  const [requestedLanguage, setRequestedLanguage] = useState(restored.requestedLanguage || "fa");
+  const [requestedLanguage, setRequestedLanguage] = useState(restored.requestedLanguage || "en");
   const [consent, setConsent] = useState(false);
   const [audio, setAudio] = useState(null);
   const [recording, setRecording] = useState(false);

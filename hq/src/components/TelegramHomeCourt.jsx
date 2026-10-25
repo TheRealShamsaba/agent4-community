@@ -1,3 +1,4 @@
+import { setActiveActor } from "../room-actor.js";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowRight,
@@ -549,9 +550,7 @@ export function TelegramHomeCourt({ snapshot = null }) {
   const [initialRoute] = useState(initialTelegramRoute);
   const [activeTab, setActiveTab] = useState(initialRoute.tab);
   const [state, setState] = useState(EMPTY_STATE);
-  useEffect(() => {
-
-  }, [state.actor, activeTab]);
+  setActiveActor(state.actor);
   const [capture, setCapture] = useState(initialRoute.capture);
   const [openTaskId, setOpenTaskId] = useState("");
   const [filmMeetingId, setFilmMeetingId] = useState("");
@@ -877,7 +876,7 @@ export function TelegramHomeCourt({ snapshot = null }) {
         {activeTab === "today" ? <TodayView state={state} today={today} onComplete={completeTask} onOpenTask={setOpenTaskId} onGoalCheckIn={markGoalProgress} onOpenCapture={() => openCapture("task")} onTab={changeTab} onCommand={runDailyCommand} onRefresh={refresh} busyId={busyId} refreshing={refreshing} /> : null}
         {activeTab === "rhythm" ? <RhythmView summary={state.summary} momentum={state.momentum} posts={state.posts} today={today} failed={state.failed} onMarkPosted={markPosted} onRefresh={refresh} refreshing={refreshing} busyId={busyId} /> : null}
         {activeTab === "calendar" ? <CalendarView events={state.events} today={today} failed={state.failed} onOpenCapture={(type) => openCapture(type || "event")} onRefresh={refresh} refreshing={refreshing} /> : null}
-        {activeTab === "film" ? <FilmRoom compact clients={snapshot?.dossiers || []} onChanged={() => loadData(state.actor)} initialMeetingId={filmMeetingId} /> : null}
+        {activeTab === "film" ? <FilmRoom key={state.actor?.id} compact clients={snapshot?.dossiers || []} onChanged={() => loadData(state.actor)} initialMeetingId={filmMeetingId} /> : null}
         {activeTab === "more" ? <MoreView state={state} today={today} companies={companies} onOpenCompany={openCompany} onComplete={completeTask} onOpenTask={setOpenTaskId} busyId={busyId} onOpenCapture={(type) => openCapture(type || "task")} focusedTaskId={initialRoute.taskId} onSaveSettings={saveSettings} settingsBusy={settingsBusy} onRefresh={refresh} refreshing={refreshing} /> : null}
       </div>
       <nav className="tg-tabs" aria-label="Home Court sections" style={{ gridTemplateColumns: `repeat(${tabs.length}, 1fr)` }}>

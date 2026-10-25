@@ -679,7 +679,7 @@ export function App({ snapshot, isLive = true }) {
       <ShellNotices isLive={isLive} warning={warning} onDismissWarning={() => setWarning(null)} />
       <TeamPanel open={teamOpen} actor={authState.actor} members={members} onInvite={createTeamInvite} onRevoke={revokeTeamMember} onChangePassword={changeAccountPassword} onClose={() => setTeamOpen(false)} />
       <ShortcutPanel open={shortcutsOpen} onClose={() => setShortcutsOpen(false)} />
-      <AgentPanel open={assistantOpen} actor={authState.actor} place={place} onClose={() => setAssistantOpen(false)} />
+      <AgentPanel key={authState.actor.id} open={assistantOpen} actor={authState.actor} place={place} onClose={() => setAssistantOpen(false)} />
       <CommandPalette
         open={paletteOpen}
         items={paletteItems}

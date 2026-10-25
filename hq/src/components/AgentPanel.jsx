@@ -1,3 +1,4 @@
+import { createActorStorage } from "../actor-storage.js";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowUp, Check, CircleAlert, LoaderCircle, Plus, Trash2, X } from "lucide-react";
 import { Agent4Avatar } from "./Agent4Avatar.jsx";
@@ -14,19 +15,6 @@ const SUGGESTIONS = [
   "What could make me money this week?",
   "Plan my week"
 ];
-
-function readTranscript() {
-  try {
-    const saved = JSON.parse(window.sessionStorage.getItem(STORAGE_KEY) || "[]");
-    return Array.isArray(saved) ? saved.slice(-30) : [];
-  } catch {
-    return [];
-  }
-}
-
-function writeTranscript(turns) {
-  try { window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(turns.slice(-30))); } catch { /* the chat still works without it */ }
-}
 
 async function call(pathname, { method = "GET", body } = {}) {
   const response = await fetch(pathname, {
@@ -81,6 +69,10 @@ function ActionCard({ action, state, onApply, onSkip }) {
 }
 
 export function AgentPanel({ open, actor, place, onClose }) {
+  const storage = useRef(null);
+  if (!storage.current) storage.current = createActorStorage(STORAGE_KEY, actor?.id, () => window.sessionStorage);
+  const readTranscript = () => { const saved = storage.current.read([]); return Array.isArray(saved) ? saved.slice(-30) : []; };
+  const writeTranscript = turns => storage.current.write(turns.slice(-30));
   const [turns, setTurns] = useState(readTranscript);
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);

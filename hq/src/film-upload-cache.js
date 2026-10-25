@@ -16,8 +16,8 @@ const DATABASE_NAME = "agent4-film-room";
 const DATABASE_VERSION = 2;
 const UPLOAD_STORE = "uploads";
 const CHUNK_STORE = "recording-chunks";
-const pendingKey = () => `pending-upload:${getActiveActor().id}`;
-const recordingKey = () => `recording:${getActiveActor().id}`;
+const pendingKey = actorId => `pending-upload:${actorId}`;
+const recordingKey = actorId => `recording:${actorId}`;
 const MAX_RECOVERY_AGE_MS = 24 * 60 * 60 * 1000;
 
 function databaseAvailable() {
@@ -73,11 +73,11 @@ function isFresh(record) {
 
 /* ------------------------------------------------------------ the pending upload --- */
 
-export async function loadPendingFilmUpload() {
+export async function loadPendingFilmUpload(actorId = getActiveActor().id) {
   try {
-    const pending = await useStore("readonly", (store) => requestResult(store.get(pendingKey())));
+    const pending = await useStore("readonly", (store) => requestResult(store.get(pendingKey(actorId))));
     if (pending && !isFresh(pending)) {
-      await clearPendingFilmUpload();
+      await clearPendingFilmUpload(actorId);
       return null;
     }
     return pending;
@@ -86,12 +86,13 @@ export async function loadPendingFilmUpload() {
   }
 }
 
-export async function savePendingFilmUpload(upload) {
+export async function savePendingFilmUpload(upload, actorId = getActiveActor().id) {
   if (!(upload?.blob instanceof Blob)) return false;
   try {
     await useStore("readwrite", (store) => requestResult(store.put({
       ...upload,
-      key: pendingKey(),
+      actorId,
+      key: pendingKey(actorId),
       savedAt: new Date().toISOString()
     })));
     return true;
@@ -100,9 +101,9 @@ export async function savePendingFilmUpload(upload) {
   }
 }
 
-export async function clearPendingFilmUpload() {
+export async function clearPendingFilmUpload(actorId = getActiveActor().id) {
   try {
-    await useStore("readwrite", (store) => requestResult(store.delete(pendingKey())));
+    await useStore("readwrite", (store) => requestResult(store.delete(pendingKey(actorId))));
     return true;
   } catch {
     return false;
@@ -124,13 +125,14 @@ function newSessionId() {
 /* Open a recording session and throw away whatever an older one left behind.
    Returns the session id, or "" when the browser has no storage to offer — the
    recording still runs in that case, it simply cannot be recovered. */
-export async function startRecordingSession(meta = {}) {
+export async function startRecordingSession(meta = {}, actorId = getActiveActor().id) {
   const sessionId = newSessionId();
   try {
-    await clearRecordingSession();
+    await clearRecordingSession(actorId);
     await useStore("readwrite", (store) => requestResult(store.put({
       ...meta,
-      key: recordingKey(),
+      actorId,
+      key: recordingKey(actorId),
       sessionId,
       savedAt: new Date().toISOString()
     })));
@@ -144,10 +146,10 @@ export async function startRecordingSession(meta = {}) {
    a failed write must never interrupt the recording that is still running, and
    deliberately one store and one request, so the transaction cannot be closed
    by the browser half-way through the only copy of the audio. */
-export async function appendRecordingChunk(sessionId, index, blob) {
+export async function appendRecordingChunk(sessionId, index, blob, actorId = getActiveActor().id) {
   if (!sessionId || !(blob instanceof Blob) || !blob.size) return false;
   try {
-    await useStores([CHUNK_STORE], "readwrite", (chunks) => requestResult(chunks.put({ key: chunkKey(sessionId, index), sessionId, index, blob })));
+    await useStores([CHUNK_STORE], "readwrite", (chunks) => requestResult(chunks.put({ key: chunkKey(sessionId, index), sessionId, index, blob, actorId })));
     return true;
   } catch {
     return false;
@@ -156,13 +158,13 @@ export async function appendRecordingChunk(sessionId, index, blob) {
 
 /* Add what only becomes known once the recording stops or the composer changes
    underneath it (the title, the client, the final duration). */
-export async function updateRecordingSession(sessionId, patch = {}) {
+export async function updateRecordingSession(sessionId, patch = {}, actorId = getActiveActor().id) {
   if (!sessionId) return false;
   try {
     await useStore("readwrite", async (store) => {
-      const session = await requestResult(store.get(recordingKey()));
+      const session = await requestResult(store.get(recordingKey(actorId)));
       if (session?.sessionId !== sessionId) return;
-      await requestResult(store.put({ ...session, ...patch, key: recordingKey(), sessionId, savedAt: new Date().toISOString() }));
+      await requestResult(store.put({ ...session, ...patch, key: recordingKey(actorId), sessionId, savedAt: new Date().toISOString() }));
     });
     return true;
   } catch {
@@ -172,12 +174,12 @@ export async function updateRecordingSession(sessionId, patch = {}) {
 
 /* Everything a recording that never reached the upload left behind, stitched
    back into one blob in the order the chunks arrived. */
-export async function loadRecoveredRecording() {
+export async function loadRecoveredRecording(actorId = getActiveActor().id) {
   try {
-    const session = await useStore("readonly", (store) => requestResult(store.get(recordingKey())));
+    const session = await useStore("readonly", (store) => requestResult(store.get(recordingKey(actorId))));
     if (!session?.sessionId) return null;
     if (!isFresh(session)) {
-      await clearRecordingSession();
+      await clearRecordingSession(actorId);
       return null;
     }
     const parts = await useStores([CHUNK_STORE], "readonly", (chunks) => requestResult(chunks.getAll()));
@@ -186,7 +188,7 @@ export async function loadRecoveredRecording() {
       .sort((left, right) => left.index - right.index)
       .map((part) => part.blob);
     if (!ordered.length) {
-      await clearRecordingSession();
+      await clearRecordingSession(actorId);
       return null;
     }
     const mimeType = session.mimeType || ordered[0].type || "audio/webm";
@@ -196,16 +198,33 @@ export async function loadRecoveredRecording() {
   }
 }
 
-export async function clearRecordingSession() {
+export async function clearRecordingSession(actorId = getActiveActor().id) {
   try {
-    // Both requests are issued before either is awaited: an IndexedDB
-    // transaction closes itself the moment it runs out of pending work.
-    await useStores([CHUNK_STORE, UPLOAD_STORE], "readwrite", (chunks, uploads) => Promise.all([
-      requestResult(chunks.clear()),
-      requestResult(uploads.delete(recordingKey()))
-    ]));
+    await useStores([CHUNK_STORE, UPLOAD_STORE], "readwrite", async (chunks, uploads) => {
+      const session = await requestResult(uploads.get(recordingKey(actorId)));
+      const parts = await requestResult(chunks.getAll());
+      await Promise.all([
+        ...parts.filter(part => part.actorId === actorId || part.sessionId === session?.sessionId).map(part => requestResult(chunks.delete(part.key))),
+        requestResult(uploads.delete(recordingKey(actorId)))
+      ]);
+    });
     return true;
   } catch {
     return false;
   }
+}
+
+// A mounted meeting screen keeps this actor even if another account signs in
+// while a MediaRecorder callback or IndexedDB request is still completing.
+export function filmCacheForActor(actorId) {
+  return {
+    loadPendingFilmUpload: () => loadPendingFilmUpload(actorId),
+    savePendingFilmUpload: upload => savePendingFilmUpload(upload, actorId),
+    clearPendingFilmUpload: () => clearPendingFilmUpload(actorId),
+    startRecordingSession: meta => startRecordingSession(meta, actorId),
+    appendRecordingChunk: (session, index, blob) => appendRecordingChunk(session, index, blob, actorId),
+    updateRecordingSession: (session, patch) => updateRecordingSession(session, patch, actorId),
+    loadRecoveredRecording: () => loadRecoveredRecording(actorId),
+    clearRecordingSession: () => clearRecordingSession(actorId)
+  };
 }

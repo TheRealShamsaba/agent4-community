@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Keep private chat drafts, meeting drafts and recoverable recordings isolated when accounts share a browser.
+
 - Raise password hashing to the current scrypt baseline and upgrade earlier preview hashes on successful login.
 - Make password verification and session creation atomic with respect to password recovery.
 - Use cryptographic recording identifiers, constant log format strings, and exact email-domain checks.
