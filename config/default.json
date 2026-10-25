@@ -1,0 +1,8 @@
+{
+  "company": {"name": "Your company", "website": "", "positioning": "", "services": [], "languages": ["en"]},
+  "strategy": {"weeklyDay": "Mon", "watchlist": []},
+  "market": {"primaryCountry": "", "primaryLanguage": "en", "regions": [], "prioritySegments": [], "internationalEnabled": false, "internationalSegments": []},
+  "discovery": {"sources": [], "queries": []},
+  "scoring": {"minimumOpportunityScore": 50, "deepReviewMinimumScore": 25, "weights": {}},
+  "policy": {"respectRobotsTxt": true, "allowAutomaticOutreach": false, "requireApprovalForOutreach": true, "storePersonalEmails": false}
+}

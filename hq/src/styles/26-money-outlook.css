@@ -1,0 +1,31 @@
+/* Money outlook — who owes you, and what is on its way. Tokens only. */
+
+.mo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-4); }
+@media (max-width: 860px) { .mo { grid-template-columns: 1fr; } }
+.mo-card { display: grid; gap: var(--s-3); align-content: start; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface-1); padding: var(--s-5); }
+.mo-card.is-alert { border-color: rgba(255, 139, 128, 0.45); background: linear-gradient(135deg, var(--bad-soft), transparent 60%), var(--surface-1); }
+.mo-card > header { display: flex; gap: var(--s-3); align-items: center; }
+.mo-card > header h3 { margin: 0; flex: 1; color: var(--text-1); font-size: var(--t-lg); font-weight: var(--w-bold); }
+.mo-card > header small { color: var(--text-3); font-size: var(--t-xs); }
+.mo-card > header button { display: inline-flex; gap: var(--s-1); align-items: center; border: 0; background: none; color: var(--accent); font: inherit; font-size: var(--t-sm); font-weight: var(--w-med); cursor: pointer; }
+.mo-icon { display: grid; place-items: center; width: 32px; height: 32px; border-radius: var(--r-md); background: var(--accent-soft); color: var(--accent); }
+.mo-icon.is-gold { background: var(--gold-soft); color: var(--gold); }
+.mo-total { color: var(--text-1); font-size: var(--t-3xl); font-weight: var(--w-bold); font-valext-numeric: tabular-nums; letter-spacing: -0.02em; line-height: 1.15; }
+.mo-alert { display: flex; gap: var(--s-2); align-items: center; margin: 0; color: var(--bad); font-size: var(--t-sm); font-weight: var(--w-med); }
+.mo-note { margin: 0; color: var(--text-3); font-size: var(--t-sm); line-height: 1.55; }
+.mo-card ul { display: grid; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line-soft); }
+.mo-card li { border-bottom: 1px solid var(--line-soft); }
+.mo-card li:last-child { border-bottom: 0; }
+.mo-card li > span, .mo-card li > button { display: flex; gap: var(--s-3); align-items: center; justify-content: space-between; width: 100%; min-height: 52px; border: 0; background: none; padding: var(--s-2) 0; color: inherit; font: inherit; text-align: start; }
+.mo-card li > button { cursor: pointer; border-radius: var(--r-sm); }
+.mo-card li > button:hover { background: var(--surface-2); }
+.mo-card li span > span { display: grid; min-width: 0; }
+.mo-card li strong { overflow: hidden; color: var(--text-1); font-size: var(--t-md); font-weight: var(--w-med); text-overflow: ellipsis; white-space: nowrap; }
+.mo-card li small { color: var(--text-3); font-size: var(--t-xs); }
+.mo-card li small.is-late { color: var(--bad); font-weight: var(--w-bold); }
+.mo-card li b { flex: none; color: var(--text-1); font-size: var(--t-md); font-valext-numeric: tabular-nums; }
+.mo-stages { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-3); }
+.mo-stages > div { display: grid; gap: 2px; min-width: 0; }
+.mo-stages small { color: var(--text-3); font-size: var(--t-xs); font-weight: var(--w-med); letter-spacing: 0.05em; text-transform: uppercase; }
+.mo-stages b { overflow-wrap: anywhere; color: var(--gold); font-size: var(--t-lg); font-valext-numeric: tabular-nums; line-height: 1.2; }
+.mo-stages span { color: var(--text-3); font-size: var(--t-xs); }

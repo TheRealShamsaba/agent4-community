@@ -1,0 +1,184 @@
+/* ---------------------------------------------------------- daily operating layer */
+
+.home-week-planner, .home-weekly-review {
+  margin-top: var(--s-4);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: #191a18;
+}
+
+.home-block-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-4);
+  align-items: center;
+  justify-content: space-between;
+  min-height: 76px;
+  border-bottom: 1px solid var(--line);
+  padding: var(--s-3) var(--s-4);
+}
+
+.home-block-head > span:first-child { display: grid; gap: 3px; min-width: 0; }
+.home-block-head > span:first-child > small { color: var(--gold); font-size: var(--t-xs); font-weight: var(--w-bold); letter-spacing: 0.13em; text-transform: uppercase; }
+.home-block-head > span:first-child > strong { font-size: var(--t-lg); font-weight: var(--w-bold); letter-spacing: -0.02em; }
+.home-block-head > span:first-child > p { margin: 0; color: var(--text-3); font-size: var(--t-sm); }
+.home-block-head > span:last-child { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.home-block-head button { display: flex; gap: var(--s-2); align-items: center; justify-content: center; min-height: var(--tap); border-radius: var(--r-sm); padding: 0 var(--s-3); font-size: var(--t-sm); font-weight: var(--w-med); cursor: pointer; }
+.home-block-head button.is-quiet { border: 1px solid var(--line); background: transparent; color: var(--text-2); }
+.home-block-head button.is-quiet:hover { color: var(--text-1); }
+.home-block-head button.is-primary { border: 0; background: var(--gold); color: var(--gold-ink); }
+.home-block-head button.is-primary:hover { background: #f5c95a; }
+
+/* The strip under a block head that carries an error, a skeleton, or the
+   "nothing here, and here is what to do" state. */
+.home-block-body { display: grid; gap: var(--s-3); padding: var(--s-4); }
+.home-block-body .emptystate { width: 100%; }
+.home-block-body .emptystate .btn { min-height: var(--tap); }
+
+/* A row is now two targets: tick it done, or open that one task. The whole row
+   used to open the whole board, and there was no way to finish anything. */
+
+.home-week-planner { margin-top: var(--s-4); }
+/* Seven days need 980px of track. The scroll container has to be pinned to
+   its parent's width or it simply grows and the last days get clipped off
+   the side of a laptop screen with no way to reach them. */
+.home-week-days { display: grid; grid-template-columns: repeat(7, minmax(140px, 1fr)); gap: 1px; min-width: 0; max-width: 100%; overflow-x: auto; background: var(--line); }
+.home-week-days > article { display: flex; flex-direction: column; min-width: 0; min-height: 132px; background: #171816; }
+.home-week-days > article.is-today { background: #1e1e1b; box-shadow: inset 0 2px var(--gold); }
+.home-week-days > article > header { display: flex; align-items: center; justify-content: space-between; min-height: 47px; border-bottom: 1px solid var(--line-soft); padding: 0 var(--s-3); }
+.home-week-days > article > header span { color: var(--text-3); font-size: var(--t-xs); font-weight: var(--w-med); letter-spacing: 0.08em; text-transform: uppercase; }
+.home-week-days > article > header b { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; color: var(--text-2); font-size: var(--t-sm); }
+.home-week-days > article.is-today > header b { background: var(--gold); color: var(--gold-ink); }
+.home-week-days > article > div { display: grid; flex: 1; align-content: start; gap: var(--s-1); padding: var(--s-2); }
+.home-week-days > article > div > small { color: var(--text-3); font-size: var(--t-xs); }
+
+/* Each day carries its own add button with its own date. The single header
+   button always seeded today, which made Thursday a three-step job. */
+.home-day-add { display: flex; gap: var(--s-1); align-items: center; justify-content: center; min-height: 32px; border: 1px dashed var(--line); border-radius: var(--r-sm); background: transparent; padding: var(--s-1) var(--s-2); color: var(--text-3); font-size: var(--t-xs); font-weight: var(--w-med); cursor: pointer; }
+.home-day-add:hover { border-color: var(--gold); color: var(--gold); }
+.home-day-add:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.home-day-add.is-empty { min-height: var(--tap); }
+
+.home-plan-item { display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: var(--s-2); align-items: start; min-height: var(--tap); border: 1px solid var(--line-soft); border-left: 2px solid var(--gold); border-radius: var(--r-sm); background: rgba(248, 241, 227, 0.025); padding: var(--s-2); color: var(--text-1); text-align: left; cursor: pointer; }
+.home-plan-item:hover { background: rgba(248, 241, 227, 0.06); }
+.home-plan-item:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.home-plan-item > svg { margin-top: 2px; color: var(--gold); }
+.home-plan-item.is-task { border-left-color: #7396eb; }
+.home-plan-item.is-task > svg { color: #7396eb; }
+.home-plan-item.is-post { border-left-color: #d88bad; }
+.home-plan-item.is-post > svg { color: #d88bad; }
+.home-plan-item.is-linkedin { border-left-color: #7396eb; }
+.home-plan-item.is-linkedin > svg { color: #7396eb; }
+.home-plan-item > span { display: grid; gap: 2px; min-width: 0; }
+.home-plan-item b { display: -webkit-box; overflow: hidden; font-size: var(--t-xs); font-weight: var(--w-med); line-height: 1.3; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.home-plan-item small { overflow: hidden; color: var(--text-3); font-size: var(--t-xs); text-overflow: ellipsis; white-space: nowrap; }
+.home-planner-error { margin: 0; border-bottom: 1px solid rgba(238, 119, 80, 0.18); background: rgba(238, 119, 80, 0.08); padding: var(--s-3) var(--s-4); color: #ee8b6a; font-size: var(--t-sm); }
+
+.home-event-backdrop { position: fixed; z-index: 140; inset: 0; display: flex; justify-content: flex-end; background: rgba(0, 0, 0, 0.58); backdrop-filter: blur(4px); }
+.home-event-editor { width: min(440px, 100%); height: 100%; overflow: auto; border-left: 1px solid var(--line); background: #171816; box-shadow: var(--e-4); color: var(--text-1); }
+.home-event-editor > header { display: flex; gap: var(--s-3); align-items: center; justify-content: space-between; min-height: 70px; border-bottom: 1px solid var(--line); padding: 0 var(--s-5); }
+.home-event-editor > header > span { display: grid; gap: 3px; min-width: 0; }
+.home-event-editor > header small { color: var(--gold); font-size: var(--t-xs); font-weight: var(--w-bold); letter-spacing: 0.11em; text-transform: uppercase; }
+.home-event-editor > header strong { font-size: var(--t-lg); }
+.home-event-editor > header button { display: grid; flex: none; place-items: center; width: var(--tap); height: var(--tap); border: 1px solid var(--line); border-radius: var(--r-sm); background: transparent; color: var(--text-2); cursor: pointer; }
+.home-event-editor form { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-4) var(--s-3); padding: var(--s-5); }
+.home-event-editor form > label { display: grid; gap: var(--s-2); color: var(--text-2); font-size: var(--t-xs); font-weight: var(--w-med); letter-spacing: 0.05em; text-transform: uppercase; }
+.home-event-editor form > label.is-wide { grid-column: 1 / -1; }
+.home-event-editor label > small { color: var(--text-3); font-size: var(--t-xs); text-transform: none; }
+.home-event-editor input, .home-event-editor select, .home-event-editor textarea { width: 100%; min-height: var(--tap); border: 1px solid var(--line); border-radius: var(--r-sm); outline: 0; background: #111210; padding: var(--s-2) var(--s-3); color: var(--text-1); font: inherit; font-size: var(--t-md); font-weight: var(--w-body); letter-spacing: 0; text-transform: none; }
+.home-event-editor textarea { resize: vertical; line-height: 1.5; }
+.home-event-editor input:focus, .home-event-editor select:focus, .home-event-editor textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(239, 187, 66, 0.12); }
+.home-event-editor form > p { grid-column: 1 / -1; margin: 0; color: #ee8b6a; font-size: var(--t-sm); }
+.home-event-editor footer { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--s-2); justify-content: flex-end; margin-top: var(--s-2); border-top: 1px solid var(--line); padding-top: var(--s-4); }
+.home-event-editor footer > span:first-child, .home-event-editor footer > .is-delete, .home-event-editor footer > .home-delete-confirm { margin-right: auto; }
+.home-event-editor footer button { display: flex; gap: var(--s-1); align-items: center; justify-content: center; min-height: var(--tap); border-radius: var(--r-sm); padding: 0 var(--s-4); font-size: var(--t-sm); font-weight: var(--w-med); cursor: pointer; }
+.home-event-editor footer .is-delete { border: 1px solid rgba(238, 119, 80, 0.3); background: transparent; color: #ee7750; }
+.home-event-editor footer .is-cancel { border: 1px solid var(--line); background: transparent; color: var(--text-2); }
+.home-event-editor footer .is-save { border: 0; background: var(--gold); color: var(--gold-ink); }
+
+/* The busy spinner only had an animation inside the workbench, so every other
+   copy of it sat still while claiming to be working. */
+.home-event-editor .is-spinning { animation: agent-spin 0.8s linear infinite; }
+
+/* Deleting is two deliberate taps, not one mis-aimed one. */
+.home-delete-confirm { display: flex; flex-wrap: wrap; gap: var(--s-2); align-items: center; }
+.home-delete-confirm b { color: var(--bad); font-size: var(--t-sm); font-weight: var(--w-med); }
+
+/* ------------------------------------------------------------- the phone --- */
+
+@media (max-width: 860px) {
+  .home-week-days { grid-template-columns: minmax(0, 1fr); overflow-x: visible; }
+  .home-week-days > article { flex-direction: row; min-height: 0; }
+  .home-week-days > article > header { flex: none; flex-direction: column; justify-content: center; width: 64px; min-height: 0; border-right: 1px solid var(--line-soft); border-bottom: 0; padding: var(--s-2); }
+  .home-week-days > article > div { flex: 1; min-width: 0; }
+}
+
+@media (max-width: 620px) {
+  .home-block-head { flex-direction: column; align-items: stretch; gap: var(--s-3); padding: var(--s-3); }
+  .home-block-head > span:last-child { justify-content: stretch; }
+  .home-block-head > span:last-child > button { flex: 1; }
+  .home-block-body { padding: var(--s-3); }
+  /* A week that scrolls sideways on a phone is a week nobody reads. Stack it. */
+  .home-event-editor form { grid-template-columns: minmax(0, 1fr); padding: var(--s-4); }
+  .home-event-editor > header { padding: 0 var(--s-4); }
+  .home-event-editor footer > button, .home-event-editor footer > .is-delete { flex: 1; }
+}
+
+/* Calendar: readable weeks, a complete agenda, and an editor outside the
+   transformed home layout so focus and scrolling remain independent. */
+.calendar-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; padding: 18px 24px; border-top: 1px solid var(--line); }
+.calendar-navigation, .calendar-view-switch { display: flex; align-items: center; gap: 6px; }
+.calendar-navigation strong { margin: 0 14px 0 8px; font-size: 15px; font-weight: 500; }
+.calendar-toolbar button, .calendar-event-kind button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 38px; padding: 0 12px; border: 1px solid var(--line); border-radius: 6px; background: transparent; color: var(--text-2); cursor: pointer; font: inherit; font-size: 13px; }
+.calendar-view-switch { padding: 3px; border: 1px solid var(--line); border-radius: 8px; background: #111210; }
+.calendar-view-switch button { border: 0; min-height: 32px; }
+.calendar-view-switch button[aria-pressed="true"], .calendar-event-kind button[aria-pressed="true"] { background: #343126; color: var(--gold); }
+.calendar-legend { display: flex; flex-wrap: wrap; gap: 20px; padding: 0 24px 18px; color: var(--text-3); font-size: 12px; }
+.calendar-legend span { display: flex; align-items: center; gap: 7px; }
+.calendar-legend i { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+.calendar-legend span:nth-child(2) i { background: #8db5db; }
+.calendar-legend span:nth-child(3) i { background: #b49cd7; }
+.home-week-days { grid-template-columns: repeat(7, minmax(0, 1fr)); overflow: visible; border-top: 1px solid var(--line); }
+.home-week-days > article { min-height: 250px; }
+.home-week-days > article > header { min-height: 68px; padding: 12px; }
+.home-week-days > article > header b { width: 32px; height: 32px; font-size: 17px; }
+.home-week-days > article > div { gap: 8px; padding: 10px; }
+.home-week-days .home-plan-item { padding: 10px 8px; border-left: 2px solid var(--gold); background: rgba(239,187,66,.07); align-items: flex-start; }
+.home-week-days .home-plan-item.is-task { border-left-color: #8db5db; background: rgba(141,181,219,.07); }
+.home-week-days .home-plan-item.is-post { border-left-color: #b49cd7; background: rgba(180,156,215,.07); }
+.home-week-days .home-plan-item b { white-space: normal; overflow-wrap: anywhere; line-height: 1.45; -webkit-line-clamp: unset; }
+.home-week-days .home-plan-item small { margin-top: 5px; }
+.calendar-day-empty { margin: 10px 0; color: var(--text-3); font-size: 12px; }
+.home-day-add { min-height: 36px; }
+.home-week-days.is-agenda { grid-template-columns: 1fr; }
+.home-week-days.is-agenda > article { flex-direction: row; min-height: 88px; }
+.home-week-days.is-agenda > article > header { flex: 0 0 100px; flex-direction: column; justify-content: center; gap: 6px; border-bottom: 0; border-right: 1px solid var(--line); }
+.home-week-days.is-agenda > article > div { display: flex; flex-direction: column; min-width: 0; }
+.home-week-days.is-agenda .home-plan-item { width: 100%; }
+.home-week-days.is-agenda .home-day-add { align-self: flex-start; }
+.home-event-backdrop { align-items: center; justify-content: center; padding: 24px; overscroll-behavior: contain; }
+.home-event-editor { width: min(560px, 100%); height: auto; max-height: calc(100dvh - 48px); border: 1px solid var(--line); border-radius: 16px; overscroll-behavior: contain; }
+.home-event-editor > header { position: sticky; top: 0; z-index: 1; background: #171816; min-height: 84px; }
+.home-event-editor > header strong { font-size: 21px; font-weight: 500; }
+.home-event-editor form { gap: 20px 16px; }
+.home-event-editor form > label { text-transform: none; letter-spacing: 0; font-size: 13px; }
+.home-event-editor input, .home-event-editor select, .home-event-editor textarea { color-scheme: dark; }
+.home-event-editor form > label:first-child input { font-size: 20px; min-height: 56px; }
+.calendar-event-kind { grid-column: 1 / -1; display: flex; gap: 8px; }
+.home-event-editor button:disabled { opacity: .5; cursor: wait; }
+.calendar-toolbar button:focus-visible, .calendar-event-kind button:focus-visible, .home-week-planner button:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+@media (max-width: 1000px) {
+  .home-week-days { grid-template-columns: 1fr; }
+  .home-week-days > article { flex-direction: row; min-height: 90px; }
+  .home-week-days > article > header { flex: 0 0 72px; flex-direction: column; justify-content: center; gap: 6px; border-bottom: 0; border-right: 1px solid var(--line); }
+  .home-week-days > article > div { min-width: 0; }
+}
+@media (max-width: 600px) {
+  .calendar-toolbar { padding: 16px; }
+  .calendar-navigation { flex-wrap: wrap; }
+  .calendar-navigation strong { font-size: 13px; margin-right: 0; }
+  .calendar-legend { padding: 0 16px 16px; gap: 12px; }
+  .home-event-backdrop { padding: 12px; }
+  .home-event-editor { max-height: calc(100dvh - 24px); border-radius: 12px; }
+}

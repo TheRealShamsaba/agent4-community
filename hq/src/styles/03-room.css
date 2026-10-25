@@ -1,0 +1,947 @@
+
+.auth-screen {
+  display: grid;
+  place-items: center;
+  width: 100vw;
+  min-height: 100vh;
+  padding: 24px;
+  background: rgba(16, 18, 17, 0.72);
+}
+
+.auth-screen--loading { align-content: center; gap: 18px; color: var(--blue); }
+
+.auth-panel {
+  width: min(390px, 100%);
+  overflow: hidden;
+  border: 1px solid rgba(244, 241, 232, 0.15);
+  border-radius: 8px;
+  background: rgba(27, 30, 29, 0.98);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.48);
+}
+
+.auth-panel > header { display: flex; gap: 12px; align-items: center; padding: 18px 20px; border-bottom: 1px solid rgba(244, 241, 232, 0.1); }
+.auth-panel > header > div { display: grid; gap: 2px; }
+.auth-panel > header strong { font-size: 17px; font-weight: 850; }
+.auth-panel > header span { color: rgba(244, 241, 232, 0.42); font-size: var(--t-xs); font-weight: 700; }
+.auth-panel form { display: grid; gap: 14px; padding: 24px 20px 20px; }
+.auth-panel__title { display: grid; gap: 5px; margin-bottom: 4px; }
+.auth-panel__title h1 { margin: 0; font-size: 24px; letter-spacing: 0; }
+.auth-panel__title p { margin: 0; color: rgba(244, 241, 232, 0.5); font-size: var(--t-xs); line-height: 1.4; }
+.auth-panel label,
+.team-panel label { display: grid; gap: 6px; color: rgba(244, 241, 232, 0.62); font-size: var(--t-xs); font-weight: 760; }
+.auth-panel input,
+.team-panel input { width: 100%; height: 42px; border: 1px solid rgba(244, 241, 232, 0.14); border-radius: 5px; outline: none; background: rgba(244, 241, 232, 0.05); color: var(--ink); padding: 0 11px; font-size: 13px; }
+.auth-panel input:focus,
+.team-panel input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(114, 167, 255, 0.12); }
+.auth-panel form > button,
+.team-panel form > button,
+.team-panel__invite button { display: flex; gap: 7px; align-items: center; justify-content: center; min-height: 40px; border: 0; border-radius: 5px; background: #3869b6; color: #fff; padding: 0 14px; font-size: var(--t-xs); font-weight: 800; cursor: pointer; }
+.auth-panel form > button:disabled,
+.team-panel form > button:disabled { opacity: 0.55; cursor: wait; }
+.auth-panel__error,
+.team-panel__error { border-left: 2px solid var(--danger); color: #f5aaa4; padding: 2px 0 2px 9px; font-size: var(--t-xs); line-height: 1.45; }
+.auth-panel__loading { display: flex; gap: 8px; align-items: center; justify-content: center; min-height: 190px; color: rgba(244, 241, 232, 0.48); font-size: var(--t-xs); }
+
+.room {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  cursor: default;
+  touch-action: none;
+}
+
+.room-header {
+  position: fixed;
+  z-index: 30;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 58px;
+  padding: 0 18px;
+  border-bottom: 1px solid rgba(244, 241, 232, 0.09);
+  background: rgba(20, 20, 18, 0.92);
+  backdrop-filter: blur(14px);
+}
+
+.brand-lockup,
+.room-presence,
+.presence-dots {
+  display: flex;
+  align-items: center;
+}
+
+/* The three header blocks must be able to give way to each other. Without an
+   explicit shrink the nav kept its full width and simply drew on top of the
+   controls to its right. The brand gives way first, the nav second, and the
+   controls on the right never shrink because they are all targets. */
+.brand-lockup { flex: 0 1 auto; gap: 10px; min-width: 0; overflow: hidden; }
+.room-presence { flex: none; }
+
+.brand-lockup span {
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 850;
+}
+
+.brand-lockup > i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--orange);
+}
+
+.brand-lockup strong {
+  color: var(--muted);
+  font-size: var(--t-xs);
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.brand-lockup .brand-lockup__culture {
+  color: #efbb42;
+  font-size: var(--t-xs);
+  font-weight: 900;
+  letter-spacing: 0.13em;
+}
+
+.room-presence {
+  gap: 10px;
+  color: var(--muted);
+  font-size: var(--t-xs);
+}
+
+.team-panel {
+  position: fixed;
+  z-index: 64;
+  top: 62px;
+  right: 14px;
+  width: min(360px, calc(100vw - 28px));
+  max-height: calc(100vh - 76px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  border: 1px solid rgba(244, 241, 232, 0.16);
+  border-radius: 8px;
+  background: rgba(27, 30, 29, 0.98);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.44);
+  color: var(--ink);
+}
+
+.team-panel > header { display: flex; align-items: center; justify-content: space-between; padding: 12px 12px 11px 14px; border-bottom: 1px solid rgba(244, 241, 232, 0.1); }
+.team-panel > header > div { display: flex; gap: 9px; align-items: center; }
+.team-panel > header > div > svg { color: var(--mint); }
+.team-panel > header span { display: grid; gap: 2px; }
+.team-panel > header strong { font-size: 12px; }
+.team-panel > header small { color: rgba(244, 241, 232, 0.38); font-size: var(--t-xs); }
+.team-panel > header button { display: grid; place-items: center; width: 32px; height: 32px; border: 0; border-radius: 5px; background: transparent; color: var(--muted); cursor: pointer; }
+.team-panel > header button:hover { background: rgba(244, 241, 232, 0.08); color: var(--ink); }
+.team-panel__members { display: grid; max-height: 210px; overflow-y: auto; border-bottom: 1px solid rgba(244, 241, 232, 0.1); padding: 7px; }
+.team-panel__members > div { display: grid; grid-template-columns: 30px minmax(0, 1fr) 30px; gap: 8px; align-items: center; min-height: 43px; padding: 4px 5px; }
+.team-panel__members > div > span { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: rgba(116, 167, 255, 0.14); color: #9cbeff; font-size: var(--t-xs); font-weight: 850; }
+.team-panel__members p { display: grid; gap: 2px; min-width: 0; margin: 0; }
+.team-panel__members p strong { overflow: hidden; font-size: var(--t-xs); text-overflow: ellipsis; white-space: nowrap; }
+.team-panel__members p small { overflow: hidden; color: rgba(244, 241, 232, 0.38); font-size: var(--t-xs); text-overflow: ellipsis; white-space: nowrap; }
+.team-panel__members button { display: grid; place-items: center; width: 28px; height: 28px; border: 0; border-radius: 5px; background: transparent; color: rgba(244, 241, 232, 0.38); cursor: pointer; }
+.team-panel__members button:hover { background: rgba(239, 119, 113, 0.1); color: var(--danger); }
+.team-panel__members button:disabled { opacity: 0.45; cursor: wait; }
+.team-panel__access { display: grid; gap: 8px; padding: 13px 16px; border-bottom: 1px solid rgba(244, 241, 232, 0.1); background: rgba(114, 167, 255, 0.045); }
+.team-panel__access > strong { color: var(--ink); font-size: var(--t-xs); }
+.team-panel__access p { display: grid; gap: 2px; margin: 0; color: rgba(244, 241, 232, 0.52); font-size: var(--t-xs); line-height: 1.42; }
+.team-panel__access p span { color: #9cbeff; font-weight: 800; }
+.team-panel form { display: grid; gap: 13px; padding: 16px; }
+.team-panel__form-head { display: grid; gap: 4px; margin-bottom: 2px; }
+.team-panel__form-head strong { color: var(--ink); font-size: var(--t-xs); }
+.team-panel__form-head small, .team-panel__invite > small { color: rgba(244, 241, 232, 0.4); font-size: var(--t-xs); line-height: 1.45; }
+.team-panel__invite { display: grid; gap: 10px; padding: 16px; }
+.team-panel__invite > strong { font-size: 12px; }
+.team-panel__invite p { overflow-wrap: anywhere; margin: 0; color: rgba(244, 241, 232, 0.54); font-size: var(--t-xs); line-height: 1.5; }
+.team-panel__invite button + button { border: 1px solid rgba(244, 241, 232, 0.14); background: transparent; color: rgba(244, 241, 232, 0.7); }
+.team-panel__security { border-top: 1px solid rgba(244, 241, 232, 0.1); }
+.team-panel__security > summary { display: flex; gap: 9px; align-items: center; min-height: 56px; padding: 10px 16px; color: rgba(244, 241, 232, 0.58); cursor: pointer; list-style: none; }
+.team-panel__security > summary::-webkit-details-marker { display: none; }
+.team-panel__security > summary > svg { color: var(--mint); }
+.team-panel__security > summary > span { display: grid; gap: 2px; }
+.team-panel__security > summary strong { color: var(--ink); font-size: var(--t-xs); }
+.team-panel__security > summary small { font-size: var(--t-xs); }
+.team-panel__security[open] > summary { background: rgba(244, 241, 232, 0.025); }
+.team-panel__security form { border-top: 1px solid rgba(244, 241, 232, 0.08); padding-top: 14px; }
+.team-panel__success { display: flex; gap: 7px; align-items: center; color: var(--mint); font-size: var(--t-xs); font-weight: 760; }
+
+.presence-dots { padding-left: 8px; }
+
+.presence-dots i {
+  display: grid;
+  place-items: center;
+  width: 19px;
+  height: 19px;
+  margin-left: -7px;
+  border: 2px solid var(--wall);
+  border-radius: 50%;
+  background: var(--blue);
+  color: #111;
+  font-size: var(--t-xs);
+  font-style: normal;
+  font-weight: 850;
+}
+
+.presence-dots i:nth-child(2) { background: var(--pink); }
+.presence-dots i:nth-child(3) { background: var(--mint); }
+.presence-dots i:nth-child(4) { background: var(--orange); }
+
+.room.is-drawing { cursor: crosshair; }
+
+.connection { pointer-events: visibleStroke; outline: none; cursor: pointer; }
+
+.room.is-selecting { cursor: crosshair; }
+
+.badge {
+  color: rgba(244, 241, 232, 0.58);
+  font-size: var(--t-xs);
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.badge--good { color: var(--mint); }
+.badge--critical { color: #ff8379; }
+.badge--muted { color: rgba(244, 241, 232, 0.46); }
+
+.task-check,
+.task-row {
+  border: 0;
+  background: transparent;
+}
+
+.task-check {
+  display: grid;
+  place-items: center;
+  align-self: start;
+  width: 32px;
+  height: 42px;
+  padding: 0;
+  color: rgba(244, 241, 232, 0.36);
+  cursor: pointer;
+}
+
+.task-check:hover { color: var(--blue); }
+
+.task-row {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 11px 8px 10px 2px;
+  color: rgba(244, 241, 232, 0.82);
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.3;
+  text-align: left;
+  cursor: pointer;
+}
+
+.task-row:hover { color: var(--ink); }
+
+.task-row > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.task-row small {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: rgba(244, 241, 232, 0.34);
+  font-size: var(--t-xs);
+}
+
+.task-row small span { display: flex; gap: 3px; align-items: center; }
+.task-row small .is-overdue { color: var(--bad); }
+
+.drawer-action,
+.drawer-close {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.shortcut-panel {
+  position: fixed;
+  z-index: 47;
+  top: 50%;
+  left: 66px;
+  width: 250px;
+  overflow: hidden;
+  border: 1px solid rgba(244, 241, 232, 0.18);
+  border-radius: 8px;
+  background: rgba(24, 27, 26, 0.94);
+  box-shadow: 0 20px 56px rgba(0, 0, 0, 0.42);
+  color: var(--ink);
+  transform: translateY(-50%);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
+}
+
+.shortcut-panel header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 45px;
+  padding: 0 8px 0 13px;
+  border-bottom: 1px solid rgba(244, 241, 232, 0.1);
+}
+
+.shortcut-panel header div { display: flex; gap: 8px; align-items: center; }
+.shortcut-panel header svg { color: var(--blue); }
+.shortcut-panel header strong { font-size: var(--t-xs); }
+.shortcut-panel header button { display: grid; place-items: center; width: 30px; height: 30px; border: 0; border-radius: 6px; background: transparent; color: var(--muted); cursor: pointer; }
+.shortcut-panel header button:hover { background: rgba(244, 241, 232, 0.08); color: var(--ink); }
+.shortcut-panel > div { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; padding: 10px 12px 12px; }
+.shortcut-panel p { display: flex; gap: 8px; align-items: center; justify-content: space-between; min-height: 29px; margin: 0; color: rgba(244, 241, 232, 0.58); font-size: var(--t-xs); }
+.shortcut-panel kbd { min-width: 24px; border: 1px solid rgba(244, 241, 232, 0.14); border-radius: 4px; background: rgba(244, 241, 232, 0.07); color: rgba(244, 241, 232, 0.82); padding: 3px 5px; font-family: inherit; font-size: var(--t-xs); font-weight: 800; text-align: center; white-space: nowrap; }
+
+.agent4-avatar {
+  display: block;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #eee6d6;
+  object-fit: contain;
+  filter: contrast(1.2) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+.agent4-avatar--small { width: 22px; height: 22px; }
+.agent4-avatar--medium { width: 32px; height: 32px; }
+.agent4-avatar--large { width: 52px; height: 52px; }
+
+@keyframes agent-spin {
+  to { transform: rotate(360deg); }
+}
+
+.drawer-backdrop {
+  position: fixed;
+  z-index: 80;
+  inset: 0;
+  display: flex;
+  justify-content: flex-end;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.action-drawer {
+  width: min(460px, 100%);
+  height: 100vh;
+  overflow-y: auto;
+  border-left: 1px solid rgba(23, 24, 21, 0.12);
+  background: #f1eee5;
+  color: var(--black);
+  box-shadow: -24px 0 70px rgba(0, 0, 0, 0.35);
+  padding: 22px;
+}
+
+.drawer-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--black);
+}
+
+.drawer-kicker {
+  display: block;
+  color: #2358d7;
+  font-size: var(--t-xs);
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.drawer-head h3 {
+  margin: 4px 0 0;
+  font-size: 29px;
+  line-height: 1;
+}
+
+.drawer-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  align-items: center;
+  margin-top: 10px;
+  color: rgba(23, 24, 21, 0.56);
+  font-size: 12px;
+}
+
+.drawer-meta a { color: #2358d7; text-decoration: none; }
+.drawer-meta .badge { color: rgba(23, 24, 21, 0.56); }
+
+.drawer-close,
+.drawer-action {
+  min-height: 34px;
+  border: 1px solid rgba(23, 24, 21, 0.25);
+  border-radius: 6px;
+  background: transparent;
+  padding: 0 11px;
+  color: var(--black);
+  font-size: var(--t-xs);
+  font-weight: 750;
+}
+
+.drawer-score {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr);
+  gap: 3px 13px;
+  align-items: center;
+  margin-top: 18px;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(23, 24, 21, 0.14);
+}
+
+.drawer-score strong {
+  grid-row: 1 / span 2;
+  color: #2358d7;
+  font-size: 46px;
+  line-height: 0.9;
+}
+
+.drawer-score span { color: rgba(23, 24, 21, 0.65); font-size: 12px; }
+
+.drawer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.drawer-action--primary { border-color: #2358d7; background: #2358d7; color: #fff; }
+
+.drawer-section {
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(23, 24, 21, 0.14);
+}
+
+.drawer-section h4 {
+  margin: 0 0 8px;
+  color: rgba(23, 24, 21, 0.5);
+  font-size: var(--t-xs);
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.drawer-section p {
+  margin: 0 0 6px;
+  color: rgba(23, 24, 21, 0.72);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.drawer-section ul { margin: 0; padding-left: 18px; color: rgba(23, 24, 21, 0.72); font-size: 14px; }
+.drawer-section li { margin-bottom: 6px; }
+
+.drawer-opening {
+  padding: 12px 14px;
+  border-left: 4px solid #2358d7;
+  background: #e5ebfb;
+  line-height: 1.9 !important;
+}
+
+.drawer-timeline { margin: 0; padding: 0 !important; list-style: none; }
+.drawer-timeline li { display: flex; gap: 12px; padding: 8px 0; border-top: 1px solid rgba(23, 24, 21, 0.12); }
+.drawer-timeline span { flex: 0 0 88px; color: rgba(23, 24, 21, 0.5); font-size: 12px; }
+.drawer-timeline p { margin: 0; }
+
+.drawer-memory-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.drawer-memory-title span {
+  color: rgba(23, 24, 21, 0.5);
+  font-size: var(--t-xs);
+}
+
+.drawer-memory-followup {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 10px !important;
+  padding: 9px 10px;
+  border-radius: 5px;
+  background: rgba(35, 88, 215, 0.08);
+}
+
+.drawer-memory-followup strong { color: #2358d7; }
+
+.drawer-meeting-timeline {
+  margin: 0;
+  padding: 0 !important;
+  list-style: none;
+}
+
+.drawer-meeting-timeline li {
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr);
+  gap: 10px;
+  margin: 0;
+  padding: 11px 0;
+  border-top: 1px solid rgba(23, 24, 21, 0.12);
+}
+
+.drawer-meeting-timeline time,
+.drawer-meeting-timeline span {
+  color: rgba(23, 24, 21, 0.48);
+  font-size: var(--t-xs);
+}
+
+.drawer-meeting-timeline div {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.drawer-meeting-timeline strong {
+  color: #171815;
+  font-size: 13px;
+}
+
+.drawer-meeting-timeline p {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 3px 0 0;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-size: 12px;
+}
+
+@media (max-width: 759px) {
+  body { overflow: auto; }
+
+  .room {
+    min-height: 100vh;
+    height: auto;
+    overflow: visible;
+    padding: 118px 12px 180px;
+    touch-action: pan-y;
+  }
+
+  .room-header { height: 48px; padding: 0 12px; }
+  .presence-dots { display: none; }
+  .shortcut-panel { top: 104px; right: 10px; left: 10px; width: auto; max-height: calc(100vh - 190px); overflow-y: auto; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================= the app shell ===
+   What the eight places share: the nav that reaches all of them, the search
+   box, the age of the embedded snapshot, the banner strip, the command palette
+   and the crash state. All of it on the token scale — the rules above this line
+   are older and still carry hardcoded values; convert them as you touch them. */
+
+/* --- the nav ---------------------------------------------------------------
+   Eight destinations, not four. The four rooms come first, then the four tools,
+   with a hairline between them; nothing is hidden behind a "More" menu, because
+   a section you cannot see is a section you do not know exists. */
+
+.place-nav {
+  display: flex;
+  flex: 1 1 auto;
+  gap: var(--s-3);
+  align-items: center;
+  min-width: 0;
+  margin-right: auto;
+  margin-left: var(--s-5);
+  overflow: hidden;
+}
+
+.place-nav__tier {
+  display: flex;
+  flex: none;
+  gap: 2px;
+  align-items: center;
+  min-width: 0;
+}
+
+.place-nav__rule {
+  flex: none;
+  width: 1px;
+  height: 18px;
+  background: var(--line);
+}
+
+.place-nav__tab {
+  position: relative;
+  display: flex;
+  gap: var(--s-2);
+  align-items: center;
+  min-height: 32px;
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  background: none;
+  padding: 0 var(--s-2);
+  color: var(--text-3);
+  font: inherit;
+  font-size: var(--t-xs);
+  font-weight: var(--w-med);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.place-nav__tab svg { flex: none; opacity: 0.75; }
+.place-nav__tab:hover { background: var(--surface-2); color: var(--text-1); }
+.place-nav__tab.is-active { border-color: var(--line); background: var(--surface-3); color: var(--text-1); }
+.place-nav__tab.is-active svg { color: var(--gold); opacity: 1; }
+
+/* --- search and the snapshot age ------------------------------------------ */
+
+.header-search {
+  display: flex;
+  gap: var(--s-2);
+  align-items: center;
+  min-height: 30px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  padding: 0 var(--s-2);
+  color: var(--text-3);
+  font: inherit;
+  font-size: var(--t-xs);
+  font-weight: var(--w-med);
+  cursor: pointer;
+}
+
+.header-search:hover { background: var(--surface-3); color: var(--text-1); }
+.header-search kbd {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface-1);
+  padding: 1px var(--s-1);
+  font: inherit;
+  font-size: var(--t-xs);
+}
+
+.snapshot-age {
+  display: flex;
+  gap: var(--s-1);
+  align-items: center;
+  min-height: 30px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: none;
+  padding: 0 var(--s-2);
+  color: var(--text-3);
+  font: inherit;
+  font-size: var(--t-xs);
+  font-weight: var(--w-med);
+  cursor: pointer;
+}
+
+.snapshot-age:hover { background: var(--surface-2); color: var(--text-1); }
+.snapshot-age.is-stale { color: var(--warn); }
+
+/* --- the banner strip ------------------------------------------------------
+   Above every place, because both of the things it says are true everywhere. */
+
+/* Deliberately a card in the corner rather than a bar under the header: every
+   place but the Locker Room is an absolutely positioned pane pinned 52px from
+   the top, so a full-width strip would sit on top of the first row of whatever
+   it is warning you about. */
+.shell-notices {
+  position: fixed;
+  z-index: 60;
+  bottom: var(--s-4);
+  left: var(--s-4);
+  display: grid;
+  gap: var(--s-2);
+  width: min(460px, calc(100vw - var(--s-5)));
+}
+
+.shell-notice {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--s-3);
+  align-items: start;
+  border-radius: var(--r-md);
+  box-shadow: var(--e-3);
+  padding: var(--s-3) var(--s-4);
+  font-size: var(--t-sm);
+}
+
+/* The Locker Room keeps its workbench along the bottom; stack above it rather
+   than under it. */
+.room:not(.room--home) .shell-notices { bottom: 88px; }
+
+.shell-notice p { display: grid; gap: 2px; margin: 0; line-height: 1.5; }
+.shell-notice strong { font-size: var(--t-md); font-weight: var(--w-med); }
+.shell-notice code {
+  border-radius: var(--r-sm);
+  background: rgba(0, 0, 0, 0.28);
+  padding: 1px var(--s-1);
+  font-size: var(--t-xs);
+}
+
+.shell-notice--bad { border: 1px solid var(--bad); background: #2a1d1c; color: var(--text-1); }
+.shell-notice--bad svg { color: var(--bad); }
+.shell-notice--warn { border: 1px solid var(--warn); background: #2a2419; color: var(--text-1); }
+.shell-notice--warn svg { color: var(--warn); }
+
+.shell-notice > button {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  min-height: 30px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.shell-notice > button:hover { background: rgba(0, 0, 0, 0.2); }
+
+/* --- the crash state ------------------------------------------------------- */
+
+.crash-state {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 60vh;
+  padding: var(--s-7) var(--s-4);
+}
+
+/* The boundary renders in the place's own slot, which on every page but the
+   Locker Room is an absolutely positioned pane under the fixed header. */
+.room--home > .crash-state { position: absolute; inset: 58px 0 0; overflow-y: auto; }
+.crash-state .errorstate { width: min(560px, 100%); }
+.crash-state__detail { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: var(--t-xs) !important; }
+.crash-state__actions { display: flex; flex-wrap: wrap; gap: var(--s-2); margin-top: var(--s-2); }
+
+/* --- the command palette ---------------------------------------------------
+   The one thing that makes this app fast to use daily. Keyboard-complete: it
+   opens, filters, moves and closes without the mouse. */
+
+.palette-scrim {
+  position: fixed;
+  z-index: 90;
+  inset: 0;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  padding: max(8vh, var(--s-6)) var(--s-4) var(--s-4);
+  background: rgba(8, 9, 8, 0.62);
+  backdrop-filter: blur(3px);
+}
+
+.palette {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: min(640px, 100%);
+  max-height: min(62vh, 560px);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface-1);
+  box-shadow: var(--e-4);
+}
+
+.palette__search {
+  display: flex;
+  gap: var(--s-3);
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  padding: 0 var(--s-4);
+}
+
+.palette__search svg { flex: none; color: var(--text-3); }
+
+.palette__search input {
+  flex: 1;
+  min-width: 0;
+  min-height: 52px;
+  border: 0;
+  background: none;
+  color: var(--text-1);
+  font: inherit;
+  font-size: var(--t-lg);
+  outline: none;
+}
+
+.palette__search input::placeholder { color: var(--text-3); }
+
+.palette__results {
+  overflow-y: auto;
+  margin: 0;
+  padding: var(--s-2);
+  list-style: none;
+}
+
+.palette__group {
+  padding: var(--s-3) var(--s-2) var(--s-1);
+  color: var(--text-3);
+  font-size: var(--t-xs);
+  font-weight: var(--w-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.palette__results button {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--s-2);
+  align-items: baseline;
+  width: 100%;
+  min-height: 40px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: none;
+  padding: var(--s-2) var(--s-3);
+  color: var(--text-2);
+  font: inherit;
+  font-size: var(--t-md);
+  text-align: left;
+  cursor: pointer;
+}
+
+.palette__results button small { grid-column: 1 / -1; color: var(--text-3); font-size: var(--t-xs); }
+.palette__results button[data-active="true"] { background: var(--accent-soft); color: var(--text-1); }
+.palette__results button[data-active="true"] svg { grid-row: 1; grid-column: 2; color: var(--accent); }
+.palette__label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.palette__empty { padding: var(--s-5) var(--s-3); color: var(--text-3); font-size: var(--t-sm); }
+
+.palette__foot {
+  display: flex;
+  gap: var(--s-4);
+  border-top: 1px solid var(--line);
+  padding: var(--s-2) var(--s-4);
+  color: var(--text-3);
+  font-size: var(--t-xs);
+}
+
+.palette__foot span { display: flex; gap: var(--s-1); align-items: center; }
+.palette__foot kbd {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface-2);
+  padding: 1px var(--s-1);
+  font: inherit;
+  font-size: var(--t-xs);
+}
+
+/* --- the sign-in notice and the shortcut sheet's groups --------------------- */
+
+.auth-panel__notice {
+  display: flex;
+  gap: var(--s-2);
+  align-items: start;
+  border-radius: var(--r-sm);
+  background: var(--warn-soft);
+  padding: var(--s-2) var(--s-3);
+  color: var(--text-1);
+  font-size: var(--t-xs);
+  line-height: 1.5;
+}
+
+.auth-panel__notice svg { flex: none; margin-top: 1px; color: var(--warn); }
+
+.shortcut-panel > div { display: block; }
+.shortcut-panel section + section { margin-top: var(--s-3); border-top: 1px solid var(--line); padding-top: var(--s-2); }
+.shortcut-panel h4 {
+  margin: 0 0 var(--s-1);
+  color: var(--text-3);
+  font-size: var(--t-xs);
+  font-weight: var(--w-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.shortcut-panel p { color: var(--text-2); font-size: var(--t-xs); }
+.shortcut-panel kbd { font-size: var(--t-xs); }
+
+/* --- undo, next to the confirmation that offers it ------------------------- */
+
+/* --- widths ---------------------------------------------------------------- */
+
+/* Each step here is measured against what the nav actually needs: eight labelled
+   tabs are 640px and eight icons are 300px, so the chrome around them gives way
+   first and the nav is the last thing to lose anything. */
+@media (max-width: 1800px) {
+  .brand-lockup .brand-lockup__culture { display: none; }
+  .header-search span { display: none; }
+}
+
+@media (max-width: 1460px) {
+  .place-nav { gap: var(--s-2); margin-left: var(--s-3); }
+  .snapshot-age__label { display: none; }
+}
+
+@media (max-width: 1240px) {
+  .place-nav__short { display: none; }
+  .place-nav__tab { padding: 0 var(--s-2); }
+  .header-search kbd { display: none; }
+  .snapshot-age { display: none; }
+}
+
+@media (max-width: 900px) {
+  .brand-lockup > i { display: none; }
+}
+
+/* On a phone the nav is a bar under the thumb rather than eight things crushed
+   into a 48px header. Every section is still one tap: the tabs share the width
+   and the one you are on keeps its name so the bar also answers "where am I",
+   which the header itself stops saying at this width. */
+@media (max-width: 759px) {
+  .place-nav {
+    position: fixed;
+    z-index: 40;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    gap: 0;
+    margin: 0;
+    border-top: 1px solid var(--line);
+    background: rgba(20, 20, 18, 0.97);
+    backdrop-filter: blur(14px);
+    padding: var(--s-1) var(--s-1) calc(var(--s-1) + env(safe-area-inset-bottom, 0px));
+  }
+
+  .place-nav__tier { flex: 1; gap: 0; }
+  .place-nav__rule { display: none; }
+
+  .place-nav__tab {
+    flex: 1 1 0;
+    justify-content: center;
+    min-width: 0;
+    min-height: var(--tap);
+    border-color: transparent;
+    padding: 0 2px;
+  }
+
+  .place-nav__tab svg { width: 19px; height: 19px; }
+  .place-nav__tab.is-active { flex: 0 0 auto; background: var(--surface-3); padding: 0 var(--s-2); }
+  .place-nav__tab.is-active .place-nav__short { display: inline; }
+
+  /* Room for the bar under every scrolling place. */
+  .room--home > .court,
+  .room--home > .film-room { padding-bottom: 76px; }
+  .room { padding-bottom: 250px; }
+
+  /* Clear of the nav bar under the thumb. */
+  .shell-notices { right: var(--s-2); bottom: calc(var(--tap) + var(--s-4)); left: var(--s-2); width: auto; }
+  .shell-notice { padding: var(--s-2) var(--s-3); }
+  .snapshot-age span { display: none; }
+  .header-search { min-height: var(--tap); width: var(--tap); justify-content: center; padding: 0; }
+  .palette-scrim { padding: var(--s-4) var(--s-2) var(--s-2); }
+  .palette { max-height: 80vh; }
+  .palette__search input { min-height: var(--tap); font-size: var(--t-md); }
+  .palette__results button { min-height: var(--tap); }
+}

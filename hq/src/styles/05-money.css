@@ -1,0 +1,297 @@
+/* ------------------------------------------------------------ money page ---
+   One period, one currency at a time. Currencies are never comparable, so the
+   page never puts two of them in the same total. */
+
+.mp-top { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+.mp-back { display: flex; gap: 7px; align-items: center; border: 0; border-radius: 8px; box-shadow: inset 0 0 0 1px var(--court-hair); background: rgba(248, 241, 227, 0.05); padding: 8px 13px; color: var(--court-dim); font-size: var(--t-xs); font-weight: 800; cursor: pointer; }
+.mp-back:hover { color: var(--ink); }
+.mp-gran { display: flex; gap: 2px; border-radius: 8px; background: rgba(248, 241, 227, 0.06); padding: 3px; }
+.mp-gran button { border: 0; border-radius: 5px; background: none; padding: 6px 13px; color: var(--court-faint); font-size: var(--t-xs); font-weight: 800; cursor: pointer; }
+.mp-gran button.on { background: var(--ink); color: #15110d; }
+.mp-nav { display: flex; gap: 4px; align-items: center; }
+.mp-nav button { display: grid; place-items: center; width: 28px; height: 28px; border: 0; border-radius: 7px; background: rgba(248, 241, 227, 0.05); box-shadow: inset 0 0 0 1px var(--court-hair); color: var(--court-dim); cursor: pointer; }
+.mp-nav button:hover { color: var(--ink); }
+.mp-nav strong { min-width: 104px; text-align: center; font-size: 13.5px; font-weight: 850; letter-spacing: -0.01em; }
+.mp-top .lock { margin-left: auto; display: flex; gap: 5px; align-items: center; border-radius: 20px; background: rgba(185, 138, 224, 0.13); padding: 4px 9px; color: #b98ae0; font-size: var(--t-xs); font-weight: 850; letter-spacing: 0.1em; text-transform: uppercase; }
+
+.mp-cur { display: flex; gap: 6px; align-items: center; }
+.mp-cur button { border: 0; border-radius: 7px; box-shadow: inset 0 0 0 1px var(--court-hair); background: rgba(248, 241, 227, 0.05); padding: 7px 14px; color: var(--text-2); font-size: var(--t-xs); font-weight: 850; letter-spacing: 0.06em; cursor: pointer; }
+.mp-cur button.on { background: var(--ink); box-shadow: none; color: #15110d; }
+.mp-note { font-size: var(--t-xs); font-weight: 700; color: var(--text-3); }
+
+.mp-heads { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.mp-heads .head { border-radius: 13px; background: var(--mod); padding: 15px 16px; box-shadow: inset 0 1px 0 rgba(248, 241, 227, 0.05); }
+.mp-heads .head b { display: block; font-size: 25px; font-weight: 900; line-height: 1; letter-spacing: -0.04em; }
+.mp-heads .head span { display: block; margin-top: 6px; font-size: var(--t-xs); font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-2); }
+.mp-heads .head.in b { color: var(--go); }
+.mp-heads .head.out b { color: var(--orange); }
+.mp-heads .head.good b { color: var(--go); }
+.mp-heads .head.bad b { color: var(--miss); }
+
+.trend { display: grid; gap: 5px; }
+.trend svg { width: 100%; height: 128px; display: block; }
+.trend-axis { display: flex; }
+.trend-axis span { flex: 1; text-align: center; font-size: var(--t-xs); font-weight: 800; color: var(--text-3); }
+.mp-legend { display: flex; gap: 14px; align-items: center; margin-top: 11px; flex-wrap: wrap; }
+.mp-legend span { display: flex; gap: 6px; align-items: center; font-size: var(--t-xs); font-weight: 750; color: var(--text-3); }
+.mp-legend i { width: 9px; height: 9px; border-radius: 2px; }
+.mp-legend em { font-style: normal; font-size: var(--t-xs); font-weight: 750; color: var(--gold); }
+.mp-toggle { display: flex; gap: 6px; align-items: center; font-size: var(--t-xs); font-weight: 800; color: var(--text-2); cursor: pointer; letter-spacing: 0.03em; }
+.mp-toggle input { accent-color: var(--gold); }
+.mp-rate { display: flex; gap: 6px; }
+.mp-rate input { width: 106px; height: 30px; border: 0; border-radius: 6px; box-shadow: inset 0 0 0 1px var(--court-hair); background: rgba(248, 241, 227, 0.05); padding: 0 9px; color: var(--ink); font: inherit; font-size: var(--t-xs); }
+.mp-rate button { min-height: 30px; border: 0; border-radius: 6px; background: rgba(239, 187, 66, 0.16); padding: 0 11px; color: var(--gold); font: inherit; font-size: var(--t-xs); font-weight: 850; cursor: pointer; }
+
+.breakdown { display: grid; gap: 9px; }
+.bd-row { display: flex; gap: 9px; align-items: center; }
+.bd-name { width: 104px; flex: none; font-size: var(--t-xs); font-weight: 730; }
+.bd-track { flex: 1; height: 8px; border-radius: 4px; background: rgba(248, 241, 227, 0.07); overflow: hidden; }
+.bd-track i { display: block; height: 100%; }
+.bd-val { flex: none; min-width: 84px; text-align: right; font-size: var(--t-xs); font-weight: 850; font-valext-numeric: tabular-nums; }
+.bd-pct { flex: none; width: 38px; text-align: right; font-size: var(--t-xs); font-weight: 800; color: var(--text-3); }
+
+.people { margin-bottom: 14px; }
+.people h4 { margin: 0 0 9px; font-size: var(--t-xs); font-weight: 850; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); }
+.pp-row { display: flex; gap: 9px; align-items: center; padding: 4px 0; }
+.pp-name { width: 118px; flex: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--t-xs); font-weight: 720; }
+.pp-track { flex: 1; height: 7px; border-radius: 4px; background: rgba(248, 241, 227, 0.07); overflow: hidden; }
+.pp-track i { display: block; height: 100%; }
+.pp-val { flex: none; min-width: 84px; text-align: right; font-size: var(--t-xs); font-weight: 820; font-valext-numeric: tabular-nums; }
+
+.inv { display: flex; gap: 10px; align-items: center; border-top: 1px solid var(--court-hair); padding: 9px 0; }
+.inv:first-of-type { border-top: 0; }
+.inv-b { flex: 1; min-width: 0; }
+.inv-b b { display: block; font-size: 12px; font-weight: 750; }
+.inv-b span { font-size: var(--t-xs); font-weight: 700; color: var(--text-3); }
+.inv.is-overdue .inv-b span { color: var(--miss); }
+.inv-v { flex: none; font-size: 13px; font-weight: 880; }
+/* `.inv button` dresses the row's own action — Mark paid, Stop — and would
+   otherwise dress the company tag as one of them, green hover and all. */
+.inv > .firm-tag { max-width: 140px; border: 1px solid var(--line); border-radius: var(--r-pill); box-shadow: none; background: none; padding: 0 var(--s-2); color: var(--text-2); font-size: var(--t-xs); font-weight: var(--w-med); }
+.inv > .firm-tag:hover { border-color: var(--accent); box-shadow: none; background: none; color: var(--accent); }
+.inv > .firm-tag.on { border-color: transparent; background: var(--accent-soft); color: var(--accent); }
+.inv button { display: inline-flex; gap: var(--s-1); align-items: center; border: 0; border-radius: 6px; box-shadow: inset 0 0 0 1px var(--court-hair); background: rgba(248, 241, 227, 0.05); padding: 6px 10px; color: var(--text-2); font: inherit; font-size: var(--t-xs); font-weight: 820; cursor: pointer; }
+.inv button:hover { background: var(--go); box-shadow: none; color: #0f1a15; }
+
+.ledger { display: grid; gap: 1px; }
+/* The rule between rows is drawn by the row that follows, not by every row
+   minus the first: `:first-of-type` means the first element of its tag among
+   its siblings, so the moment the row stopped being the only button in the
+   list it stopped meaning "the first row". */
+.lg-row { display: flex; gap: 12px; align-items: center; padding: 8px 2px; font-size: var(--t-xs); }
+.lg-row + .lg-row { border-top: 1px solid var(--court-hair); }
+.lg-date { flex: none; min-width: 84px; color: var(--text-3); font-size: var(--t-xs); font-weight: 750; }
+.lg-dir { flex: none; width: 36px; border-radius: 4px; padding: 2px 0; text-align: center; font-size: var(--t-xs); font-weight: 880; letter-spacing: 0.04em; text-transform: uppercase; }
+.lg-dir.in { background: rgba(76, 177, 131, 0.16); color: var(--go); }
+.lg-dir.out { background: rgba(232, 98, 44, 0.16); color: var(--orange); }
+.lg-who { flex: none; width: 148px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 740; }
+.lg-cat { flex: none; width: 112px; color: var(--text-3); font-size: var(--t-xs); font-weight: 720; }
+.lg-note { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-3); font-size: var(--t-xs); }
+.lg-pending { flex: none; border-radius: var(--r-pill); background: rgba(239, 187, 66, 0.16); padding: 2px 8px; color: var(--gold); font-size: var(--t-xs); font-weight: 850; text-transform: uppercase; letter-spacing: 0.04em; }
+.lg-amt { flex: none; min-width: 118px; text-align: right; font-size: 12.5px; font-weight: 870; font-valext-numeric: tabular-nums; }
+.lg-amt.in { color: var(--go); }
+.lg-amt.out { color: var(--ink); }
+
+.c6 { grid-column: span 6; }
+
+@media (max-width: 1080px) {
+  .mp-heads { grid-template-columns: repeat(2, 1fr); }
+  .c6 { grid-column: span 12; }
+}
+
+/* the whole module is the way into the books, empty or not */
+
+/* recording money happens in the books */
+.mp-record { display: flex; gap: 7px; align-items: center; border: 0; border-radius: 8px; background: var(--ink); padding: 8px 14px; color: #15110d; font-size: var(--t-xs); font-weight: 850; cursor: pointer; }
+.money-scrim { position: fixed; z-index: 90; inset: 0; display: grid; place-items: start center; overflow-y: auto; overscroll-behavior: contain; background: rgba(0, 0, 0, 0.58); padding: 84px var(--s-4) var(--s-5); }
+.money-sheet--page { position: static; width: min(430px, 100%); max-height: calc(100dvh - 120px); overflow-y: auto; }
+
+/* what you are holding */
+.mp-purse .purse-row { display: flex; gap: 20px; align-items: flex-end; flex-wrap: wrap; }
+.purse-cell b { display: block; font-size: 27px; font-weight: 900; line-height: 1; letter-spacing: -0.04em; }
+.purse-cell b.good { color: var(--go); }
+.purse-cell b.warn { color: var(--gold); }
+.purse-cell b.bad { color: var(--miss); }
+.purse-cell b.dim { color: var(--court-faint); }
+.purse-cell span { display: block; margin-top: 6px; font-size: var(--t-xs); font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-2); }
+.purse-open { display: flex; gap: 7px; align-items: flex-end; margin-left: auto; }
+.purse-open label { display: grid; gap: 5px; }
+.purse-open label span { font-size: var(--t-xs); font-weight: 850; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); }
+.purse-open input { width: 132px; height: 30px; border: 0; border-radius: 6px; box-shadow: inset 0 0 0 1px var(--court-hair); background: rgba(248, 241, 227, 0.05); padding: 0 9px; color: var(--ink); font-size: 12px; }
+.purse-open button { height: 32px; border: 0; border-radius: 6px; background: rgba(248, 241, 227, 0.09); padding: 0 12px; color: var(--text-2); font: inherit; font-size: var(--t-xs); font-weight: 820; cursor: pointer; }
+.purse-open button:hover { background: var(--ink); color: #15110d; }
+.purse-note { margin: 12px 0 0; font-size: var(--t-xs); line-height: 1.5; color: var(--text-3); font-weight: 650; max-width: 78ch; }
+.mp-purse .cnt { display: flex; gap: 5px; align-items: center; }
+
+.mp-export { display: flex; gap: 6px; align-items: center; border-radius: 8px; box-shadow: inset 0 0 0 1px var(--court-hair); background: rgba(248, 241, 227, 0.05); padding: 8px 12px; color: var(--court-dim); font-size: var(--t-xs); font-weight: 820; text-decoration: none; }
+.mp-export:hover { color: var(--ink); }
+
+/* ------------------------------------------------------- the ledger row ---
+   The row used to be one big button. It cannot be, now that the company on it
+   is its own way into a filtered ledger: a button inside a button is not
+   something a browser will render, and a clickable span would be invisible to
+   the keyboard. So the row is a plain row holding two buttons. The amount sits
+   outside the open button on purpose — that keeps every amount on the same
+   right edge whether or not the row carries a company. */
+.lg-open { display: flex; gap: 12px; align-items: center; flex: 1; min-width: 0; border: 0; background: none; padding: 0; text-align: left; cursor: pointer; font: inherit; font-size: inherit; color: inherit; }
+.lg-row:hover { background: rgba(248, 241, 227, 0.035); }
+.lg-auto { flex: none; display: grid; place-items: center; width: 18px; height: 18px; border-radius: 5px; background: rgba(122, 167, 240, 0.16); color: var(--sky); }
+
+/* The company a row is filed against, and the way to see only that company.
+   One tag, wherever a row can name a company: the ledger, the invoice list and
+   the standing costs. Its width belongs to the row it sits in, so that is set
+   where the row is, not here. */
+.firm-tag { display: inline-flex; gap: var(--s-1); align-items: center; flex: none; max-width: 168px; min-height: 26px; border: 1px solid var(--line); border-radius: var(--r-pill); background: none; padding: 0 var(--s-2); color: var(--text-2); font: inherit; font-size: var(--t-xs); font-weight: var(--w-med); cursor: pointer; }
+.firm-tag span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.firm-tag:hover { border-color: var(--accent); color: var(--accent); }
+.firm-tag.on { border-color: transparent; background: var(--accent-soft); color: var(--accent); }
+
+.money-foot { display: flex; gap: 8px; }
+.money-foot .money-save { flex: 1; }
+.money-del { display: flex; gap: 6px; align-items: center; border: 0; border-radius: 7px; background: rgba(201, 80, 58, 0.16); padding: 10px 13px; color: #e8705c; font-size: var(--t-xs); font-weight: 820; cursor: pointer; }
+.money-del:hover { background: var(--miss); color: #fff; }
+.money-hint { margin: 0; font-size: var(--t-xs); line-height: 1.45; color: var(--sky); font-weight: 650; }
+
+/* ------------------------------------------- what a number is scoped to ---
+   The period switcher sits above figures that ignore it. "What you are
+   holding" and "Owed to you" are both as of today, whatever month is showing,
+   and the heading now says so. */
+.mh-scope { margin-left: var(--s-2); color: var(--text-3); font-size: var(--t-xs); font-weight: var(--w-med); font-style: normal; letter-spacing: 0; text-transform: none; }
+.mp-heads .head small { display: block; margin-top: var(--s-1); color: var(--text-3); font-size: var(--t-xs); font-weight: var(--w-med); }
+
+/* Money that came back. A refund is a real line, not an error. */
+.bd-row.is-back .bd-val { color: var(--ok); }
+.bd-row.is-back .bd-track { opacity: 0.55; }
+
+/* ------------------------------------------------------------ the rate ---
+   Always on screen. It used to appear only while unset, so the moment a rate
+   was saved the only way to change it was to edit the database. */
+.mp-rate label { display: grid; gap: 0; }
+.mp-rate .quiet-btn { border: 1px solid var(--line); border-radius: var(--r-sm); background: none; padding: 0 var(--s-3); color: var(--text-3); font-size: var(--t-xs); font-weight: var(--w-med); cursor: pointer; }
+.mp-rate .quiet-btn:hover { color: var(--text-1); }
+
+/* ------------------------------------------------------- standing costs ---
+   These write themselves into the books every month, so starting and stopping
+   one belongs on the page that shows what they cost. */
+.standing-mh { margin-top: var(--s-4); }
+.standing-add { display: flex; gap: var(--s-2); align-items: center; justify-content: center; width: 100%; min-height: 38px; margin-top: var(--s-3); border: 1px dashed var(--line); border-radius: var(--r-sm); background: none; color: var(--text-2); font: inherit; font-size: var(--t-sm); font-weight: var(--w-med); cursor: pointer; }
+.standing-add:hover { border-style: solid; color: var(--text-1); }
+.standing-form { display: grid; gap: var(--s-3); margin-top: var(--s-3); border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface-2); padding: var(--s-4); }
+.standing-form label { display: grid; gap: var(--s-1); }
+.standing-form label > span { color: var(--text-3); font-size: var(--t-xs); font-weight: var(--w-med); letter-spacing: 0.06em; text-transform: uppercase; }
+.standing-form input, .standing-form select { width: 100%; min-height: 38px; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--surface-1); padding: 0 var(--s-3); color: var(--text-1); font: inherit; font-size: var(--t-sm); }
+.standing-form input:focus, .standing-form select:focus { border-color: var(--accent); outline: none; }
+.standing-head { display: flex; align-items: center; gap: var(--s-2); }
+.standing-head strong { font-size: var(--t-md); font-weight: var(--w-bold); }
+.standing-head .money-x { margin-left: auto; }
+.standing-form .money-row { display: flex; gap: var(--s-3); }
+.standing-form .money-row .grow { flex: 1; min-width: 0; }
+.standing-form .money-row .narrow { flex: none; width: 128px; }
+
+/* ------------------------------------------------------ the currency box ---
+   A select of what is already in the books, with opening a new currency as a
+   deliberate second step rather than a typo away. */
+.currency-field select { cursor: pointer; }
+.currency-new { display: flex; gap: var(--s-1); }
+.currency-new input { flex: 1; min-width: 0; text-transform: uppercase; }
+.currency-new button { display: grid; place-items: center; width: 34px; min-height: 34px; flex: none; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--surface-2); color: var(--text-2); cursor: pointer; }
+.currency-new button:disabled { opacity: 0.4; cursor: not-allowed; }
+.currency-field em { color: var(--text-3); font-size: var(--t-xs); font-style: normal; font-weight: var(--w-body); letter-spacing: 0; text-transform: none; }
+
+/* --------------------------------------------------------- the date box ---
+   Half of what gets recorded comes off an Iranian receipt, so the Persian
+   reading is always shown and can be typed into. */
+.money-date > span { display: flex; align-items: center; gap: var(--s-2); }
+.money-cal { margin-left: auto; border: 1px solid var(--line); border-radius: var(--r-pill); background: none; padding: 2px var(--s-2); color: var(--text-3); font: inherit; font-size: var(--t-xs); font-weight: var(--w-med); letter-spacing: 0; text-transform: none; cursor: pointer; }
+.money-cal:hover { color: var(--text-1); }
+.money-date em { color: var(--text-3); font-size: var(--t-xs); font-style: normal; font-weight: var(--w-body); }
+
+.money-cancel { border: 1px solid var(--line); border-radius: var(--r-sm); background: none; padding: var(--s-2) var(--s-4); color: var(--text-2); font: inherit; font-size: var(--t-sm); font-weight: var(--w-med); cursor: pointer; }
+.money-cancel:hover { color: var(--text-1); background: var(--surface-3); }
+.money-foot { flex-wrap: wrap; }
+
+/* ------------------------------------------------------------- the phone ---
+   The ledger row was a non-wrapping line of fixed widths adding up to about
+   512px, on a page whose only breakpoint was 1080. Below that it simply ran off
+   the side. Date and who share the first line, the amount takes the second. */
+@media (max-width: 720px) {
+  .lg-row { flex-wrap: wrap; row-gap: var(--s-1); column-gap: var(--s-2); padding: var(--s-3) 2px; }
+  .lg-open { flex: 1 1 100%; flex-wrap: wrap; row-gap: var(--s-1); column-gap: var(--s-2); order: 1; }
+  .lg-date { order: 1; min-width: 0; }
+  .lg-dir { order: 2; }
+  .lg-who { order: 3; width: auto; flex: 1 1 auto; min-width: 0; }
+  .lg-cat { order: 5; width: auto; }
+  .lg-note { order: 6; flex: 1 1 100%; }
+  .lg-pending { order: 7; }
+  .lg-auto { order: 8; }
+  .lg-amt { order: 2; flex: 1 1 100%; min-width: 0; text-align: left; }
+  .lg-row > .firm-tag { order: 3; max-width: 100%; }
+
+  .mp-heads { grid-template-columns: 1fr 1fr; }
+  .purse-open { margin-left: 0; }
+  .purse-open input { width: 100%; }
+  .standing-form .money-row { flex-wrap: wrap; }
+  .standing-form .money-row .narrow { width: 100%; }
+  .money-scrim { padding: var(--s-5) var(--s-4); }
+  .money-sheet--page { max-height: calc(100dvh - 64px); }
+}
+
+/* Anything a thumb has to hit clears 44px, whatever it looks like on a mouse. */
+@media (pointer: coarse) {
+  .lg-row, .inv { min-height: var(--tap); }
+  .inv button, .mp-rate button, .standing-add, .money-cancel, .money-cal, .currency-new button { min-height: var(--tap); }
+  .firm-tag, .firm-chip, .pp-row--firm { min-height: var(--tap); }
+  .mp-nav button, .money-x { width: var(--tap); height: var(--tap); }
+}
+
+/* The base sheet styling lives with the home court, where the labels are 9px.
+   This is the full-page version of the same sheet, and a nine-pixel label on a
+   form that records money is not readable. */
+.money-sheet--page label > span { font-size: var(--t-xs); letter-spacing: 0.08em; }
+.money-sheet--page input, .money-sheet--page select { font: inherit; font-size: var(--t-sm); }
+.money-sheet--page .money-error { font-size: var(--t-xs); }
+.mp-record:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* --------------------------------------------------- which company it is ---
+   Money that is not filed against a company never reaches that company's page,
+   which is the whole reason the CRM and the books share an id space. The
+   picker is a select because there are a handful of companies, not a
+   directory, and a typeahead over five rows is a spinner in the way. */
+.company-pick { display: grid; gap: var(--s-2); }
+.company-pick > label { display: grid; gap: var(--s-1); }
+.company-pick select { cursor: pointer; }
+.company-pick-note { display: block; color: var(--text-3); font-size: var(--t-xs); font-style: normal; font-weight: var(--w-body); line-height: 1.45; letter-spacing: 0; text-transform: none; }
+.company-pick-error { padding: var(--s-2) var(--s-3); }
+.company-pick-error strong { font-size: var(--t-sm); }
+.company-pick-error .btn { min-height: 30px; }
+
+/* The same link read back, as a filter. The count is the point: the number of
+   entries with nobody against them is what sends a person to go and fix it. */
+.firm-filters { display: flex; gap: var(--s-1); align-items: center; flex-wrap: wrap; margin-bottom: var(--s-3); }
+.firm-filters-lbl { color: var(--text-3); font-size: var(--t-xs); font-weight: var(--w-med); letter-spacing: 0.08em; text-transform: uppercase; }
+.firm-chip { display: inline-flex; gap: var(--s-2); align-items: center; min-height: 28px; max-width: 100%; border: 1px solid var(--line); border-radius: var(--r-pill); background: none; padding: 0 var(--s-3); color: var(--text-3); font: inherit; font-size: var(--t-xs); font-weight: var(--w-med); cursor: pointer; }
+.firm-chip > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.firm-chip b { flex: none; font-weight: var(--w-bold); font-valext-numeric: tabular-nums; opacity: 0.72; }
+.firm-chip:hover { color: var(--text-1); }
+.firm-chip.on { border-color: transparent; background: var(--text-1); color: #15110d; }
+.firm-chip.warn { border-color: var(--warn); color: var(--warn); }
+.firm-chip.warn.on { background: var(--warn); color: var(--gold-ink); }
+
+.mp-unattributed { margin: 0 0 var(--s-3); max-width: 78ch; color: var(--text-2); font-size: var(--t-sm); line-height: 1.5; }
+
+/* An entry an invoice raised takes its company from that invoice, so the form
+   shows the link and says where it is changed rather than offering a choice
+   that would be refused. */
+.company-held { display: grid; gap: var(--s-1); border: 1px solid var(--line); border-radius: var(--r-sm); background: rgba(248, 241, 227, 0.04); padding: var(--s-2) var(--s-3); }
+.company-held > span { color: var(--text-3); font-size: var(--t-xs); font-weight: var(--w-med); letter-spacing: 0.08em; text-transform: uppercase; }
+.company-held strong { font-size: var(--t-sm); font-weight: var(--w-med); }
+.company-held em { color: var(--text-3); font-size: var(--t-xs); font-style: normal; font-weight: var(--w-body); line-height: 1.45; }
+
+/* A row in "who paid, who got paid" that names a company is a way into that
+   company's money; one grouped by typed text is only a label. */
+.pp-row--firm { width: 100%; margin: 0 calc(var(--s-1) * -1); padding: 4px var(--s-1); border: 0; border-radius: var(--r-sm); background: none; font: inherit; color: inherit; text-align: left; cursor: pointer; }
+.pp-row--firm:hover { background: rgba(248, 241, 227, 0.05); }
+.pp-row--firm:hover .pp-name { color: var(--accent); }
+.pp-row--firm.on .pp-name { color: var(--accent); }
+.pp-row--firm.on { background: var(--accent-soft); }
+.people .quiet { margin: var(--s-1) 0 0; font-size: var(--t-xs); }

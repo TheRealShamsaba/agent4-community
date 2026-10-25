@@ -1,0 +1,338 @@
+/* Home — one next move, today, and the clients waiting on you.
+   Built only from 00-tokens. The old home-* rules stay in the earlier files
+   until the redesign settles; nothing here depends on them. */
+
+.court.hm { background: var(--bg); }
+.court.hm::after { display: none; }
+
+.hm-wrap {
+  display: grid;
+  gap: var(--s-5);
+  width: min(1080px, 100%);
+  margin: 0 auto;
+  padding: var(--s-7) var(--s-5) 96px;
+}
+
+/* A calm entrance, one block after another. Skipped for anyone who asks. */
+@media (prefers-reduced-motion: no-preference) {
+  .hm-wrap > * { animation: hm-rise 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  .hm-wrap > :nth-child(2) { animation-delay: 70ms; }
+  .hm-wrap > :nth-child(3) { animation-delay: 140ms; }
+  .hm-wrap > :nth-child(4) { animation-delay: 210ms; }
+}
+@keyframes hm-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ------------------------------------------------------------ greeting --- */
+
+.hm-intro { display: grid; gap: var(--s-2); }
+.hm-date {
+  color: var(--text-3);
+  font-size: var(--t-xs);
+  font-weight: var(--w-med);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.hm-intro h1 {
+  margin: 0;
+  color: var(--text-1);
+  font-size: clamp(30px, 4.6vw, 44px);
+  font-weight: var(--w-bold);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+}
+.hm-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-3);
+  align-items: center;
+  margin: var(--s-1) 0 0;
+  color: var(--text-2);
+  font-size: var(--t-lg);
+}
+.hm-summary i { width: 3px; height: 3px; border-radius: 50%; background: var(--text-3); }
+.hm-summary .is-bad { color: var(--bad); font-weight: var(--w-med); }
+.hm-summary .is-warn { color: var(--warn); font-weight: var(--w-med); }
+
+/* ---------------------------------------------------------- next move --- */
+
+.hm-hero {
+  position: relative;
+  display: grid;
+  gap: var(--s-3);
+  overflow: hidden;
+  border: 1px solid rgba(239, 187, 66, 0.26);
+  border-radius: var(--r-lg);
+  background:
+    radial-gradient(90% 140% at 0% 0%, rgba(239, 187, 66, 0.15), transparent 58%),
+    radial-gradient(60% 90% at 100% 100%, rgba(141, 183, 255, 0.07), transparent 70%),
+    var(--surface-1);
+  padding: var(--s-6);
+  box-shadow: var(--e-2);
+}
+.hm-hero__label {
+  display: inline-flex;
+  gap: var(--s-2);
+  align-items: center;
+  color: var(--gold);
+  font-size: var(--t-xs);
+  font-weight: var(--w-bold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.hm-hero__label em {
+  color: var(--text-3);
+  font-style: normal;
+  font-weight: var(--w-med);
+  letter-spacing: 0.04em;
+}
+.hm-hero__label em::before { content: "·"; margin-right: var(--s-2); }
+.hm-hero h2 {
+  max-width: 28ch;
+  margin: 0;
+  color: var(--text-1);
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: var(--w-bold);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+.hm-hero h2:dir(rtl) { max-width: none; }
+.hm-hero p {
+  max-width: 58ch;
+  margin: 0;
+  color: var(--text-2);
+  font-size: var(--t-md);
+  line-height: 1.6;
+}
+.hm-hero__actions { display: flex; flex-wrap: wrap; gap: var(--s-2); margin-top: var(--s-2); }
+.hm-hero .btn--gold { box-shadow: 0 6px 20px rgba(239, 187, 66, 0.22); }
+.hm-hero .btn--gold:hover { filter: brightness(1.06); }
+
+/* --------------------------------------------------------------- cards --- */
+
+.hm-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: var(--s-5);
+  align-items: start;
+}
+
+.hm-card {
+  display: grid;
+  gap: var(--s-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface-1);
+  padding: var(--s-4) var(--s-4) var(--s-3);
+}
+.hm-card__head {
+  display: flex;
+  gap: var(--s-3);
+  align-items: baseline;
+  padding: var(--s-1) var(--s-2) var(--s-2);
+}
+.hm-card__head h3 {
+  margin: 0;
+  color: var(--text-1);
+  font-size: var(--t-xl);
+  font-weight: var(--w-bold);
+  letter-spacing: -0.01em;
+}
+.hm-card__meta { color: var(--text-3); font-size: var(--t-sm); }
+.hm-card__head .hm-link { margin-left: auto; }
+
+.hm-link {
+  display: inline-flex;
+  gap: var(--s-1);
+  align-items: center;
+  min-height: 32px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: none;
+  padding: 0 var(--s-2);
+  color: var(--accent);
+  font: inherit;
+  font-size: var(--t-sm);
+  font-weight: var(--w-med);
+  cursor: pointer;
+}
+.hm-link:hover { background: var(--accent-soft); }
+
+.hm-list { display: grid; margin: 0; padding: 0; list-style: none; }
+.hm-list + .hm-list { margin-top: var(--s-2); padding-top: var(--s-2); border-top: 1px solid var(--line-soft); }
+
+.hm-row {
+  display: flex;
+  gap: var(--s-3);
+  align-items: center;
+  width: 100%;
+  min-height: 56px;
+  border: 0;
+  border-radius: var(--r-md);
+  background: none;
+  padding: var(--s-2);
+  color: inherit;
+  font: inherit;
+  text-align: start;
+}
+button.hm-row { cursor: pointer; }
+button.hm-row:hover,
+li.hm-row:hover { background: var(--surface-2); }
+
+.hm-row__main { display: grid; flex: 1; gap: 2px; min-width: 0; }
+.hm-row__main strong {
+  overflow: hidden;
+  color: var(--text-1);
+  font-size: var(--t-md);
+  font-weight: var(--w-med);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hm-row__main small {
+  overflow: hidden;
+  color: var(--text-3);
+  font-size: var(--t-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hm-row__open {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+/* A meeting reads as a time on a rail, not as another task. */
+.hm-row--event { min-height: 52px; }
+.hm-time {
+  flex: none;
+  width: 52px;
+  color: var(--gold);
+  font-size: var(--t-sm);
+  font-weight: var(--w-bold);
+  font-valext-numeric: tabular-nums;
+}
+.hm-row--event .hm-row__main { border-inline-start: 2px solid var(--gold-soft); padding-inline-start: var(--s-3); }
+
+.hm-tick {
+  position: relative;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1.5px solid var(--text-3);
+  border-radius: 50%;
+  color: transparent;
+  cursor: pointer;
+  transition: background 140ms, border-color 140ms, color 140ms;
+}
+/* The circle stays small; the thumb gets the full 44px around it. */
+.hm-tick::after { content: ""; position: absolute; inset: -10px; }
+.hm-tick input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: inherit; }
+.hm-tick:hover:not(:has(input:disabled)) { border-color: var(--ok); background: var(--ok-soft); color: var(--ok); }
+.hm-tick:has(input:checked) { border-color: var(--ok); background: var(--ok); color: var(--bg); cursor: progress; }
+.hm-tick:has(input:focus-visible) { outline: 2px solid var(--focus); outline-offset: 3px; }
+
+/* Clients: an initial, a name, the one thing owed, and when. */
+.hm-avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-md);
+  background: var(--surface-3);
+  color: var(--text-2);
+  font-size: var(--t-md);
+  font-weight: var(--w-bold);
+}
+.hm-client.is-overdue .hm-avatar { background: var(--bad-soft); color: var(--bad); }
+.hm-client.is-today .hm-avatar { background: var(--warn-soft); color: var(--warn); }
+.hm-client.is-missing .hm-avatar { border: 1px dashed var(--line); background: none; color: var(--text-3); }
+
+.hm-more {
+  display: flex;
+  gap: var(--s-1);
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  margin-top: var(--s-1);
+  border: 0;
+  border-top: 1px solid var(--line-soft);
+  border-radius: 0 0 var(--r-md) var(--r-md);
+  background: none;
+  color: var(--text-3);
+  font: inherit;
+  font-size: var(--t-sm);
+  cursor: pointer;
+}
+.hm-more:hover { color: var(--text-1); }
+
+.hm-empty {
+  display: grid;
+  gap: var(--s-1);
+  border: 1px dashed var(--line);
+  border-radius: var(--r-md);
+  margin: var(--s-1) var(--s-2) var(--s-2);
+  padding: var(--s-5) var(--s-4);
+  text-align: center;
+}
+.hm-empty strong { color: var(--text-1); font-size: var(--t-lg); font-weight: var(--w-med); }
+.hm-empty p { margin: 0; color: var(--text-3); font-size: var(--t-sm); line-height: 1.55; }
+
+.hm-error { margin: var(--s-1) var(--s-2); color: var(--bad); font-size: var(--t-sm); }
+
+.hm-card .home-skeleton-rows { display: grid; gap: var(--s-2); padding: 0 var(--s-2) var(--s-2); }
+
+/* ------------------------------------------------------- plan the week --- */
+
+.hm-week {
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface-1);
+}
+.hm-week summary {
+  display: flex;
+  gap: var(--s-3);
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--s-4) var(--s-5);
+  list-style: none;
+  cursor: pointer;
+}
+.hm-week summary::-webkit-details-marker { display: none; }
+.hm-week summary > span { display: grid; gap: 2px; min-width: 0; }
+.hm-week summary strong { color: var(--text-1); font-size: var(--t-lg); font-weight: var(--w-bold); }
+.hm-week summary small {
+  overflow: hidden;
+  color: var(--text-3);
+  font-size: var(--t-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hm-week summary svg { flex: none; color: var(--text-3); transition: transform 180ms; }
+.hm-week[open] summary svg { transform: rotate(180deg); }
+.hm-week summary:hover strong { color: var(--gold); }
+.hm-week__body { display: grid; gap: var(--s-5); padding: 0 var(--s-4) var(--s-5); }
+
+/* ------------------------------------------------------------ responsive --- */
+
+@media (max-width: 860px) {
+  .hm-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 620px) {
+  .hm-wrap { gap: var(--s-4); padding: var(--s-5) var(--s-4) var(--s-6); }
+  .hm-hero { padding: var(--s-5) var(--s-4); }
+  .hm-hero__actions { flex-direction: column; }
+  .hm-hero__actions .btn { width: 100%; }
+  .hm-card { padding: var(--s-3) var(--s-3) var(--s-2); }
+  .hm-row { min-height: var(--tap); }
+  .hm-week summary { padding: var(--s-4); }
+}

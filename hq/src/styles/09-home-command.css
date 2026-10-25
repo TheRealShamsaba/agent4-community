@@ -1,0 +1,141 @@
+/* -------------------------------------------------- command-center home --- */
+
+.header-add-wrap { position: relative; }
+
+.header-add {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  min-width: 88px;
+  min-height: 36px;
+  border: 0;
+  border-radius: 8px;
+  background: #efbb42;
+  box-shadow: 0 5px 18px rgba(239, 187, 66, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  color: #17130f;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.header-add:hover { background: #f5c85d; transform: translateY(-1px); }
+.header-add:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
+.header-add-menu {
+  position: absolute;
+  z-index: 90;
+  top: 44px;
+  right: 0;
+  display: grid;
+  width: 270px;
+  overflow: hidden;
+  border: 1px solid rgba(248, 241, 227, 0.15);
+  border-radius: 12px;
+  background: #201c18;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.52);
+  padding: 7px;
+}
+
+.header-add-menu > span {
+  padding: 8px 9px 7px;
+  color: rgba(248, 241, 227, 0.38);
+  font-size: var(--t-xs);
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.header-add-menu button {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 9px;
+  align-items: center;
+  min-height: 54px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  padding: 7px 9px;
+  color: rgba(248, 241, 227, 0.62);
+  text-align: left;
+  cursor: pointer;
+}
+
+.header-add-menu button:hover { background: rgba(248, 241, 227, 0.07); color: #f8f1e3; }
+.header-add-menu button > svg { justify-self: center; color: #efbb42; }
+.header-add-menu button span { display: grid; gap: 2px; }
+.header-add-menu button b { font-size: var(--t-xs); }
+.header-add-menu button small { color: rgba(248, 241, 227, 0.34); font-size: var(--t-xs); font-weight: 650; }
+
+/* The three local aliases below are kept because forty rules in this file and
+   its neighbours still name them. They now resolve to the token tiers, which
+   is how the old --home-faint (2.6:1 on this background) stopped failing
+   contrast everywhere at once. */
+
+/* Four lenses, each a link to the thing it counts. They used to be inert text
+   at 5.5px in a seven-column grid that could not wrap. */
+
+.target-tracker { display: grid; gap: var(--s-3); min-width: 0; }
+.target-tracker-head { display: flex; flex-wrap: wrap; gap: var(--s-2); align-items: baseline; justify-content: space-between; }
+.target-tracker-head span { color: var(--text-2); font-size: var(--t-sm); font-weight: var(--w-med); }
+.target-tracker-head b { color: var(--text-1); font-size: var(--t-xl); }
+.target-tracker-head em { color: var(--text-3); font-size: var(--t-xs); font-style: normal; font-weight: var(--w-med); }
+.target-tracker-days { display: grid; grid-template-columns: repeat(7, minmax(20px, 1fr)); gap: var(--s-1); }
+.target-tracker-days > span { display: grid; gap: var(--s-1); justify-items: center; min-width: 0; }
+.target-tracker-days small { color: var(--text-3) !important; font-size: var(--t-xs) !important; letter-spacing: 0 !important; }
+.target-tracker-days i { width: 100%; height: 14px; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--surface-2); }
+.target-tracker-days .is-moved i { border-color: rgba(91, 148, 108, 0.55); background: #5b946c; box-shadow: 0 0 10px rgba(91, 148, 108, 0.14); }
+.target-tracker-days .is-stalled i { border-color: rgba(207, 92, 67, 0.5); background: #9d4939; }
+.target-tracker-days .is-missed i { border-color: rgba(207, 92, 67, 0.3); background: repeating-linear-gradient(135deg, rgba(207, 92, 67, 0.6) 0 2px, rgba(207, 92, 67, 0.18) 2px 4px); }
+.target-tracker-days .is-today i { border-color: var(--gold); background: var(--gold-soft); box-shadow: 0 0 0 1px rgba(239, 187, 66, 0.12); }
+.target-tracker-actions { display: flex; flex-wrap: wrap; gap: var(--s-2); align-items: center; justify-content: space-between; }
+.target-tracker-actions > span:first-child { color: var(--text-3); font-size: var(--t-xs); font-weight: var(--w-bold); letter-spacing: 0.09em; }
+.target-tracker-actions > span:last-child { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.target-tracker-actions button { min-height: var(--tap); border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--surface-2); padding: 0 var(--s-4); color: var(--text-2); font-size: var(--t-sm); font-weight: var(--w-med); cursor: pointer; }
+.target-tracker-actions button:hover { border-color: rgba(239, 187, 66, 0.4); color: var(--text-1); }
+.target-tracker-actions button.is-selected.is-yes { border-color: rgba(91, 148, 108, 0.65); background: rgba(91, 148, 108, 0.22); color: #9ecbaa; }
+.target-tracker-actions button.is-selected.is-no { border-color: rgba(207, 92, 67, 0.55); background: rgba(207, 92, 67, 0.17); color: #e39a89; }
+.target-tracker-actions button:disabled { cursor: wait; opacity: 0.55; }
+.target-tracker-note, .target-tracker-error { margin: 0; font-size: var(--t-sm); }
+.target-tracker-note { color: var(--text-3); }
+.target-tracker-error { color: var(--bad); }
+
+/* Every client, their next step, and when it is owed. This replaces the single
+   banner that only appeared when one follow-up happened to be overdue, which
+   meant most mornings showed no clients at all. */
+
+.target-tracker.is-telegram .target-tracker-head span { color: rgba(247, 241, 229, 0.68); }
+.target-tracker.is-telegram .target-tracker-head b { color: #f7f1e5; }
+.target-tracker.is-telegram .target-tracker-days i { height: 12px; }
+.target-tracker.is-telegram .target-tracker-actions button { min-height: var(--tap); font-size: var(--t-sm); }
+
+/* A card that failed to load is a section, not a button: it holds its own
+   retry, so the whole surface must stop pretending to be clickable. */
+
+/* Every lens and in-page link scrolls to one of these, so none of them may
+   land underneath the sticky header. */
+#week-planner,
+#weekly-plan,
+#weekly-game-plan,
+#home-clients,
+#home-task-board,
+#home-daily-checkin { scroll-margin-top: 76px; }
+
+/* ------------------------------------------------- loading and failure --- */
+
+/* These two sit inside cards and sections all over Home Court, so they keep
+   their own spacing rather than inheriting whatever they landed in. */
+.home-errorstate { width: 100%; margin: var(--s-2) 0; }
+.home-errorstate strong { display: flex; gap: var(--s-2); align-items: center; }
+.home-errorstate .btn { min-height: var(--tap); }
+.home-skeleton-rows { display: grid; gap: var(--s-2); width: 100%; padding: var(--s-2) 0; }
+
+/* ------------------------------------------------------------- the phone ---
+   The app's breakpoints are 620 / 860 / 1120. This file styles the main
+   screen and had none of them; two-up cards at 183px and a 796px-minimum
+   banner are what that produced. */
+
+/* Anything a thumb has to hit clears 44px, whatever it looks like on a mouse. */
+@media (pointer: coarse) {
+  .target-tracker-actions button { min-height: var(--tap); }
+}

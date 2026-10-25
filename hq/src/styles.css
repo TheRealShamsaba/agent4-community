@@ -1,0 +1,39 @@
+/* Agent4 HQ stylesheet.
+   One file per surface, imported in cascade order — later files may override
+   earlier ones, so do not reorder these lines. Shared primitives live in
+   styles/00-tokens.css; everything after it is layout for one surface. */
+@import "./styles/00-tokens.css";
+@import "./styles/01-base.css";
+@import "./styles/02-telegram.css";
+@import "./styles/03-room.css";
+@import "./styles/04-home-court.css";
+@import "./styles/05-money.css";
+@import "./styles/06-invoices.css";
+@import "./styles/07-companies.css";
+@import "./styles/08-tasks.css";
+@import "./styles/09-home-command.css";
+@import "./styles/10-pipeline.css";
+@import "./styles/11-home-board.css";
+@import "./styles/12-home-rhythm.css";
+@import "./styles/13-content.css";
+@import "./styles/14-home-daily.css";
+@import "./styles/15-film.css";
+@import "./styles/16-sheets.css";
+@import "./styles/17-company-desk.css";
+@import "./styles/18-paperwork.css";
+@import "./styles/19-client-page.css";
+@import "./styles/21-clients.css";
+@import "./styles/22-home.css";
+@import "./styles/23-agent.css";
+@import "./styles/24-clients-board.css";
+@import "./styles/25-company-workspace.css";
+@import "./styles/26-money-outlook.css";
+@import "./styles/27-tasks-list.css";
+@import "./styles/28-monitor.css";
+@import "./styles/29-files.css";
+@import "./styles/30-pages.css";
+@import "./styles/97-responsive.css";
+@import "./styles/98-touch.css";
+@import "./styles/99-focus.css";
+
+@import "./styles/31-community.css";

@@ -1,0 +1,8 @@
+/* Keyboard focus, last so it wins over the sections that still clear outlines.
+   One ring, one colour, everywhere. If a component needs a different shape,
+   override the radius here rather than removing the ring. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}

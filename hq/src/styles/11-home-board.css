@@ -1,0 +1,6 @@
+/* ---------------------------------------------------------- live home board */
+@keyframes home-live-pulse { 50% { opacity: 0.48; transform: scale(0.82); } }
+
+/* The wall preview is a scale model of the room, so the labels inside the
+   notes stay miniature on purpose; the board itself is what has to stay
+   legible. Below the tablet breakpoint it gets more height, not less. */

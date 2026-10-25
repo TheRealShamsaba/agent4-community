@@ -1,0 +1,55 @@
+/* Task list — the view you work from. Tokens only. */
+
+.tl { display: grid; gap: var(--s-5); }
+.tl-add { display: flex; gap: var(--s-3); align-items: center; min-height: 52px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface-1); padding: 0 var(--s-3) 0 var(--s-4); color: var(--text-3); }
+.tl-add:focus-within { border-color: var(--gold); }
+.tl-add input { flex: 1; min-width: 0; border: 0; background: none; color: var(--text-1); font: inherit; font-size: var(--t-md); outline: none; }
+
+.tl-group { display: grid; gap: var(--s-1); }
+.tl-group h3 { display: flex; gap: var(--s-2); align-items: center; margin: 0 0 var(--s-1) var(--s-2); color: var(--text-2); font-size: var(--t-xs); font-weight: var(--w-bold); letter-spacing: 0.08em; text-transform: uppercase; }
+.tl-group h3.is-bad { color: var(--bad); }
+.tl-group h3.is-warn { color: var(--warn); }
+.tl-group h3 b { border-radius: var(--r-pill); background: var(--surface-3); padding: 0 var(--s-2); color: var(--text-2); font-size: var(--t-xs); }
+.tl-group ul { display: grid; margin: 0; padding: var(--s-1); list-style: none; border: 1px solid var(--line-soft); border-radius: var(--r-lg); background: var(--surface-1); }
+
+.tl-row { display: flex; gap: var(--s-3); align-items: center; min-height: 56px; border-radius: var(--r-md); padding: var(--s-1) var(--s-2); }
+.tl-row:hover { background: var(--surface-2); }
+.tl-row.is-done .tl-main strong { color: var(--text-3); text-decoration: line-through; }
+
+.tl-tick { position: relative; display: grid; flex: none; place-items: center; width: 24px; height: 24px; border: 1.5px solid var(--text-3); border-radius: 50%; color: transparent; cursor: pointer; transition: background 140ms, border-color 140ms, color 140ms; }
+.tl-tick::after { content: ""; position: absolute; inset: -10px; }
+.tl-tick input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: inherit; }
+.tl-tick:hover { border-color: var(--ok); background: var(--ok-soft); color: var(--ok); }
+.tl-tick:has(input:checked) { border-color: var(--ok); background: var(--ok); color: var(--bg); }
+.tl-tick:has(input:focus-visible) { outline: 2px solid var(--focus); outline-offset: 3px; }
+
+.tl-main { display: grid; flex: 1; gap: 2px; min-width: 0; border: 0; background: none; padding: 0; color: inherit; font: inherit; text-align: start; cursor: pointer; }
+.tl-main strong { overflow: hidden; color: var(--text-1); font-size: var(--t-md); font-weight: var(--w-med); text-overflow: ellipsis; white-space: nowrap; }
+.tl-main small { display: flex; gap: var(--s-2); color: var(--text-3); font-size: var(--t-xs); }
+.tl-main small:empty { display: none; }
+.tl-main em { border-radius: var(--r-pill); padding: 0 var(--s-2); font-style: normal; font-weight: var(--w-bold); }
+.tl-main em.is-high { background: var(--bad-soft); color: var(--bad); }
+.tl-main em.is-doing { background: var(--accent-soft); color: var(--accent); }
+
+.tl-company { flex: none; max-width: 160px; overflow: hidden; border: 1px solid var(--line); border-radius: var(--r-pill); background: none; padding: 2px var(--s-3); color: var(--text-2); font: inherit; font-size: var(--t-xs); text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+.tl-company:hover { border-color: var(--accent); color: var(--accent); }
+.tl-due { flex: none; color: var(--text-3); font-size: var(--t-xs); font-weight: var(--w-med); white-space: nowrap; }
+.tl-due.is-late { color: var(--bad); font-weight: var(--w-bold); }
+.tl-due.is-today { color: var(--warn); font-weight: var(--w-bold); }
+.tl-who { display: grid; flex: none; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--surface-3); color: var(--text-2); font-size: var(--t-xs); font-weight: var(--w-bold); }
+
+.tl-done__toggle { display: flex; gap: var(--s-2); align-items: center; min-height: 40px; border: 0; background: none; padding: 0 var(--s-2); color: var(--text-3); font: inherit; font-size: var(--t-xs); font-weight: var(--w-bold); letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; }
+.tl-done__toggle b { border-radius: var(--r-pill); background: var(--surface-3); padding: 0 var(--s-2); }
+
+.tl-empty { display: grid; gap: var(--s-1); justify-items: center; border: 1px dashed var(--line); border-radius: var(--r-lg); padding: var(--s-6) var(--s-4); text-align: center; }
+.tl-empty strong { color: var(--text-1); font-size: var(--t-xl); }
+.tl-empty p { margin: 0; color: var(--text-3); font-size: var(--t-sm); }
+
+.tk-viewswitch { display: inline-flex; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface-1); padding: 2px; }
+.tk-viewswitch button { min-height: 32px; border: 0; border-radius: var(--r-sm); background: none; padding: 0 var(--s-3); color: var(--text-3); font: inherit; font-size: var(--t-sm); font-weight: var(--w-med); cursor: pointer; }
+.tk-viewswitch button.is-on { background: var(--surface-3); color: var(--text-1); font-weight: var(--w-bold); }
+
+@media (max-width: 620px) {
+  .tl-company { display: none; }
+  .tl-who { display: none; }
+}

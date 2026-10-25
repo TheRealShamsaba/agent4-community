@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { randomBytes } from 'node:crypto';
+// Explicitly opt in: this claims an empty disposable installation for a test user.
+if (process.env.AGENT4_SMOKE_TEST !== 'true') throw new Error('Set AGENT4_SMOKE_TEST=true only for a fresh, disposable test installation.');
+const base = process.env.AGENT4_SMOKE_URL || 'http://localhost:18782';
+const token = (await readFile('.secrets/setup-token', 'utf8')).trim();
+const password = randomBytes(24).toString('hex');
+const post = (route, body, cookie = '', csrfToken = '') => fetch(base + route, { method: 'POST', headers: { origin: base, 'content-type': 'application/json', cookie, 'x-csrf-token': csrfToken }, body: JSON.stringify(body) });
+assert.equal((await fetch(base + '/api/tasks')).status, 401);
+const first = await post('/api/auth/setup', { token, workspace: 'Example team', name: 'Example owner', email: 'owner@example.com', password });
+assert.equal(first.status, 201);
+const cookie = first.headers.get('set-cookie').split(';')[0];
+const { csrfToken } = await first.json();
+assert.equal((await post('/api/auth/setup', { token })).status, 409);
+const tasks = await (await fetch(base + '/api/tasks', { headers: { cookie } })).json();
+assert.equal(tasks.tasks.length, 0, 'fresh installs start empty');
+assert.equal((await post('/api/tasks', { title: 'Build our first prototype' }, cookie, 'incorrect')).status, 403);
+assert.equal((await post('/api/tasks', { title: 'Build our first prototype' }, cookie, csrfToken)).status, 200);
+const company = await post('/api/workspaces/companies', { name: 'Example Studio' }, cookie, csrfToken);
+assert.equal(company.status, 200);
+const invoice = await fetch(base + '/api/invoices/profile', { headers: { cookie } });
+assert.equal((await invoice.json()).profile.name, '', 'invoice identity starts blank');
+for (const route of ['/data/state.json','/.env','/.secrets/setup-token','/config/default.json','/src/config.js']) assert.equal((await fetch(base + route, { headers: { cookie } })).status, 404);
+console.log('Fresh Docker setup, empty data, owner login, CSRF, task/client creation and private-file isolation passed.');

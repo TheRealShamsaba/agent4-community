@@ -1,0 +1,21 @@
+/* One page header for every place that is not a board: a title, one line of
+   what the page is for, and the page's main action on the right. Tokens only. */
+
+.pg-head { display: flex; flex-wrap: wrap; gap: var(--s-3) var(--s-4); align-items: center; padding: var(--s-2) 0 var(--s-1); }
+.pg-head > div { flex: 1; min-width: 220px; }
+.pg-head h1 { margin: 0; color: var(--text-1); font-size: var(--t-3xl); font-weight: var(--w-bold); letter-spacing: -0.025em; line-height: 1.1; }
+.pg-head p { margin: var(--s-1) 0 0; color: var(--text-3); font-size: var(--t-md); }
+.pg-count { color: var(--text-3); font-size: var(--t-sm); font-valext-numeric: tabular-nums; }
+@media (max-width: 620px) { .pg-head h1 { font-size: var(--t-2xl); } }
+
+/* The pages that still use the older grid sit on the same background and
+   width as the new ones. */
+.court.taskspage, .court.moneypage, .court.pw-page { background: var(--bg); }
+.court.taskspage::after, .court.moneypage::after, .court.pw-page::after { display: none; }
+.court.taskspage > .bento, .court.moneypage > .bento, .court.pw-page > .bento { width: min(1180px, 100%); margin-inline: auto; }
+
+/* Paperwork: starting a document is a row of buttons, not a wall of cards. */
+.pw-start-row { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.pw-start-chip { display: inline-flex; gap: var(--s-2); align-items: center; min-height: 44px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface-2); padding: 0 var(--s-4); color: var(--text-1); font: inherit; font-size: var(--t-md); font-weight: var(--w-med); cursor: pointer; transition: border-color 140ms, background 140ms; }
+.pw-start-chip b { color: var(--gold); font-size: var(--t-xs); font-weight: var(--w-bold); letter-spacing: 0.08em; }
+.pw-start-chip:hover { border-color: rgba(239, 187, 66, 0.5); background: var(--gold-soft); }

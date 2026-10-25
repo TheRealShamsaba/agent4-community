@@ -1,0 +1,217 @@
+/* Agent4 HQ — the one scale.
+   Every new rule takes its colour, size, spacing, radius and shadow from here.
+   Older sections still carry hardcoded values; convert them as you touch them,
+   never in a sweep. The primitives at the bottom (.btn, .card, .field) replace
+   the per-section copies — reach for those before writing a new button. */
+
+:root {
+  /* — spacing: a 4px grid. Nothing between these. — */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+
+  /* — type: seven sizes, and a floor of 12px so everything stays readable — */
+  --t-xs: 12px;   /* meta, timestamps, counts */
+  --t-sm: 13px;   /* secondary copy */
+  --t-md: 14px;   /* body */
+  --t-lg: 16px;   /* card titles */
+  --t-xl: 20px;   /* section headings */
+  --t-2xl: 26px;  /* page headings */
+  --t-3xl: 34px;  /* the one number a screen is about */
+
+  /* — weight: three, not twenty-nine — */
+  --w-body: 400;
+  --w-med: 600;
+  --w-bold: 800;
+
+  /* — radius: three — */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+  --r-pill: 999px;
+
+  /* — elevation: four — */
+  --e-1: 0 1px 2px rgba(0, 0, 0, 0.28);
+  --e-2: 0 6px 18px rgba(0, 0, 0, 0.32);
+  --e-3: 0 18px 48px rgba(0, 0, 0, 0.34);
+  --e-4: 0 30px 90px rgba(0, 0, 0, 0.48);
+
+  /* — surfaces, dark (the app is dark; light surfaces are marked .on-paper) — */
+  --bg: #121514;
+  --surface-1: #181b1a;
+  --surface-2: #1e2221;
+  --surface-3: #252a28;
+  --line: rgba(248, 241, 227, 0.12);
+  --line-soft: rgba(248, 241, 227, 0.07);
+
+  /* — text. Every tier clears 4.5:1 on --surface-1. The old --*-faint tiers
+       sat at 2.4–3.0:1 and are gone; use --text-3 where you used faint. — */
+  --text-1: #f8f1e3;
+  --text-2: rgba(248, 241, 227, 0.78);
+  --text-3: rgba(248, 241, 227, 0.62);
+
+  /* — accents. One hue per meaning. — */
+  --accent: #8db7ff;        /* links, selection, the primary action */
+  --accent-ink: #12161d;    /* text on --accent */
+  --accent-soft: rgba(141, 183, 255, 0.14);
+  --gold: #efbb42;          /* today, streaks, the thing you are aiming at */
+  --gold-ink: #1b1710;
+  --gold-soft: rgba(239, 187, 66, 0.15);
+
+  /* — state. Semantic, never decorative. — */
+  --ok: #7fd9ae;
+  --ok-soft: rgba(127, 217, 174, 0.14);
+  --warn: #f0b45c;
+  --warn-soft: rgba(240, 180, 92, 0.15);
+  --bad: #ff8b80;
+  --bad-soft: rgba(255, 139, 128, 0.14);
+
+  /* — paper: light surfaces (invoice, sheet print, the Telegram cream card) — */
+  --paper-bg: #f5f1e7;
+  --paper-ink: #1a1815;
+  --paper-ink-2: rgba(26, 24, 21, 0.72);
+  --paper-line: rgba(26, 24, 21, 0.14);
+
+  --focus: var(--accent);
+  --tap: 44px; /* minimum size of anything a thumb has to hit */
+
+  /* Breakpoints are 620 / 860 / 1120. CSS custom properties do not work in
+     media queries, so they live here as a note, not a value. */
+}
+
+/* ------------------------------------------------------------- primitives --- */
+
+.btn {
+  display: inline-flex;
+  gap: var(--s-2);
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  padding: 0 var(--s-3);
+  color: var(--text-1);
+  font: inherit;
+  font-size: var(--t-sm);
+  font-weight: var(--w-med);
+  line-height: 1;
+  text-align: center;
+  cursor: pointer;
+}
+.btn:hover { background: var(--surface-3); }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.btn--primary { border-color: transparent; background: var(--accent); color: var(--accent-ink); }
+.btn--primary:hover { background: #a3c4ff; }
+.btn--gold { border-color: transparent; background: var(--gold); color: var(--gold-ink); }
+.btn--quiet { border-color: transparent; background: none; color: var(--text-2); }
+.btn--quiet:hover { background: var(--surface-2); color: var(--text-1); }
+.btn--danger { border-color: var(--bad); background: none; color: var(--bad); }
+.btn--danger:hover { background: var(--bad-soft); }
+.btn--lg { min-height: var(--tap); padding: 0 var(--s-4); font-size: var(--t-md); }
+.btn--icon { width: 36px; min-height: 36px; padding: 0; }
+
+/* Anything a thumb has to hit is at least 44px on a touch device, whatever it
+   looks like on a mouse. */
+@media (pointer: coarse) {
+  .btn, .btn--icon { min-height: var(--tap); }
+  .btn--icon { width: var(--tap); }
+}
+
+.card {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface-1);
+  padding: var(--s-4);
+}
+
+.field { display: grid; gap: var(--s-1); }
+.field > span { color: var(--text-3); font-size: var(--t-xs); font-weight: var(--w-med); }
+.field > input,
+.field > select,
+.field > textarea {
+  width: 100%;
+  min-height: 38px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  padding: var(--s-2) var(--s-3);
+  color: var(--text-1);
+  font: inherit;
+  font-size: var(--t-md);
+}
+.field > textarea { min-height: 84px; resize: vertical; }
+.field > input:focus,
+.field > select:focus,
+.field > textarea:focus { border-color: var(--accent); outline: none; }
+
+.pill {
+  display: inline-flex;
+  gap: var(--s-1);
+  align-items: center;
+  border-radius: var(--r-pill);
+  padding: 2px var(--s-2);
+  font-size: var(--t-xs);
+  font-weight: var(--w-med);
+  line-height: 1.5;
+  white-space: nowrap;
+}
+.pill--ok { background: var(--ok-soft); color: var(--ok); }
+.pill--warn { background: var(--warn-soft); color: var(--warn); }
+.pill--bad { background: var(--bad-soft); color: var(--bad); }
+.pill--quiet { background: var(--surface-3); color: var(--text-3); }
+
+/* A block that says "this is empty, and here is what to do about it" — never a
+   bare sentence, and never the same thing a failed load shows. */
+.emptystate {
+  display: grid;
+  gap: var(--s-2);
+  justify-items: start;
+  border: 1px dashed var(--line);
+  border-radius: var(--r-md);
+  padding: var(--s-4);
+  color: var(--text-3);
+  font-size: var(--t-sm);
+}
+.emptystate strong { color: var(--text-2); font-size: var(--t-md); font-weight: var(--w-med); }
+
+/* A load or save that failed. Deliberately not the empty state: the user has to
+   be able to tell "nothing here" from "I could not read it". */
+.errorstate {
+  display: grid;
+  gap: var(--s-2);
+  justify-items: start;
+  border: 1px solid var(--bad);
+  border-radius: var(--r-md);
+  background: var(--bad-soft);
+  padding: var(--s-3) var(--s-4);
+  color: var(--text-1);
+  font-size: var(--t-sm);
+}
+.errorstate strong { font-size: var(--t-md); font-weight: var(--w-med); }
+.errorstate p { margin: 0; color: var(--text-2); }
+
+.skeleton {
+  border-radius: var(--r-sm);
+  background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface-3) 37%, var(--surface-2) 63%);
+  background-size: 400% 100%;
+  animation: hq-shimmer 1.4s ease infinite;
+}
+@keyframes hq-shimmer { from { background-position: 100% 0; } to { background-position: 0 0; } }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton { animation: none; }
+}

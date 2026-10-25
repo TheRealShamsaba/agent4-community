@@ -1,0 +1,14 @@
+/* ---------------------------------------------------------- pipeline page */
+/* A seven-stage board is meant to scroll sideways, but only if the scroll
+   container is held to the width of the page. Unpinned it grew past the
+   viewport and the last three stages were unreachable below 1000px. */
+
+@media (max-width: 720px) {
+  .room-header { padding: 0 10px; }
+  .brand-lockup strong { display: none; }
+  .brand-lockup .brand-lockup__culture { display: none; }
+  .room-presence { gap: 5px; }
+  .presence-dots { display: none; }
+  .header-add { min-width: 70px; min-height: 34px; }
+  .header-add-menu { position: fixed; top: 58px; right: 10px; left: 10px; width: auto; }
+}

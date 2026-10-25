@@ -1,0 +1,1028 @@
+/* ------------------------------------------------------------- paperwork ---
+   Two surfaces in one file, and they are deliberately not the same.
+
+   `.pw-*` is the section: a dark room in the HQ where paper is chosen, filled
+   in and filed. `.pdoc-*` is the paper itself — Your company's own page, the
+   thing a client in Istanbul or Tehran actually receives, printed or as a PDF.
+
+   The identity is structured chaos: a strict grid, restrained colour and one
+   heavy grotesk, interrupted by the marks that carry meaning — a mono eyebrow
+   over an accent rule, the filing number in mono, a note set as a hand in the
+   margin rather than as a coloured box. Each template's accent tints its own
+   document and is spent two or three times, never turned into a colour scheme.
+
+   Everything on the paper is written with logical properties, because the
+   Persian version is the same page mirrored, not a second page kept by hand. */
+
+.pw-page,
+.pdoc {
+  --pw-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* ===========================================================================
+   THE SECTION
+   =========================================================================== */
+
+.pw-page .is-spinning { animation: agent-spin 0.8s linear infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .pw-page .is-spinning { animation: none; }
+}
+
+.pw-head { display: flex; gap: var(--s-3); align-items: center; flex-wrap: wrap; }
+
+.pw-back {
+  display: inline-flex;
+  gap: var(--s-2);
+  align-items: center;
+  flex: none;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  padding: var(--s-2) var(--s-3);
+  color: var(--text-2);
+  font: inherit;
+  font-size: var(--t-xs);
+  font-weight: var(--w-bold);
+  cursor: pointer;
+}
+.pw-back:hover { background: var(--surface-3); color: var(--text-1); }
+
+.pw-head-title { display: flex; gap: var(--s-3); align-items: center; min-width: 0; }
+/* The mark's graphite square is a shade off the page, so a hairline shows where it ends. */
+.pw-head-title .pw-mark { flex: none; border-radius: 2px; box-shadow: 0 0 0 1px var(--line); }
+.pw-head-title small { display: block; font-family: var(--pw-mono); font-size: var(--t-xs); font-weight: 500; letter-spacing: 0.2em; color: var(--text-3); }
+.pw-head-title strong { display: block; font-size: var(--t-xl); font-weight: 900; letter-spacing: -0.02em; line-height: 1.15; }
+.pw-head-count { margin-inline-start: auto; font-family: var(--pw-mono); font-size: var(--t-xs); color: var(--text-3); }
+
+/* --- the shelf ------------------------------------------------------------
+   Eight kinds of blank paper. Picking one is meant to be the obvious first
+   move, so the shelf is the top of the page and not a button called "New". */
+
+.pw-page .pw-shelf-lede { max-width: 70ch; margin-bottom: var(--s-3); }
+
+.pw-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(214px, 1fr)); gap: var(--s-2); }
+
+.pw-card {
+  position: relative;
+  display: grid;
+  gap: var(--s-1);
+  align-content: start;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface-1);
+  padding: var(--s-4) var(--s-3) var(--s-3);
+  color: var(--text-1);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+.pw-card:hover { border-color: rgba(248, 241, 227, 0.22); background: var(--surface-2); }
+.pw-card-rule { position: absolute; inset-block-start: 0; inset-inline: 0; height: 3px; background: var(--pw-tint); }
+.pw-card-prefix { font-family: var(--pw-mono); font-size: var(--t-xs); font-weight: 600; letter-spacing: 0.18em; color: var(--pw-tint); }
+.pw-card strong { font-size: var(--t-md); font-weight: var(--w-bold); letter-spacing: -0.01em; }
+.pw-card-blurb { color: var(--text-3); font-size: var(--t-xs); line-height: 1.5; }
+.pw-card-go { display: inline-flex; gap: var(--s-1); align-items: center; margin-top: var(--s-1); color: var(--text-3); font-size: var(--t-xs); font-weight: var(--w-med); }
+.pw-card:hover .pw-card-go { color: var(--text-1); }
+
+/* The paper palette, lifted where it has to sit on a dark ground. Cobalt and
+   clay at their paper values fall under 4.5:1 against --surface-1. */
+.pw-card--cobalt, .pw-dialog-mark.pw-card--cobalt { --pw-tint: #7a95ff; }
+.pw-card--clay, .pw-dialog-mark.pw-card--clay { --pw-tint: #e28e70; }
+.pw-card--moss, .pw-dialog-mark.pw-card--moss { --pw-tint: #9daa92; }
+.pw-card--yellow, .pw-dialog-mark.pw-card--yellow { --pw-tint: #e8c33f; }
+.pw-card--ink, .pw-dialog-mark.pw-card--ink { --pw-tint: rgba(248, 241, 227, 0.6); }
+
+/* --- what is already written ---------------------------------------------- */
+
+.pw-filters { display: flex; gap: var(--s-1); align-items: center; flex-wrap: wrap; margin-bottom: var(--s-2); }
+.pw-filters button {
+  min-height: 28px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: none;
+  padding: 0 var(--s-3);
+  color: var(--text-3);
+  font: inherit;
+  font-size: var(--t-xs);
+  font-weight: var(--w-med);
+  cursor: pointer;
+}
+.pw-filters button:hover { color: var(--text-1); }
+.pw-filters button.on { border-color: transparent; background: var(--text-1); color: #15110d; }
+
+.pw-firms { margin-bottom: var(--s-3); }
+
+.pw-row { display: flex; gap: var(--s-3); align-items: center; width: 100%; min-width: 0; }
+.pw-row + .pw-row { border-top: 1px solid var(--line-soft); }
+.pw-row-main {
+  display: flex;
+  gap: var(--s-3);
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  padding: var(--s-2) 0;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+.pw-row:hover { background: rgba(248, 241, 227, 0.035); }
+.pw-no { flex: none; font-family: var(--pw-mono); font-size: var(--t-xs); font-weight: 600; color: var(--text-3); }
+.pw-row-main .pw-no { width: 98px; }
+.pw-status {
+  flex: none;
+  min-width: 62px;
+  border-radius: var(--r-pill);
+  padding: 2px var(--s-2);
+  text-align: center;
+  font-size: var(--t-xs);
+  font-weight: var(--w-bold);
+  letter-spacing: 0.04em;
+}
+.pw-status.s-draft { background: rgba(248, 241, 227, 0.09); color: var(--text-3); }
+.pw-status.s-sent { background: var(--gold-soft); color: var(--gold); }
+.pw-status.s-signed { background: var(--ok-soft); color: var(--ok); }
+.pw-status.s-void { background: var(--bad-soft); color: var(--bad); }
+.pw-row-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--t-sm); font-weight: 720; }
+.pw-row-kind { flex: none; color: var(--text-3); font-size: var(--t-xs); }
+.pw-row-when { flex: none; font-family: var(--pw-mono); font-size: var(--t-xs); color: var(--text-3); white-space: nowrap; }
+.pw-row-go { flex: none; color: var(--text-3); }
+.pw-row:hover .pw-row-go { color: var(--text-1); }
+.pw-page .pw-capped { margin-top: var(--s-3); }
+
+.pw-locked { max-width: 62ch; }
+.pw-locked strong { display: flex; gap: var(--s-2); align-items: center; }
+
+/* --- starting one --------------------------------------------------------- */
+
+.pw-scrim {
+  position: fixed;
+  z-index: 60;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow-y: auto;
+  background: rgba(8, 8, 7, 0.66);
+  padding: var(--s-4);
+}
+.pw-dialog {
+  display: grid;
+  gap: var(--s-3);
+  width: min(520px, 100%);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  box-shadow: var(--e-3);
+  background: var(--surface-1);
+  padding: var(--s-4);
+}
+.pw-dialog header { display: flex; gap: var(--s-3); align-items: flex-start; }
+.pw-dialog-mark {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--r-sm);
+  background: var(--pw-tint);
+  color: #151515;
+  font-family: var(--pw-mono);
+  font-size: 12px;
+  font-weight: 700;
+}
+.pw-dialog header strong { display: block; font-size: var(--t-md); font-weight: var(--w-bold); }
+.pw-dialog header small { display: block; margin-top: 3px; color: var(--text-3); font-size: var(--t-xs); line-height: 1.45; }
+.pw-x {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  margin-inline-start: auto;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: none;
+  color: var(--text-3);
+  cursor: pointer;
+}
+.pw-x:hover { background: var(--surface-3); color: var(--text-1); }
+.pw-dialog-foot { display: flex; gap: var(--s-2); justify-content: flex-end; }
+
+.pw-langs { border: 0; margin: 0; padding: 0; }
+.pw-langs legend { display: block; margin-bottom: var(--s-1); padding: 0; color: var(--text-3); font-size: var(--t-xs); font-weight: var(--w-med); }
+.pw-langs button, .pw-lang button {
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: none;
+  padding: 6px var(--s-3);
+  color: var(--text-3);
+  font: inherit;
+  font-size: var(--t-xs);
+  font-weight: var(--w-med);
+  cursor: pointer;
+}
+.pw-langs button + button, .pw-lang button + button { margin-inline-start: var(--s-1); }
+.pw-langs button.is-on, .pw-lang button.is-on { border-color: transparent; background: var(--accent); color: var(--accent-ink); }
+.pw-lang { display: inline-flex; gap: var(--s-1); align-items: center; color: var(--text-3); }
+
+/* --- the desk -------------------------------------------------------------
+   The questions on one side, the page they become on the other. Side by side
+   is the whole point: a hint and the sentence it produced should never be two
+   screens apart. */
+
+.pw-top { display: flex; gap: var(--s-2); align-items: center; flex-wrap: wrap; margin-bottom: var(--s-3); }
+.pw-top-id { display: inline-flex; gap: var(--s-2); align-items: center; }
+.pw-top-actions { display: flex; gap: var(--s-1); align-items: center; flex-wrap: wrap; margin-inline-start: auto; }
+.pw-on { display: inline-flex; gap: var(--s-1); align-items: center; color: var(--text-3); font-size: var(--t-xs); }
+.pw-on input {
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  padding: 5px var(--s-2);
+  color: var(--text-1);
+  font: inherit;
+  font-size: var(--t-xs);
+}
+
+.pw-save { display: inline-flex; gap: var(--s-1); align-items: center; font-family: var(--pw-mono); font-size: var(--t-xs); letter-spacing: 0.04em; color: var(--text-3); }
+.pw-save.is-saved { color: var(--ok); }
+.pw-save.is-pending { color: var(--warn); }
+.pw-save.is-error { color: var(--bad); }
+
+.pw-desk { display: grid; grid-template-columns: minmax(320px, 38%) minmax(0, 1fr); gap: var(--s-4); align-items: start; }
+.pw-form { display: grid; gap: var(--s-4); min-width: 0; }
+.pw-paper { min-width: 0; }
+
+.pw-form-meta {
+  display: grid;
+  gap: var(--s-3);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface-1);
+  padding: var(--s-3);
+}
+.pw-missing {
+  margin: 0;
+  border-inline-start: 3px solid var(--warn);
+  padding-inline-start: var(--s-3);
+  color: var(--warn);
+  font-size: var(--t-xs);
+  font-weight: var(--w-med);
+}
+
+.pw-fields { display: grid; gap: var(--s-5); }
+.pw-field { display: grid; gap: 5px; min-width: 0; }
+.pw-field-label { display: flex; gap: var(--s-2); align-items: baseline; color: var(--text-1); font-size: var(--t-sm); font-weight: 720; }
+.pw-field-label i { flex: none; font-family: var(--pw-mono); font-size: var(--t-xs); font-style: normal; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3); }
+.pw-field.is-missing .pw-field-label i { color: var(--warn); }
+.pw-field-hint { color: var(--text-3); font-size: var(--t-xs); font-style: normal; line-height: 1.5; }
+
+.pw-field > input,
+.pw-field > select,
+.pw-field > textarea,
+.pw-list input,
+.pw-list select {
+  width: 100%;
+  min-height: 38px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  padding: var(--s-2) var(--s-3);
+  color: var(--text-1);
+  font: inherit;
+  font-size: var(--t-md);
+}
+.pw-field > textarea { min-height: 104px; line-height: 1.55; resize: vertical; }
+/* A four-option select stretched across the column reads as a text box. */
+.pw-field--choice > select { max-width: 280px; }
+.pw-field.is-missing > :is(input, select, textarea) { border-color: rgba(240, 180, 92, 0.45); }
+
+.pw-list { display: grid; gap: var(--s-1); border: 1px solid var(--line-soft); border-radius: var(--r-sm); background: rgba(0, 0, 0, 0.18); padding: var(--s-2); }
+.pw-list-head, .pw-list-row { display: flex; gap: var(--s-1); align-items: center; }
+.pw-list-head span { flex: 1 1 110px; min-width: 0; font-family: var(--pw-mono); font-size: var(--t-xs); font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); }
+.pw-list-head .pw-list-head-tools { flex: 0 0 96px; }
+.pw-list input { flex: 1 1 110px; min-height: 34px; font-size: var(--t-sm); }
+.pw-list select { flex: 1 1 110px; min-height: 34px; font-size: var(--t-sm); }
+.pw-list-empty { margin: 0; color: var(--text-3); font-size: var(--t-xs); }
+.pw-row-tools { display: flex; gap: 3px; justify-content: flex-end; flex: 0 0 96px; }
+.pw-row-tools button {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: rgba(248, 241, 227, 0.06);
+  color: var(--text-3);
+  cursor: pointer;
+}
+.pw-row-tools button:disabled { opacity: 0.3; cursor: default; }
+.pw-row-tools button:hover:not(:disabled) { background: rgba(248, 241, 227, 0.13); color: var(--text-1); }
+.pw-row-tools .is-danger:hover:not(:disabled) { background: var(--bad-soft); color: var(--bad); }
+.pw-list-add {
+  display: flex;
+  gap: var(--s-1);
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--line);
+  border-radius: var(--r-sm);
+  background: none;
+  padding: var(--s-2);
+  color: var(--text-3);
+  font: inherit;
+  font-size: var(--t-xs);
+  font-weight: var(--w-med);
+  cursor: pointer;
+}
+.pw-list-add:hover { color: var(--text-1); }
+
+/* ===========================================================================
+   THE PAPER
+   ===========================================================================
+   The documents speak the same language as the website and the client page,
+   so a proposal looks like it came from the people who built the homepage:
+   a graphite band with the mark across the top, the cobalt line under it,
+   the title set large with the cobalt full stop, numbered sections in a
+   rail, a quote where a form would put a box, and the price allowed to be
+   enormous. No typewriter type anywhere: the grotesk carries labels in
+   capitals, the serif carries the one sentence that is a person talking. */
+
+.pdoc {
+  --pw-ink: #151515;
+  --pw-paper: #f4efe6;
+  --pw-hair: rgba(21, 21, 21, 0.14);
+  --pw-soft: rgba(21, 21, 21, 0.58);
+  --pw-body: rgba(21, 21, 21, 0.9);
+  --pw-accent: var(--pw-ink);
+  --pw-cobalt: #2457ff;
+  --pw-rail: 124px;
+  --pw-pad-top: 46px;
+  --pw-pad-x: 52px;
+
+  /* The company's Latin voice is the website's: a neo-grotesk already on every
+     machine that will open this, not a webfont that makes it look like
+     everyone else's document. */
+  --pw-display: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
+  --pw-serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+  --pw-fa: "Vazirmatn", "Helvetica Neue", Arial, Tahoma, sans-serif;
+  /* The editor keeps its mono; the paper has no typewriter in it. */
+  --pw-mono: var(--pw-display);
+
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 840px;
+  margin: 0 auto;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5), 0 34px 70px -34px rgba(0, 0, 0, 0.6);
+  background: var(--pw-paper);
+  padding: var(--pw-pad-top) var(--pw-pad-x) 34px;
+  color: var(--pw-ink);
+  font-family: var(--pw-display);
+  font-size: 13.5px;
+  line-height: 1.6;
+  letter-spacing: -0.003em;
+  text-align: start;
+  page: paperwork;
+}
+.pdoc *, .pdoc *::before, .pdoc *::after { box-sizing: border-box; }
+.pdoc:lang(fa) { font-family: var(--pw-fa); letter-spacing: 0; }
+
+.pdoc--cobalt { --pw-accent: #2457ff; }
+.pdoc--clay { --pw-accent: #c96d4b; }
+.pdoc--moss { --pw-accent: #5d6a52; }
+.pdoc--yellow { --pw-accent: #a8830a; }
+.pdoc--ink { --pw-accent: #151515; }
+
+/* --- the band ------------------------------------------------------------- */
+/* The first thing on the page is the company, the way the website opens:
+   graphite, the mark, and the filing line, with the cobalt line under it. */
+.pdoc-band {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: space-between;
+  margin: calc(var(--pw-pad-top) * -1) calc(var(--pw-pad-x) * -1) 0;
+  border-bottom: 5px solid var(--pw-cobalt);
+  background: #171717;
+  padding: 18px var(--pw-pad-x);
+  color: #f4efe6;
+}
+.pdoc-band-brand { display: flex; flex: none; gap: 11px; align-items: center; direction: ltr; }
+.pdoc-band-brand b { font-family: var(--pw-display); font-size: 11px; font-weight: 850; letter-spacing: 0.16em; }
+.pdoc-band-meta { display: flex; gap: 12px; align-items: center; justify-content: flex-end; min-width: 0; }
+.pdoc-filing-left {
+  display: flex;
+  gap: 9px;
+  align-items: baseline;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  margin: 0;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 230, 0.62);
+}
+.pdoc:lang(fa) .pdoc-filing-left { font-size: 11px; letter-spacing: 0; }
+.pdoc-filing-kind { color: #8aa2ff; }
+.pdoc-filing-left i { color: rgba(244, 239, 230, 0.3); font-style: normal; }
+
+.pdoc-stamp {
+  flex: none;
+  margin: 0;
+  border: 1px solid currentColor;
+  padding: 3px 8px;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.pdoc:lang(fa) .pdoc-stamp { letter-spacing: 0; font-size: 11px; }
+.pdoc-stamp--draft { color: rgba(244, 239, 230, 0.78); }
+.pdoc-stamp--void { color: #ff8f72; }
+
+/* --- the opening ---------------------------------------------------------- */
+/* This part breathes: who it is for, then the title at full size. */
+.pdoc-open { padding-block: 58px 42px; }
+
+.pdoc-for { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 0 0 22px; }
+.pdoc-for span {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--pw-soft);
+}
+.pdoc-for span::before { flex: none; width: 26px; height: 3px; background: var(--pw-cobalt); content: ""; }
+.pdoc:lang(fa) .pdoc-for span { font-size: 12px; letter-spacing: 0; }
+.pdoc-for strong { font-size: 15px; font-weight: 760; }
+
+.pdoc-title {
+  max-width: 16ch;
+  margin: 0;
+  font-size: 58px;
+  font-weight: 760;
+  line-height: 0.94;
+  letter-spacing: -0.055em;
+  text-wrap: balance;
+}
+.pdoc-title .pdoc-dot { color: var(--pw-cobalt); }
+.pdoc:lang(fa) .pdoc-title { max-width: 18ch; padding-inline-end: 2px; font-size: 44px; font-weight: 800; line-height: 1.3; letter-spacing: 0; }
+
+/* --- the grid ------------------------------------------------------------- */
+.pdoc-body { counter-reset: pdsec; }
+.pdoc-sec {
+  display: grid;
+  grid-template-columns: var(--pw-rail) minmax(0, 1fr);
+  gap: 28px;
+  border-top: 1px solid var(--pw-hair);
+  padding-block: 24px 28px;
+}
+.pdoc-sec:first-child { border-top: 2px solid var(--pw-ink); }
+.pdoc-sec--open { grid-template-columns: minmax(0, 1fr); }
+.pdoc-sec--open .pdoc-lede { max-width: 50ch; }
+
+/* The rail: a number in the document's colour, then the label, the way the
+   website numbers its chapters. */
+.pdoc-sec-label {
+  margin: 0;
+  font-size: 10.5px;
+  font-weight: 800;
+  line-height: 1.5;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--pw-ink);
+  direction: ltr;
+  text-align: start;
+}
+.pdoc-sec-label::before {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--pw-accent);
+  font-size: 24px;
+  font-weight: 780;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  font-valext-numeric: tabular-nums;
+  counter-increment: pdsec;
+  content: counter(pdsec, decimal-leading-zero);
+}
+.pdoc:lang(fa) .pdoc-sec-label { font-size: 12px; letter-spacing: 0; text-align: end; }
+.pdoc:lang(fa) .pdoc-sec-label::before { content: counter(pdsec, persian); letter-spacing: 0; }
+
+.pdoc-sec-body { min-width: 0; }
+.pdoc-sec-body > * + * { margin-top: 18px; }
+
+/* --- type ----------------------------------------------------------------- */
+.pdoc-lede {
+  margin: 0;
+  max-width: 44ch;
+  font-size: 20px;
+  line-height: 1.45;
+  letter-spacing: -0.018em;
+}
+.pdoc:lang(fa) .pdoc-lede { font-size: 17px; line-height: 1.9; letter-spacing: 0; }
+
+.pdoc-para { margin: 0; max-width: 62ch; color: var(--pw-body); }
+.pdoc:lang(fa) .pdoc-para { line-height: 1.95; }
+
+/* One number on the page is allowed to be enormous: the price, the amount. */
+.pdoc-h1 { margin: 0; font-size: 56px; font-weight: 780; line-height: 0.95; letter-spacing: -0.055em; font-valext-numeric: tabular-nums; }
+.pdoc-h1::after { display: block; width: 56px; height: 5px; margin-top: 16px; background: var(--pw-accent); content: ""; }
+.pdoc:lang(fa) .pdoc-h1 { font-size: 40px; font-weight: 800; letter-spacing: 0; line-height: 1.2; }
+
+.pdoc-h2 { margin: 0; font-size: 19px; font-weight: 760; line-height: 1.3; letter-spacing: -0.022em; }
+.pdoc:lang(fa) .pdoc-h2 { font-weight: 800; letter-spacing: 0; }
+
+.pdoc-gap {
+  margin: 0;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(21, 21, 21, 0.32);
+}
+
+/* --- key / value ---------------------------------------------------------- */
+.pdoc-kv { display: grid; margin: 0; }
+.pdoc-kv-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--s-4);
+  align-items: baseline;
+  border-bottom: 1px solid var(--pw-hair);
+  padding-block: 10px;
+}
+.pdoc-kv-row:last-child { border-bottom: 0; }
+.pdoc-kv dt { margin: 0; color: var(--pw-soft); font-size: 13px; }
+.pdoc-kv dd { margin: 0; font-weight: 750; text-align: end; }
+
+/* --- tables: where the page is allowed to get dense ----------------------- */
+.pdoc-tablewrap { overflow-x: auto; }
+.pdoc-table { width: 100%; border-collapse: collapse; font-valext-numeric: tabular-nums; }
+.pdoc-table th,
+.pdoc-table td { padding: 10px 12px 10px 0; text-align: start; vertical-align: top; }
+.pdoc-table th:last-child,
+.pdoc-table td:last-child { padding-inline-end: 0; }
+.pdoc-table thead th {
+  border-bottom: 1px solid var(--pw-ink);
+  padding-bottom: 7px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--pw-soft);
+}
+.pdoc:lang(fa) .pdoc-table thead th { font-size: 11.5px; letter-spacing: 0; }
+.pdoc-table tbody td { border-bottom: 1px solid var(--pw-hair); font-size: 13.5px; }
+.pdoc-table tbody .pdoc-total-row th { border-top: 3px solid var(--pw-accent); border-bottom: 0; padding-top: 12px; font-size: 18px; font-weight: 780; letter-spacing: -0.02em; text-align: start; }
+.pdoc-table tbody .pdoc-total-row td { border-top: 3px solid var(--pw-accent); border-bottom: 0; padding-top: 12px; font-size: 18px; font-weight: 780; letter-spacing: -0.02em; text-align: end; }
+
+/* --- lists ---------------------------------------------------------------- */
+.pdoc-bullets { margin: 0; padding: 0; list-style: none; }
+.pdoc-bullets li {
+  position: relative;
+  border-bottom: 1px solid var(--pw-hair);
+  padding-block: 9px;
+  padding-inline-start: 20px;
+  color: var(--pw-body);
+}
+.pdoc-bullets li:last-child { border-bottom: 0; }
+.pdoc-bullets li::before {
+  position: absolute;
+  inset-inline-start: 0;
+  top: 16px;
+  width: 7px;
+  height: 7px;
+  background: var(--pw-accent);
+  content: "";
+}
+
+.pdoc-steps { margin: 0; padding: 0; list-style: none; }
+.pdoc-steps li {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  gap: 0 14px;
+  align-items: baseline;
+  border-bottom: 1px solid var(--pw-hair);
+  padding-block: 14px;
+}
+.pdoc-steps li:last-child { border-bottom: 0; }
+.pdoc-step-n { font-size: 21px; font-weight: 780; letter-spacing: -0.045em; line-height: 1.1; color: var(--pw-accent); font-valext-numeric: tabular-nums; }
+.pdoc-step-body { display: grid; gap: 3px; min-width: 0; }
+.pdoc-step-body strong { font-size: 16px; font-weight: 740; letter-spacing: -0.015em; }
+.pdoc:lang(fa) .pdoc-step-body strong { font-weight: 800; letter-spacing: 0; }
+.pdoc-step-body span { color: var(--pw-body); font-size: 13px; }
+.pdoc-step-meta { font-size: 10.5px; font-weight: 750; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; color: var(--pw-soft); }
+.pdoc:lang(fa) .pdoc-step-meta { font-size: 12px; letter-spacing: 0; }
+
+/* --- the evidence ------------------------------------------------------------ */
+/* A person talking, not a form field: a coloured line, what kind of remark it
+   is, and the sentence in the serif. No box around it. */
+.pdoc-card {
+  border: 0;
+  border-inline-start: 4px solid var(--pw-card-tone, var(--pw-accent));
+  background: transparent;
+  padding-block: 3px;
+  padding-inline: 22px 0;
+}
+.pdoc-card-kicker {
+  margin: 0 0 7px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--pw-card-tone, var(--pw-accent));
+}
+.pdoc:lang(fa) .pdoc-card-kicker { font-size: 11.5px; letter-spacing: 0; }
+.pdoc-card-text { margin: 0; max-width: 46ch; font-family: var(--pw-serif); font-size: 19px; font-style: italic; font-weight: 400; line-height: 1.45; letter-spacing: 0; }
+.pdoc:lang(fa) .pdoc-card-text { font-family: var(--pw-fa); font-style: normal; font-size: 15px; font-weight: 800; line-height: 1.85; }
+.pdoc-card-rule { display: none; }
+.pdoc-card--cobalt { --pw-card-tone: #2457ff; }
+.pdoc-card--clay { --pw-card-tone: #c96d4b; }
+.pdoc-card--moss { --pw-card-tone: #5d6a52; }
+.pdoc-card--yellow { --pw-card-tone: #a8830a; }
+.pdoc-card--ink { --pw-card-tone: #151515; }
+
+/* --- signature ------------------------------------------------------------ */
+.pdoc-sign { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px; padding-top: 26px; }
+.pdoc-party { display: grid; gap: 5px; }
+.pdoc-party-rule { display: block; height: 1px; margin-bottom: 10px; background: var(--pw-ink); }
+.pdoc-party-meta { font-size: 10px; font-weight: 750; letter-spacing: 0.14em; text-transform: uppercase; color: var(--pw-soft); }
+.pdoc:lang(fa) .pdoc-party-meta { font-size: 11.5px; letter-spacing: 0; }
+.pdoc-party-role { color: var(--pw-soft); font-size: 12.5px; }
+.pdoc-party-name { font-size: 15px; font-weight: 750; }
+
+/* --- the foot ------------------------------------------------------------- */
+.pdoc-foot {
+  display: flex;
+  gap: var(--s-5);
+  align-items: flex-end;
+  justify-content: space-between;
+  border-top: 2px solid var(--pw-ink);
+  margin-top: 40px;
+  padding-top: 18px;
+}
+.pdoc-foot-co { display: grid; gap: 10px; }
+.pdoc-foot-co p { max-width: 52ch; margin: 0; color: var(--pw-soft); font-size: 11.5px; line-height: 1.55; }
+.pdoc-creed { display: flex; flex: none; gap: 10px; align-items: center; margin: 0; font-size: 10px; font-weight: 850; letter-spacing: 0.18em; color: var(--pw-ink); }
+.pdoc-creed::before { flex: none; width: 26px; height: 3px; background: var(--pw-cobalt); content: ""; }
+
+.pdoc-runner { display: none; }
+
+/* The marks are Latin drawings; in a Persian document their letters must not be set right to left. */
+.pdoc .pw-mark, .pdoc .pw-wordmark { direction: ltr; unicode-bidi: isolate; }
+
+@media screen and (max-width: 860px) {
+  .pdoc { --pw-pad-top: 30px; --pw-pad-x: 22px; padding-bottom: 24px; }
+  .pdoc-open { padding-block: 38px 28px; }
+  .pdoc-title { font-size: 38px; }
+  .pdoc:lang(fa) .pdoc-title { font-size: 30px; }
+  .pdoc-sec { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .pdoc-sec-label::before { display: inline; margin: 0 8px 0 0; font-size: 18px; }
+  .pdoc-h1 { font-size: 40px; }
+  .pdoc-sign { grid-template-columns: minmax(0, 1fr); gap: 22px; }
+  .pdoc-steps li { grid-template-columns: 34px minmax(0, 1fr); }
+  .pdoc-step-meta { grid-column: 2; }
+}
+
+/* ===========================================================================
+   THE NAV, NOW THAT THERE ARE NINE PLACES
+   =========================================================================== */
+
+/* The phone nav lays each tier out as a fixed grid of four. The tools tier is
+   five wide now, and a hard-coded four wrapped it onto a second row and pushed
+   it off the bar. AppHeader gives every tier its own count; this reads it. */
+@media screen and (max-width: 759px) {
+  .place-nav .place-nav__tier { grid-template-columns: repeat(var(--tier-count, 4), minmax(0, 1fr)); }
+  .place-nav .place-nav__tab { font-size: var(--t-xs); }
+}
+
+/* ===========================================================================
+   NARROW
+   =========================================================================== */
+
+@media screen and (max-width: 1120px) {
+  .pw-desk { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media screen and (max-width: 760px) {
+  .pw-row-main { flex-wrap: wrap; gap: var(--s-1) var(--s-3); }
+  .pw-row-main .pw-no { width: auto; }
+  .pw-row-kind { display: none; }
+  .pw-row-title { flex: 1 1 100%; white-space: normal; }
+  .pw-top-actions { margin-inline-start: 0; width: 100%; }
+
+  .pdoc { --pw-pad-top: 26px; --pw-pad-x: 20px; padding-bottom: 22px; }
+  .pdoc-filing { justify-items: start; text-align: start; }
+  .pdoc-title { font-size: 32px; }
+  .pdoc-h1 { font-size: 22px; }
+  .pdoc-lede { font-size: 15.5px; }
+  .pdoc-kv-row { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .pdoc-steps li { grid-template-columns: 26px minmax(0, 1fr); gap: var(--s-3); }
+  .pdoc-step-meta { grid-column: 2; white-space: normal; }
+  .pdoc-foot { grid-template-columns: minmax(0, 1fr); align-items: start; gap: var(--s-4); }
+  .pdoc-creed { white-space: normal; }
+
+  .pw-list-head { display: none; }
+  .pw-list-row { flex-wrap: wrap; }
+  .pw-list input { flex: 1 1 100%; }
+  .pw-row-tools { flex: 1 1 100%; }
+}
+
+/* ===========================================================================
+   PRINT
+   ===========================================================================
+   This is the actual deliverable, so it is designed, not left to the browser.
+
+   Every rule is scoped behind `html.is-printing-paperwork`, which PaperworkDoc
+   sets while it is mounted and removes when it is not — exactly the way
+   InvoiceDoc scopes its own. Two print blocks that both hid `body *` is how
+   printing a third surface came out blank, and neither of these can now reach
+   past its own document.
+
+   The page box is named rather than global: `@page paperwork` gives this
+   document A4 and its own margins without moving the invoice's. A browser that
+   does not know named pages simply prints it on the shared page box, which is
+   a slightly tighter margin and nothing worse. */
+
+/* --- the proposal: a cover, then the brief, the reasons, the plan, the price */
+/* The cover is the website's opening scene on paper: graphite, the wordmark,
+   what changes for them set large, and what is inside along the bottom. */
+.pdoc-cover {
+  display: flex;
+  flex-direction: column;
+  min-height: 1060px;
+  margin: calc(var(--pw-pad-top) * -1) calc(var(--pw-pad-x) * -1) 0;
+  background: #171717;
+  padding: 40px var(--pw-pad-x) 34px;
+  color: #f4efe6;
+}
+.pdoc-cover-top { display: flex; align-items: center; justify-content: space-between; gap: 18px; direction: ltr; }
+.pdoc-cover .pdoc-filing-left { align-items: center; }
+.pdoc-cover-mid { margin-top: 170px; }
+.pdoc-cover-for { display: flex; gap: 12px; align-items: center; margin: 0; font-size: 11px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: #f4efe6; }
+.pdoc-cover-for::before { flex: none; width: 40px; height: 4px; background: var(--pw-cobalt); content: ""; }
+.pdoc:lang(fa) .pdoc-cover-for { font-size: 13px; letter-spacing: 0; }
+.pdoc-cover-title { max-width: 12ch; margin: 26px 0 0; font-size: 68px; font-weight: 760; line-height: 0.95; letter-spacing: -0.055em; text-wrap: balance; }
+.pdoc:lang(fa) .pdoc-cover-title { max-width: 15em; font-size: 50px; line-height: 1.35; letter-spacing: 0; }
+.pdoc-cover-title .pdoc-dot { color: var(--pw-cobalt); }
+.pdoc-cover-toc { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: auto 0 0; border-top: 1px solid rgba(244, 239, 230, 0.22); padding: 0; list-style: none; }
+.pdoc-cover-toc li { padding: 14px 14px 0 0; }
+.pdoc-cover-toc li + li { border-inline-start: 1px solid rgba(244, 239, 230, 0.14); padding-inline-start: 14px; }
+.pdoc-cover-toc b { display: block; font-size: 22px; font-weight: 700; letter-spacing: -0.03em; color: var(--pw-cobalt); }
+.pdoc-cover-toc span { display: block; margin-top: 10px; font-size: 13px; font-weight: 700; }
+.pdoc-cover-foot { display: flex; justify-content: space-between; gap: 16px; margin-top: 28px; border-top: 1px solid rgba(244, 239, 230, 0.14); padding-top: 14px; font-size: 10px; font-weight: 750; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(244, 239, 230, 0.6); }
+.pdoc:lang(fa) .pdoc-cover-foot { font-size: 11px; letter-spacing: 0; }
+.pdoc--has-cover .pdoc-body { margin-top: 46px; }
+
+/* Their numbers, large, in quiet tiles. */
+.pdoc-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 26px 0 0; }
+.pdoc-fact { background: rgba(21, 21, 21, 0.05); padding: 14px 16px 16px; }
+.pdoc-fact b { display: block; font-size: 36px; font-weight: 700; line-height: 1; letter-spacing: -0.05em; }
+.pdoc:lang(fa) .pdoc-fact b { letter-spacing: 0; line-height: 1.3; }
+.pdoc-fact span { display: block; margin-top: 10px; font-size: 12.5px; line-height: 1.45; color: var(--pw-body); }
+
+/* Today, then after: the left is muted, the right is what they are buying. */
+.pdoc-shift { margin: 28px 0 0; }
+.pdoc-shift-head, .pdoc-shift-row { display: grid; grid-template-columns: minmax(0, 1fr) 30px minmax(0, 1fr); align-items: center; }
+.pdoc-shift-head { border-bottom: 1.5px solid var(--pw-ink); padding-bottom: 8px; font-size: 10px; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; color: var(--pw-soft); }
+.pdoc-shift-head span:last-child { color: var(--pw-cobalt); }
+.pdoc:lang(fa) .pdoc-shift-head { font-size: 11.5px; letter-spacing: 0; }
+.pdoc-shift-row { border-bottom: 1px solid var(--pw-hair); padding-block: 11px; font-size: 13px; line-height: 1.45; }
+.pdoc-shift-was { color: var(--pw-soft); }
+.pdoc-shift-now { font-weight: 650; }
+.pdoc-shift-row i { font-style: normal; text-align: center; color: var(--pw-cobalt); }
+
+/* How both sides will know it worked: one figure, one sentence. */
+.pdoc-goal { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 20px; align-items: center; margin: 28px 0 0; border: 1.5px solid var(--pw-ink); border-inline-start: 6px solid var(--pw-cobalt); padding: 18px 20px; }
+.pdoc-goal > b { font-size: 42px; font-weight: 700; line-height: 1; letter-spacing: -0.05em; color: var(--pw-cobalt); }
+.pdoc-goal-label { margin: 0; font-size: 10px; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; color: var(--pw-soft); }
+.pdoc:lang(fa) .pdoc-goal-label { font-size: 11.5px; letter-spacing: 0; }
+.pdoc-goal-text { margin: 6px 0 0; font-size: 15px; font-weight: 650; line-height: 1.45; }
+
+/* What we will do, and why: the why carries the cobalt rule. */
+.pdoc-sols { display: grid; margin: 18px 0 0; padding: 0; list-style: none; }
+.pdoc-sol { border-top: 1px solid var(--pw-hair); padding-block: 16px; }
+.pdoc-sol:first-child { border-top: 1.5px solid var(--pw-ink); }
+.pdoc-sol-head { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: baseline; }
+.pdoc-sol-n { font-size: 22px; font-weight: 700; letter-spacing: -0.03em; color: var(--pw-cobalt); }
+.pdoc-sol-head strong { font-size: 17px; font-weight: 760; letter-spacing: -0.02em; }
+.pdoc-sol-lands { margin-inline-start: auto; border: 1px solid var(--pw-ink); padding: 2px 7px; font-size: 9.5px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
+.pdoc:lang(fa) .pdoc-sol-lands { font-size: 11px; letter-spacing: 0; }
+.pdoc-sol-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin-top: 10px; }
+.pdoc-sol-cols p { margin: 0; font-size: 12.5px; line-height: 1.55; }
+.pdoc-sol-cols p + p { margin-top: 4px; }
+.pdoc-sol-label { font-size: 9.5px !important; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; color: var(--pw-soft); }
+.pdoc:lang(fa) .pdoc-sol-label { font-size: 11px !important; letter-spacing: 0; }
+.pdoc-sol-why { border-inline-start: 3px solid var(--pw-cobalt); padding-inline-start: 12px; }
+.pdoc-sol-why .pdoc-sol-label { color: var(--pw-cobalt); }
+
+/* The payments to scale. */
+.pdoc-paybar { display: flex; gap: 4px; margin: 22px 0 14px; }
+.pdoc-pay { display: grid; gap: 6px; min-width: 0; flex-basis: 0; padding: 12px 12px 14px; color: #fff; }
+.pdoc-pay--0 { background: #171717; }
+.pdoc-pay--1 { background: var(--pw-cobalt); }
+.pdoc-pay--2 { background: #6f8fff; }
+.pdoc-pay-when { font-size: 9.5px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.85; }
+.pdoc:lang(fa) .pdoc-pay-when { font-size: 11px; letter-spacing: 0; }
+.pdoc-pay b { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; overflow-wrap: anywhere; }
+
+@media (max-width: 720px) {
+  .pdoc-cover { min-height: 0; }
+  .pdoc-cover-mid { margin-top: 80px; }
+  .pdoc-cover-title { font-size: 42px; }
+  .pdoc-cover-toc { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 60px; }
+  .pdoc-sol-cols { grid-template-columns: minmax(0, 1fr); }
+}
+
+@page paperwork { size: A4; margin: 18mm 16mm 16mm; }
+
+@media print {
+  /* HQ declares itself dark, and a browser paints the page margins in the
+     colour scheme's canvas colour, so paper came out with black borders. */
+  html.is-printing-paperwork { color-scheme: light; }
+  html.is-printing-paperwork,
+  html.is-printing-paperwork body { background: #fff !important; }
+
+  html.is-printing-paperwork .room-header,
+  html.is-printing-paperwork .place-nav,
+  html.is-printing-paperwork .shell-notices,
+  html.is-printing-paperwork .pw-scrim { display: none !important; }
+  html.is-printing-paperwork .court::after { display: none !important; }
+
+  /* Every wrapper between the shell and the paper is a fixed-height scroller,
+     which on paper means one clipped screenful. They are undone rather than
+     hidden, because the document is inside them. */
+  html.is-printing-paperwork .room,
+  html.is-printing-paperwork .court,
+  html.is-printing-paperwork .bento,
+  html.is-printing-paperwork .bento > .c12,
+  html.is-printing-paperwork .pw-page,
+  html.is-printing-paperwork .pw-stage,
+  html.is-printing-paperwork .pw-desk,
+  html.is-printing-paperwork .pw-paper {
+    position: static;
+    display: block;
+    inset: auto;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    height: auto;
+    max-height: none;
+    margin: 0;
+    box-shadow: none;
+    background: none;
+    padding: 0;
+    overflow: visible;
+  }
+
+  html.is-printing-paperwork .pdoc {
+    --pw-pad-top: 0px;
+    --pw-pad-x: 0px;
+    max-width: none;
+    margin: 0;
+    overflow: visible;
+    box-shadow: none;
+    background: #fff;
+    padding: 0 0 12mm;
+    font-size: 10.5pt;
+    line-height: 1.55;
+  }
+  /* The grid is the design, and it has to be restated here — a page box is
+     narrow enough to look like a phone to a width query. But Chrome does not
+     fragment a grid container across pages: break-inside and break-after are
+     both ignored inside one, which is what stranded a price on one sheet and
+     its schedule on the next. On paper the same two tracks are built from a
+     float instead, which the paged engine does understand. */
+  html.is-printing-paperwork .pdoc-sec {
+    display: block;
+    grid-template-columns: none;
+  }
+  html.is-printing-paperwork .pdoc-sec-label {
+    float: inline-start;
+    width: var(--pw-rail);
+    margin-inline-end: 26px;
+  }
+  html.is-printing-paperwork .pdoc-sec-body {
+    margin-inline-start: calc(var(--pw-rail) + 26px);
+  }
+  html.is-printing-paperwork .pdoc-sec--open .pdoc-sec-body { margin-inline-start: 0; }
+  html.is-printing-paperwork .pdoc-sec::after { display: block; clear: both; content: ""; }
+  html.is-printing-paperwork .pdoc-sec--open { grid-template-columns: minmax(0, 1fr); }
+  /* None of these tables runs longer than a page, and splitting one stranded
+     the total on a sheet of its own under a repeated header. They stay whole. */
+  /* A table splitting leaves its total on a sheet of its own under a repeated
+     header, and a section label stranded at the foot of a sheet with its content
+     overleaf reads the same way. The engine will not hold a table together from
+     the inside, so a section moves whole instead. One longer than a page still
+     breaks — avoid is a preference, not a promise — and the white space this
+     leaves at a page foot is the identity's own instruction to let some parts
+     breathe. */
+  html.is-printing-paperwork .pdoc-sec { break-inside: avoid; }
+  html.is-printing-paperwork .pdoc-cover {
+    min-height: 255mm;
+    margin: 0;
+    padding: 12mm 12mm 10mm;
+    break-after: page;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  html.is-printing-paperwork .pdoc-cover-title { font-size: 46pt; }
+  html.is-printing-paperwork .pdoc:lang(fa) .pdoc-cover-title { font-size: 34pt; }
+  html.is-printing-paperwork .pdoc--has-cover .pdoc-body { margin-top: 0; }
+  html.is-printing-paperwork .pdoc--has-cover .pdoc-sec + .pdoc-sec { break-before: page; }
+  html.is-printing-paperwork .pdoc-fact,
+  html.is-printing-paperwork .pdoc-goal,
+  html.is-printing-paperwork .pdoc-pay,
+  html.is-printing-paperwork .pdoc-sol-why {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  html.is-printing-paperwork .pdoc-sol,
+  html.is-printing-paperwork .pdoc-shift-row,
+  html.is-printing-paperwork .pdoc-goal,
+  html.is-printing-paperwork .pdoc-paybar { break-inside: avoid; }
+  /* A price with its schedule overleaf is the one split that reads as an error,
+     because the number and what it is made of are one statement. */
+  html.is-printing-paperwork .pdoc-h1,
+  html.is-printing-paperwork .pdoc-h2,
+  html.is-printing-paperwork .pdoc-sec-label { break-after: avoid; }
+  html.is-printing-paperwork .pdoc-tablewrap,
+  html.is-printing-paperwork .pdoc-table,
+  html.is-printing-paperwork .pdoc-table tbody { break-inside: avoid; }
+  html.is-printing-paperwork .pdoc-total-row { break-before: avoid; }
+  html.is-printing-paperwork .pdoc-table thead { display: table-row-group; }
+  html.is-printing-paperwork .pdoc-steps li { grid-template-columns: 26px minmax(0, 1fr) auto; }
+  html.is-printing-paperwork .pdoc-sign { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  html.is-printing-paperwork .pdoc-open { padding-block: 26px 30px; }
+  html.is-printing-paperwork .pdoc-title { font-size: 40pt; }
+  html.is-printing-paperwork .pdoc:lang(fa) .pdoc-title { font-size: 33pt; }
+  html.is-printing-paperwork .pdoc-tablewrap { overflow: visible; }
+  html.is-printing-paperwork .pdoc-gap { display: none; }
+
+  /* Sheet four of a scope agreement has to be identifiable once it has left
+     the stapler, so the number runs on every page. It sits at the FOOT: a fixed
+     box in paged media is laid out in the page area, not the margin, so at the
+     head it printed straight through the letterhead on page one. The reserved
+     strip below keeps it clear of the last line of text. */
+  html.is-printing-paperwork .pdoc { padding-bottom: 12mm; }
+  html.is-printing-paperwork .pdoc-runner {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    inset-inline: 0;
+    font-family: var(--pw-mono);
+    font-size: 7pt;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(21, 21, 21, 0.45);
+  }
+
+  /* Nothing that reads as one thing is allowed to be cut in half. */
+  html.is-printing-paperwork .pdoc-open,
+  html.is-printing-paperwork .pdoc-lede,
+  html.is-printing-paperwork .pdoc-kv-row,
+  html.is-printing-paperwork .pdoc-table tr,
+  html.is-printing-paperwork .pdoc-steps li,
+  html.is-printing-paperwork .pdoc-bullets li,
+  html.is-printing-paperwork .pdoc-card,
+  html.is-printing-paperwork .pdoc-sign,
+  html.is-printing-paperwork .pdoc-party,
+  html.is-printing-paperwork .pdoc-foot { break-inside: avoid; }
+
+  html.is-printing-paperwork .pdoc-title,
+  html.is-printing-paperwork .pdoc-sec-label,
+  html.is-printing-paperwork .pdoc-h1,
+  html.is-printing-paperwork .pdoc-h2 { break-after: avoid; }
+
+  /* A filled shape here is not decoration: the accent band says which kind of
+     document this is, the rule beside a note says it is an aside, and the mark
+     is the company. A browser printing with background graphics off would drop
+     all three and leave a page that could have come from anyone. */
+  /* On paper the band keeps to the margins and keeps its colour. */
+  html.is-printing-paperwork .pdoc-band { padding: 12px 14px; }
+  html.is-printing-paperwork .pdoc-band,
+  html.is-printing-paperwork .pdoc-for span::before,
+  html.is-printing-paperwork .pdoc-creed::before,
+  html.is-printing-paperwork .pdoc-h1::after,
+  html.is-printing-paperwork .pdoc-card-rule,
+  html.is-printing-paperwork .pdoc-bullets li::before,
+  html.is-printing-paperwork .pdoc-bullets li::before,
+  html.is-printing-paperwork .pdoc-card,
+  html.is-printing-paperwork .pdoc-stamp,
+  html.is-printing-paperwork .pdoc-table tfoot :is(th, td),
+  html.is-printing-paperwork .pw-mark,
+  html.is-printing-paperwork .pw-mark rect,
+  html.is-printing-paperwork .pw-wordmark,
+  html.is-printing-paperwork .pw-wordmark path {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

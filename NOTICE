@@ -1,0 +1,8 @@
+Agent4 Community
+Copyright (c) Agent4 contributors.
+Licensed under AGPL-3.0-only. See LICENSE.
+
+The Agent4 falcon SVG is an original project asset under the same license.
+Third-party dependencies retain their own licenses. Run npm run sbom to generate
+CycloneDX dependency inventories; dependency licenses remain in their packages.
+No third-party fonts or private company imagery are bundled.

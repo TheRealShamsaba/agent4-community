@@ -1,0 +1,40 @@
+.brand-lockup .agent4-avatar { width: 28px; height: 28px; object-fit: contain; border-radius: 8px; }
+.setup-screen { display: grid; grid-template-columns: minmax(0, 520px) minmax(0, 420px); align-content: center; justify-content: center; gap: 80px; padding: 48px; background: radial-gradient(ellipse at 20% 40%, #182749 0, transparent 60%), #101217; }
+.setup-story { color: #f3f5fa; }
+.setup-story > .agent4-avatar { width: 88px; height: 88px; margin-bottom: 28px; }
+.setup-eyebrow { display: block; letter-spacing: .15em; font-size: 11px; font-weight: 700; color: #8daaff; }
+.setup-story h1 { font-size: clamp(36px,4vw,60px); letter-spacing: -.045em; line-height: 1.1; margin: 22px 0; }
+.setup-story p { max-width: 420px; line-height: 1.8; color: #b2bac9; font-size: 16px; }
+.setup-promise { display: flex; gap: 12px; margin-top: 38px; color: #9baccb; line-height: 1.7; font-size: 12px; }
+.setup-promise svg { flex-shrink: 0; margin-top: 4px; }
+.setup-screen .auth-panel { margin: 0; width: 100%; }
+.auth-panel h2 { color: inherit; font-size: 24px; letter-spacing: -.03em; margin: 0; }
+.auth-panel label small { font-weight: 400; color: #9aa3b4; font-size: 11px; line-height: 1.5; }
+.team-panel { overflow-y: auto; max-height: calc(100dvh - 80px); }
+.workspace-settings__hint { color: #a9b0be; font-size: 12px; line-height: 1.6; }
+.module-choice { display: flex !important; flex-direction: row !important; align-items: flex-start; gap: 12px; padding: 12px; border: 1px solid #ffffff12; border-radius: 8px; cursor: pointer; }
+.module-choice > input { width: 18px !important; height: 18px !important; min-height: 18px !important; margin: 3px 0 0; accent-color: #4f83ff; }
+.module-choice > span { display: grid; gap: 5px; }
+.module-choice small { font-weight: 400; color: #a9b0be; line-height: 1.5; }
+.pending-invites { padding: 20px; }
+.pending-invites > p { font-size: 12px; color: #a9b0be; }
+.pending-invites > div { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; }
+.pending-invites span { display: grid; gap: 4px; }
+.pending-invites small { color: #a9b0be; font-size: 11px; }
+.canvas-page { max-width: 1400px; margin: 0 auto; padding: 48px 32px 130px; }
+.canvas-page > header { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
+.canvas-page h1 { font-size: 32px; letter-spacing: -.04em; margin: 12px 0; }
+.canvas-page p { color: #a7adbb; font-size: 14px; line-height: 1.7; max-width: 650px; }
+.canvas-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.canvas-actions button { display: inline-flex; gap: 8px; align-items: center; padding: 10px 16px; border: 1px solid #ffffff20; border-radius: 8px; background: #ffffff08; color: #dce2ef; }
+.canvas-actions button:disabled { opacity: .4; }
+.canvas-status { font-size: 12px !important; margin: 24px 0; }
+.canvas-empty { border: 1px dashed #ffffff25; padding: 48px 24px; text-align: center; border-radius: 16px; }
+.canvas-empty p { margin: 10px auto; }
+.canvas-notes { display: grid; grid-template-columns: repeat(auto-fill,minmax(260px,1fr)); gap: 20px; }
+.canvas-note { background: #f7df8b; color: #29251e; padding: 20px; border-radius: 5px; min-height: 240px; box-shadow: 0 12px 35px #0002; }
+.canvas-note.tone-blue { background: #bed5fb; }.canvas-note.tone-mint { background: #bce3cc; }.canvas-note.tone-pink { background: #f0c6d8; }
+.canvas-note > div { display: flex; gap: 8px; }.canvas-note input,.canvas-note textarea { background: transparent; border: 0; color: inherit; width: 100%; padding: 0; }
+.canvas-note input { font-weight: 700; font-size: 17px; }.canvas-note textarea { margin-top: 16px; resize: vertical; min-height: 140px; line-height: 1.7; font-size: 14px; }
+.canvas-note button { background: transparent; border: 0; color: inherit; opacity: .6; }.canvas-note footer { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; gap: 8px; }.canvas-note select { background: #fff5; color: #29251e; border: 0; border-radius: 4px; padding: 5px; }.canvas-note small { font-size: 10px; opacity: .65; }
+@media(max-width:850px) { .setup-screen { grid-template-columns: minmax(0,420px); gap: 36px; padding: 36px 20px; }.setup-story h1 { font-size: 38px; }.setup-story > .agent4-avatar { width: 56px; height: 56px; margin-bottom: 16px; }.setup-story p { font-size: 14px; }.setup-promise { margin-top: 16px; }.canvas-page { padding: 28px 16px 140px; }.team-panel { max-height: calc(100dvh - 120px); } }

@@ -1,0 +1,42 @@
+/* The touch floor, last so it wins.
+   Every surface added its own @media (pointer: coarse) block and each one
+   covered the controls its author happened to think of, which left a 22px stage
+   picker, a 26px filter chip and a 13px date field on the phone that is used in
+   meetings. This is the one place that rule lives, and it is deliberately not
+   overridable — a control below the floor is a bug, never a design choice.
+
+   The canvas is the exception: objects on the wall are drawn inside a scaled
+   wrapper, so their size is in wall units and grows with the zoom. */
+@media (pointer: coarse), (max-width: 759px) {
+  button,
+  summary,
+  select,
+  textarea,
+  [role="button"],
+  [role="tab"],
+  a[href],
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="hidden"]) {
+    min-height: var(--tap) !important;
+  }
+
+  /* A tick box is hit through its label, so it only needs to be findable. */
+  input[type="checkbox"],
+  input[type="radio"] {
+    min-width: 22px !important;
+    min-height: 22px !important;
+  }
+
+  p a[href],
+  li a[href],
+  .body a[href] {
+    min-height: 0 !important;
+  }
+
+  .connection button {
+    min-width: 0 !important;
+    min-height: 0 !important;
+  }
+}
+
+/* The phone wall is an unscaled list, so its controls need the same touch
+   targets as the rest of HQ. The scaled desktop canvas keeps its exception. */
