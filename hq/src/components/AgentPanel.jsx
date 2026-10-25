@@ -1,3 +1,4 @@
+import { requestForActor } from "../actor-request.js";
 import { createActorStorage } from "../actor-storage.js";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowUp, Check, CircleAlert, LoaderCircle, Plus, Trash2, X } from "lucide-react";
@@ -29,19 +30,19 @@ async function call(pathname, { method = "GET", body } = {}) {
 
 /* Each proposal maps onto a route the screens already use, so an approved
    change is indistinguishable from one made by hand. */
-async function applyAction(action, actor) {
+async function applyAction(action, actor, request) {
   const company = action.companyId ? `/api/workspaces/companies/${encodeURIComponent(action.companyId)}` : "";
   if (action.type === "create_task") {
-    await call("/api/tasks", { method: "POST", body: { title: action.title, dueOn: action.dueOn || undefined, assigneeId: actor?.id, companyId: action.companyId || undefined, companyName: action.companyName || undefined } });
+    await request("/api/tasks", { method: "POST", body: { title: action.title, dueOn: action.dueOn || undefined, assigneeId: actor?.id, companyId: action.companyId || undefined, companyName: action.companyName || undefined } });
   } else if (action.type === "set_next_step") {
-    await call(company, { method: "PATCH", body: { nextAction: action.text, nextActionOn: action.dueOn || null } });
+    await request(company, { method: "PATCH", body: { nextAction: action.text, nextActionOn: action.dueOn || null } });
   } else if (action.type === "add_note") {
-    await call(`${company}/events`, { method: "POST", body: { type: "note", detail: action.text } });
+    await request(`${company}/events`, { method: "POST", body: { type: "note", detail: action.text } });
   } else if (action.type === "move_stage") {
-    await call(company, { method: "PATCH", body: { stage: action.stage } });
-    await call(`${company}/events`, { method: "POST", body: { type: "stage", detail: `Moved to ${action.stage}` } }).catch(() => {});
+    await request(company, { method: "PATCH", body: { stage: action.stage } });
+    await request(`${company}/events`, { method: "POST", body: { type: "stage", detail: `Moved to ${action.stage}` } }).catch(() => {});
   } else if (action.type === "set_deal") {
-    await call(company, { method: "PATCH", body: { dealValue: action.dealValue, dealCurrency: action.dealCurrency } });
+    await request(company, { method: "PATCH", body: { dealValue: action.dealValue, dealCurrency: action.dealCurrency } });
   } else {
     throw new Error("Agent4 suggested something this screen cannot do yet.");
   }
@@ -69,6 +70,8 @@ function ActionCard({ action, state, onApply, onSkip }) {
 }
 
 export function AgentPanel({ open, actor, place, onClose }) {
+  const request = useRef(null);
+  if (!request.current) request.current = requestForActor(actor?.id, call);
   const storage = useRef(null);
   if (!storage.current) storage.current = createActorStorage(STORAGE_KEY, actor?.id, () => window.sessionStorage);
   const readTranscript = () => { const saved = storage.current.read([]); return Array.isArray(saved) ? saved.slice(-30) : []; };
@@ -123,7 +126,7 @@ export function AgentPanel({ open, actor, place, onClose }) {
     const params = new URLSearchParams(window.location.search);
     const viewing = place === "workspaces" && params.get("company") ? `(The owner is looking at the company with id ${params.get("company")}.) ` : "";
     try {
-      const body = await call("/api/agent4/chat", { method: "POST", body: { message: `${viewing}${message}`, today: localIsoDate(), history } });
+      const body = await request.current("/api/agent4/chat", { method: "POST", body: { message: `${viewing}${message}`, today: localIsoDate(), history } });
       setTurns((current) => [...current, { id: `a-${Date.now()}`, role: "agent", text: body.reply, actions: body.actions || [] }]);
     } catch (caught) {
       setError(caught.message);
@@ -136,7 +139,7 @@ export function AgentPanel({ open, actor, place, onClose }) {
     const key = `${turnId}:${index}`;
     setActionState((current) => ({ ...current, [key]: { status: "busy" } }));
     try {
-      await applyAction(action, actor);
+      await applyAction(action, actor, request.current);
       setActionState((current) => ({ ...current, [key]: { status: "done" } }));
     } catch (caught) {
       setActionState((current) => ({ ...current, [key]: { status: "error", message: caught.message } }));

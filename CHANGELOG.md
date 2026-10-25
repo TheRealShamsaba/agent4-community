@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Stop delayed meeting and assistant workflows from continuing requests after an account switch.
+
 - Keep private chat drafts, meeting drafts and recoverable recordings isolated when accounts share a browser.
 
 - Raise password hashing to the current scrypt baseline and upgrade earlier preview hashes on successful login.

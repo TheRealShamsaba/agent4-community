@@ -29,6 +29,7 @@ import {
   Upload,
   Wand2
 } from "lucide-react";
+import { requestForActor } from "../actor-request.js";
 import { filmCacheForActor } from "../film-upload-cache.js";
 import { createActorStorage } from "../actor-storage.js";
 import { getActiveActor } from "../room-actor.js";
@@ -61,7 +62,7 @@ export function filmRoomInterruption() {
   return interruptionReason;
 }
 
-async function filmApi(pathname, options = {}) {
+async function requestFilmApi(pathname, options = {}) {
   const response = await fetch(pathname, options);
   let body = {};
   try { body = await response.json(); } catch { /* handled below */ }
@@ -307,8 +308,8 @@ function RecapDocument({ text }) {
 export function FilmRoom({ compact = null, onBack = null, onOpenClient = null, clients = [], onChanged = null, startCreating = false, initialMeetingId = "", onBusy = null }) {
   const actorId = useRef(getActiveActor().id).current;
   const privateCache = useRef(null);
-  if (!privateCache.current) privateCache.current = { ...filmCacheForActor(actorId), ...filmSessionForActor(actorId) };
-  const { readSession, writeSession, readDrafts, appendRecordingChunk, clearPendingFilmUpload, clearRecordingSession,
+  if (!privateCache.current) privateCache.current = { ...filmCacheForActor(actorId), ...filmSessionForActor(actorId), filmApi: requestForActor(actorId, requestFilmApi) };
+  const { filmApi, readSession, writeSession, readDrafts, appendRecordingChunk, clearPendingFilmUpload, clearRecordingSession,
     loadPendingFilmUpload, loadRecoveredRecording, savePendingFilmUpload, startRecordingSession, updateRecordingSession } = privateCache.current;
 
   const restoredRef = useRef(null);
@@ -348,6 +349,7 @@ export function FilmRoom({ compact = null, onBack = null, onOpenClient = null, c
   const [confirming, setConfirming] = useState(null);
   const [confirmBusy, setConfirmBusy] = useState(false);
   const [nowMs, setNowMs] = useState(() => Date.now());
+  const mountedRef = useRef(true);
   const recorderRef = useRef(null);
   const streamRef = useRef(null);
   const chunksRef = useRef([]);
@@ -499,7 +501,7 @@ export function FilmRoom({ compact = null, onBack = null, onOpenClient = null, c
       setClientChoice(meta.clientId || (meta.clientName ? "__manual__" : ""));
       setClientName(meta.clientName || "");
       setProjectName(meta.projectName || "");
-      setRequestedLanguage(meta.requestedLanguage || "fa");
+      setRequestedLanguage(meta.requestedLanguage || "en");
       // Consent is the one thing that is never restored. The copy under the box
       // says the owner is responsible for telling the room, so the app must not
       // tick it on his behalf on a recording he may not have made today.
@@ -617,17 +619,21 @@ export function FilmRoom({ compact = null, onBack = null, onOpenClient = null, c
     return () => window.clearInterval(timer);
   }, [recording, state.limits.maxDurationSeconds]);
 
-  useEffect(() => () => {
-    // App remounts this component whenever a nav tab is touched, so this runs
-    // in the middle of real recordings. Stopping fires onstop, which writes the
-    // finished blob to IndexedDB even though the component is already gone, and
-    // every chunk before it is already on disk — so the worst case is the last
-    // few seconds rather than the meeting.
-    if (recorderRef.current?.state === "recording") {
-      if (sessionRef.current.id) void updateRecordingSession(sessionRef.current.id, { stoppedAt: new Date().toISOString() });
-      recorderRef.current.stop();
-    }
-    streamRef.current?.getTracks?.().forEach((track) => track.stop());
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      // App remounts this component whenever a nav tab is touched, so this runs
+      // in the middle of real recordings. Stopping fires onstop, which writes the
+      // finished blob to IndexedDB even though the component is already gone, and
+      // every chunk before it is already on disk — so the worst case is the last
+      // few seconds rather than the meeting.
+      if (recorderRef.current?.state === "recording") {
+        if (sessionRef.current.id) void updateRecordingSession(sessionRef.current.id, { stoppedAt: new Date().toISOString() });
+        recorderRef.current.stop();
+      }
+      streamRef.current?.getTracks?.().forEach((track) => track.stop());
+    };
   }, []);
 
   const limits = state.limits || FALLBACK_LIMITS;
@@ -678,11 +684,19 @@ export function FilmRoom({ compact = null, onBack = null, onOpenClient = null, c
     }
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, channelCount: 1 } });
+      if (!mountedRef.current || getActiveActor().id !== actorId) {
+        stream.getTracks().forEach(track => track.stop());
+        return;
+      }
       const mimeType = recordingMimeType();
       const recorder = new Recorder(stream, { ...(mimeType ? { mimeType } : {}), audioBitsPerSecond: 32_000 });
       const startedAt = new Date().toISOString();
       const type = mimeType || "audio/webm";
       const sessionId = await startRecordingSession({ ...composerRef.current, mimeType: type, startedAt, name: `meeting-${Date.now()}.${recordingExtension(type)}` });
+      if (!mountedRef.current || getActiveActor().id !== actorId) {
+        stream.getTracks().forEach(track => track.stop());
+        return;
+      }
       sessionRef.current = { id: sessionId, index: 0 };
       chunksRef.current = [];
       recorder.ondataavailable = (event) => {

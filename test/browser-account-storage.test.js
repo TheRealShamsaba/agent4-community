@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { IDBFactory } from 'fake-indexeddb';
+import { requestForActor } from '../hq/src/actor-request.js';
 import { createActorStorage } from '../hq/src/actor-storage.js';
 import { filmCacheForActor, savePendingFilmUpload } from '../hq/src/film-upload-cache.js';
 import { setActiveActor } from '../hq/src/room-actor.js';
@@ -61,5 +62,26 @@ test('recording recovery and in-flight uploads remain isolated across account ch
     setActiveActor(null);
     if (originalWindow === undefined) delete globalThis.window;
     else globalThis.window = originalWindow;
+  }
+});
+
+
+test('delayed workflows cannot send requests or accept results after switching accounts', async () => {
+  setActiveActor({ id: 'owner-example' });
+  let calls = 0;
+  let finish;
+  const request = requestForActor('owner-example', () => {
+    calls += 1;
+    return new Promise(resolve => { finish = resolve; });
+  });
+  try {
+    const pending = request('/private');
+    setActiveActor({ id: 'member-example' });
+    finish({ private: 'owner response' });
+    await assert.rejects(pending, /account changed/);
+    await assert.rejects(request('/late-write', { method: 'POST' }), /account changed/);
+    assert.equal(calls, 1, 'no network request starts using the next account');
+  } finally {
+    setActiveActor(null);
   }
 });
