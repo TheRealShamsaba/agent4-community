@@ -1,45 +1,59 @@
 <div align="center">
-  <img src="public/favicon.svg" alt="Agent4 falcon" width="88" height="88" />
+  <img src="public/favicon.svg" alt="Agent4 falcon" width="80" height="80" />
   <h1>Agent4</h1>
-  <p><strong>Your company. Your tools. Your starting point.</strong></p>
-  <p>A free, self-hosted workspace for small teams building something of their own.</p>
+  <p><strong>An open-source workspace for running a small company.</strong></p>
+  <p>Clients, projects, tasks, meetings, and money. On your own server.</p>
   <p>
     <a href="https://github.com/TheRealShamsaba/agent4-community/actions/workflows/ci.yml"><img alt="Build and tests" src="https://github.com/TheRealShamsaba/agent4-community/actions/workflows/ci.yml/badge.svg" /></a>
+    <a href="https://github.com/TheRealShamsaba/agent4-community/actions/workflows/codeql.yml"><img alt="CodeQL" src="https://github.com/TheRealShamsaba/agent4-community/actions/workflows/codeql.yml/badge.svg" /></a>
     <a href="LICENSE"><img alt="License: AGPL v3" src="https://img.shields.io/badge/license-AGPL--3.0-blue" /></a>
-    <a href="#get-started"><img alt="Self hosted" src="https://img.shields.io/badge/self--hosted-yours-2563eb" /></a>
   </p>
-  <p><a href="#get-started">Get started</a> · <a href="docs/SELF_HOSTING.md">Hosting guide</a> · <a href="docs/CUSTOMIZATION.md">Make it yours</a> · <a href="CONTRIBUTING.md">Contribute</a></p>
 </div>
 
-Starting a company should not mean collecting a new subscription for every small thing your team needs to do.
+Agent4 gives a small team one place to organize the work of building a company. Track a potential client, turn the relationship into a project, assign the next task, keep meeting notes, and follow the money without maintaining a separate tool for each step.
 
-Agent4 brings your clients, projects, tasks, meetings, money, and documents into one place. Run it on your laptop or a server you control. Start with the tools you need today, switch on more as your team grows, and change the code however you like.
+It is built for founders, independent studios, and small teams who want a useful starting point they can own and change. **The core tools are free to use and self-host.** There are no per-seat fees or required AI subscriptions. You pay for the hardware, hosting, and optional services you choose.
 
-This is a clean starting point: **no preloaded company records, accounts, customer information, credentials, or connections**. Your first visit creates your own workspace. There is no signup service, license server, per-seat fee, or required AI subscription.
+![Agent4 Home: today's work, the next client follow-up, and upcoming commitments in a complete desktop view.](docs/images/home-desktop.jpg)
 
-![A fresh Agent4 workspace begins with your own account and company name.](docs/images/setup.png)
+*Actual app screenshots at 1920 × 1080. Northstar Studio, its people, clients, and work are fictional examples created for this documentation. New installations start empty.*
 
-## What you can do
+[What's included](#whats-included) · [Install](#install-agent4) · [Your first workspace](#your-first-workspace) · [Customize](#make-it-fit-your-team) · [Hosting & backups](#hosting-updates-and-backups) · [Contribute](#contribute)
 
-| Tool | What it helps with |
+## What's included
+
+| Tool | Use it to |
 | --- | --- |
-| Home | See today's work, plan the week, and choose your next move. |
-| Clients & projects | Keep relationships, deals, next steps, projects, sheets, and files together. |
-| Tasks | Assign work, set due dates, comment, and track progress as a team. |
-| Meetings | Keep personal recordings, transcripts, notes, and reviewed action items. Transcription and generated summaries need an optional service. |
-| Money | Track income, expenses, recurring costs, invoices, and separate currency totals. Owner only. |
-| Paperwork | Create proposals, agreements, updates, and receipts from editable templates. Owner only. |
-| Canvas | Share notes and ideas. Optional, with saved revisions and conflict protection. |
-| Sites | Check public website uptime, search basics, visitors, and errors. Optional; owner only. |
-| Agent4 assistant | Ask built-in questions about your work. Connect a local or hosted model for open-ended conversations and suggested actions. |
+| **Home** | See work due today, choose the next useful action, and plan the week. |
+| **Clients** | Track leads, conversations, proposals, active projects, and ongoing relationships. Keep a next step and date for each client. |
+| **Projects** | Keep a project's goal, owner, milestones, decisions, links, discovery sheets, and files with its client. |
+| **Tasks** | Assign work to teammates, add dates and comments, and follow progress in a list or board. |
+| **Meetings** | Keep personal recordings, transcripts, notes, and reviewed action items. Transcription and AI summaries use optional services. |
+| **Money** | Record income and expenses, track recurring costs, and create invoices. Currency totals stay separate. Owner only. |
+| **Paperwork** | Draft proposals, agreements, updates, and receipts using editable templates. Owner only. |
+| **Canvas** | Keep shared notes, ideas, and questions on a simple team wall. Optional. |
+| **Sites** | Monitor public website availability and search basics; optionally collect visitor and error events. Owner only; off by default. |
+| **Agent4 assistant** | Ask built-in questions about your work. Add a local or hosted model for open-ended conversations and suggested actions you review before applying. |
 
-Canvas and Sites start off. The other tools start on. **Turning a tool off hides it; it does not delete its work.** Turn it back on whenever you want. These preferences are separate from access permissions.
+You can start with just Clients and Tasks. Turn on the other tools when you need them. **Hiding a tool preserves its saved work**, so you can bring it back later.
 
-The core app works without AI, Telegram, Google, or GitHub credentials. Hosting hardware, domain names, and any paid services you choose are your costs. [See optional connections and exactly what they share.](docs/INTEGRATIONS.md)
+### From a client conversation to work getting done
 
-## Get started
+Add a client, choose their stage, and record the next action. Open their workspace to create a project, collect discovery answers, attach files, and keep decisions together. Link tasks to the client and give each task an owner and a date.
 
-You need **Git and Docker with Compose v2**. On a laptop, start Docker Desktop first. On a server, install Docker Engine and the Compose plugin.
+The Clients view shows where each relationship stands and which follow-up comes next:
+
+![Agent4 Clients: a full desktop pipeline with fictional conversations, proposals, active projects, deal values, and next steps.](docs/images/clients-desktop.jpg)
+
+Tasks bring work from different clients into one team view. Filter by teammate, switch between List and Board, open a task to discuss it, and mark it complete when it is finished:
+
+![Agent4 Tasks: the complete desktop task list with teammate filters, client links, due dates, work in progress, and completed tasks.](docs/images/tasks-desktop.jpg)
+
+## Install Agent4
+
+### Docker — recommended
+
+You need **Git** and **Docker with Compose v2**. Start Docker Desktop on your laptop, or Docker Engine on a server. Run these commands in a shell on macOS, Linux, or WSL2:
 
 ```sh
 git clone https://github.com/TheRealShamsaba/agent4-community.git
@@ -47,24 +61,22 @@ cd agent4-community
 ./agent4.sh
 ```
 
-The script builds Agent4, starts it, waits for its health check, and prints a **private setup link**. Open that link, choose your workspace name, and create your owner account with a password of at least 12 characters. Setup closes after the first owner is created.
+The first build can take a few minutes. The installer builds the app, starts it, waits until it is healthy, and prints a **private setup link**.
 
-Default address: **[localhost:8782](http://localhost:8782)**. The port is bound to your machine only. No email service is needed, and no sample clients or tasks are added.
+1. Open that link in your browser.
+2. Enter your workspace name, name, email, and a password of at least 12 characters.
+3. Create your owner account. You are ready to add your own work.
 
-After signing in:
+Agent4 runs at **[http://localhost:8782](http://localhost:8782)** by default. The port is accessible from your machine only. There are no default login credentials, sample clients, or preconnected company accounts. Setup closes after the first owner is created.
 
-1. Open the menu at the top right, then **Team access**.
-2. Under **Customize this workspace**, choose the tools your team needs.
-3. Create a task or add your first client.
-4. Invite a teammate by entering their name and email, then share the generated link privately. Agent4 does not send invitation emails.
+Keep the setup link private. If you open the address directly and the form asks for a setup key, use the link or key printed in your terminal.
 
-Invites work once, expire after seven days, and can be revoked. A new invite for the same email replaces the old one. Teammates choose their own passwords. Removing someone signs them out; the owner account is protected.
+**Hosting for a remote team?** Follow the [HTTPS hosting guide](docs/SELF_HOSTING.md#https-for-a-remote-team) to configure your domain and reverse proxy before sharing access.
 
-For a custom port, edit both `AGENT4_HOST_PORT` and `AGENT4_PUBLIC_URL` in `.env`, then rerun `./agent4.sh`. For a domain or remote team, follow the [HTTPS hosting guide](docs/SELF_HOSTING.md) before sharing access.
+<details>
+<summary><strong>Run with Node instead of Docker</strong></summary>
 
-### Prefer Node without Docker?
-
-Use **Node 24 LTS**, or Node 22.13+ on the 22.x line. Node includes SQLite; no separate database service is needed.
+Use **Node 24 LTS**, or Node 22.13+ on the 22.x line. SQLite is included in Node; no separate database service is required.
 
 ```sh
 npm ci
@@ -74,45 +86,147 @@ npm run setup
 npm start
 ```
 
-`npm run setup` prints your private first-use link. Open it after `npm start`. The server binds to `127.0.0.1` by default. Set `AGENT4_HOST` explicitly only when you have arranged a protected network or HTTPS proxy. [Development setup](CONTRIBUTING.md) explains the frontend dev server.
+`npm run setup` prints your private first-use link. Open it after the server starts. Native installs bind to `127.0.0.1` by default. For local AI, set `OLLAMA_BASE_URL=http://127.0.0.1:11434` in `.env` if you choose to use Ollama.
 
-## Keep it yours
+See [CONTRIBUTING.md](CONTRIBUTING.md#run-locally) for the frontend development server.
 
-The owner's **Team access → Customize this workspace** controls the workspace name and visible tools. Canvas is included even if you prefer not to use it. Hide it today and bring it back next month; its notes stay in the database.
+</details>
 
-You can also edit the styles, replace the falcon, change document templates, add your own tools, or connect your own services. Source code is part of the product. [Customization guide →](docs/CUSTOMIZATION.md)
+## Your first workspace
 
-Agent4's public core is intended to stay useful for everyone. Personal deployments can have their own choices, branding, connections, and independent extensions. Keep those in a private deployment configuration; contribute improvements to shared features here so the two versions do not drift. [Shared-core workflow →](docs/ARCHITECTURE.md)
+Start small. You do not need to configure every feature before using Agent4.
 
-![Optional Canvas with fictional example notes.](docs/images/canvas.png)
+1. **Choose your tools.** Open the top-right menu → **Team access → Customize this workspace**. Set your company name and turn on the tools you need. Canvas and Sites start off; the other tools start on.
+2. **Add your first client.** Open **Clients → New client**. Give the relationship a stage, next action, and follow-up date.
+3. **Create a project.** Open that client and add a project. Write down what you want to achieve, who owns it, and the next milestone.
+4. **Add real next steps.** Open **Tasks → Add task**. Set an assignee, client, and due date. Use the team filters to see each person's workload.
+5. **Invite your team.** In **Team access**, enter a teammate's name and email. Copy the invitation link and send it to them privately. They choose their own password.
 
-## Look after your workspace
+Agent4 does **not** send invitation emails or require a mail server. Invitations work once, expire after seven days, and can be revoked. Reissuing an invitation for the same email replaces the previous unused link. Removing a teammate revokes their sessions; the owner account is protected from removal.
+
+For daily use, begin on **Home**, review today's tasks and client follow-ups, then open the relevant client or task to continue. Use **Search** in the top bar to find work across the workspace. Open **Agent4** to ask a question or request a proposed action.
+
+### What your teammates can see
+
+One installation is one trusted team, with shared work and personal areas:
+
+| Access | Records |
+| --- | --- |
+| **Shared with the team** | Clients, projects, tasks, shared files and Canvas notes. |
+| **Personal to the signed-in account** | Calendar events and meeting recordings/notes. Private browser drafts are scoped to their account. |
+| **Owner only** | Money, invoices, paperwork, site monitoring, invitations, member removal, and workspace settings. |
+
+Permissions are enforced by the server. Turning a module off changes navigation; it does not revoke someone's existing permission to access its retained records through the API.
+
+## Make it fit your team
+
+Agent4 is a starting point you can adapt to how your company works.
+
+- **Choose the visible tools** in **Team access → Customize this workspace**. You can hide Canvas today and restore it next month; its notes stay saved. The choices apply to everyone in that installation.
+- **Use your own identity.** Set your workspace name and invoice details. Replace the falcon, change colors, and adapt the interface in the source.
+- **Change your documents.** Edit the paperwork and discovery-sheet templates for the work you actually do.
+- **Build on the code.** Add tools and optional connections, or contribute reusable improvements to the public core.
+
+Here is the optional Canvas with shared planning notes:
+
+![Agent4 Canvas: a complete desktop view with fictional planning notes, working agreements, discovery questions, and team progress.](docs/images/canvas-desktop.jpg)
+
+The [customization guide](docs/CUSTOMIZATION.md) points to the relevant source files. The [architecture guide](docs/ARCHITECTURE.md) explains how to keep your deployment's private configuration separate while updating the shared core.
+
+## AI and other optional services
+
+**You can use the workspace without an AI model, Telegram, Google, or GitHub credentials.** Add a connection only when it solves a need for your team.
+
+| If you want… | Configure… |
+| --- | --- |
+| Open-ended assistant conversations and generated notes | Your own Ollama endpoint and model, or a supported hosted model with your API key. |
+| Audio transcription | A whisper.cpp-compatible HTTP transcription service; explicitly enable transcription in `.env`. |
+| Repository activity inside a project | A GitHub token limited to the repositories you choose. |
+| A Telegram mini app and optional notifications | Your own Telegram bot, linked accounts, and an HTTPS deployment. |
+| Client-facing updates or a website inquiry form | The optional client-page/inquiry settings and your own domains. |
+
+Built-in assistant answers work without a model. Transcription and generated meeting summaries need their respective services. Google Calendar connector code is included for developers; entering OAuth credentials does not enable automatic web-UI sync.
+
+The [integration guide](docs/INTEGRATIONS.md) explains configuration, requirements, and what data each connection sends to its chosen service. Credentials stay in your ignored `.env` file, outside the public source.
+
+## Hosting, updates, and backups
+
+The default installation uses one application container and a persistent Docker volume. Start with approximately **2 CPU cores and 2 GB RAM**, plus storage for your files and audio. Building the image needs additional temporary resources. AI inference and transcription need their own hardware or service capacity.
+
+| Keep track of | Location |
+| --- | --- |
+| Deployment URL, timezone, optional credentials | `.env` on your host; never commit it. |
+| Database, uploaded documents, meeting audio, backups | Persistent Docker volume, named `agent4_agent4-data` for the default Compose project. |
+| First-owner setup key | `.secrets/setup-token` on your host; never share it publicly. |
+| App code and editable templates | This repository. |
+
+Common commands:
 
 ```sh
-./agent4.sh stop            # Stop; keep your data
-./agent4.sh                 # Start or rebuild; keep your data
-./agent4.sh logs            # Recent app logs
-./agent4.sh backup          # Briefly stop, copy the database + files, restart
-./agent4.sh reset-password  # Recover an account using access to your host
+./agent4.sh                 # Start or rebuild; preserve workspace data
+./agent4.sh stop            # Stop; preserve workspace data
+./agent4.sh logs            # Read recent application logs
+./agent4.sh backup          # Briefly stop, back up database + files, restart
+./agent4.sh reset-password  # Recover an account from the host terminal
 ```
 
-A Docker volume stores the database, uploaded documents, and meeting audio. Container updates keep them. Backups contain private information: copy the **whole backup directory** to private off-host storage. The backup command prints its location inside the volume. Use `docker compose cp agent4:/app/data/backups ./backups` to copy it to your machine.
+To copy backups out of the container:
 
-Do not use `docker compose down -v` unless you intend to delete your data. Read [backup and restore instructions](docs/SELF_HOSTING.md#backups-and-restores) before updating an installation you rely on.
+```sh
+docker compose cp agent4:/app/data/backups ./backups
+```
 
-## A few things to know
+Keep the **whole backup directory** in private storage outside the server. Backups include private workspace records. Do not run `docker compose down -v` unless you intend to delete the workspace volume.
 
-- This is an early community release. Keep backups and test upgrades on a copy of your data.
-- One installation is one trusted team. Shared clients, tasks, and Canvas are team-wide; calendars and meeting recordings are personal. Money, paperwork, site monitoring, and access management are owner-only.
-- No open registration, default owner password, or hidden support account. Authentication is required.
-- There is no core telemetry or required external font/CDN request. Optional connections contact only services you configure; site monitoring contacts sites you explicitly add.
-- Module switches organize your workspace. They do not create additional security boundaries or prevent a permitted API user from reading retained data.
-- Document templates and accounting views are starting points you can adapt to your business.
+To update an installation you use:
 
-## Build it with us
+```sh
+./agent4.sh backup
+git pull --ff-only
+./agent4.sh
+```
 
-Small, useful improvements are welcome: a confusing setup step, clearer wording, a fixed bug, accessibility work, or a tool that saves a small team time.
+Read the [changelog](CHANGELOG.md) before updating. Follow the [hosting guide](docs/SELF_HOSTING.md) for HTTPS, custom ports, recovery, and restoring a backup into a new volume. This is an early community release; test upgrades on a backup before relying on them for critical work.
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md), browse [issues](https://github.com/TheRealShamsaba/agent4-community/issues), or start a [discussion](https://github.com/TheRealShamsaba/agent4-community/discussions). Please use fictional data in screenshots and bug reports. See [SECURITY.md](SECURITY.md) for vulnerability reporting.
+## Common questions
 
-**[AGPL-3.0-only](LICENSE).** You can use, study, modify, and self-host Agent4, including for your company. If you distribute modified versions or offer a modified version over a network, follow the license's source-sharing requirements. Third-party dependencies keep their own licenses; see [NOTICE](NOTICE).
+**Is this a hosted service?**
+
+You run Agent4 on your own laptop or server. This repository does not provide managed hosting.
+
+**Do I need an AI subscription?**
+
+No. The workspace and built-in assistant answers work without one. Local models are optional; hosted providers may charge for your usage.
+
+**Can I change or remove a tool?**
+
+Yes. Use the owner's module settings to hide and restore it, or modify the source under its license. Hiding preserves saved data.
+
+**Does it contain someone else's company data?**
+
+New installs have no accounts, client records, credentials, or connected services. The screenshots use a separate fictional workspace; those records are not seeded into your installation. There is no core telemetry or required external font/CDN request.
+
+**Why can't I sign up again after setup?**
+
+The first-owner form closes permanently once an owner exists. Sign in, accept an owner-issued invitation, or use `./agent4.sh reset-password` from the host if you need account recovery.
+
+**The app will not start, or a request is rejected.**
+
+Confirm Docker is running. If port 8782 is busy, change **both** `AGENT4_HOST_PORT` and `AGENT4_PUBLIC_URL` in `.env`, then rerun the installer. Open the exact configured URL. More fixes are in [troubleshooting](docs/SELF_HOSTING.md#troubleshooting).
+
+## Contribute
+
+The aim is practical: help more people start and run a company without paying for a growing stack of tools. Useful contributions include clearer onboarding, accessible interfaces, reliable integrations, better templates, tests, documentation, and small features that save a team time.
+
+- [Development and contribution guide](CONTRIBUTING.md)
+- [Issues](https://github.com/TheRealShamsaba/agent4-community/issues) for bugs and focused feature requests
+- [Discussions](https://github.com/TheRealShamsaba/agent4-community/discussions) for ideas and questions
+- [Security policy](SECURITY.md) for private vulnerability reporting
+
+`main` is protected: changes go through pull requests, the branch must be current, required CI checks must pass, and review conversations must be resolved. Force pushes and branch deletion are blocked. See the [contribution workflow](CONTRIBUTING.md#protected-main-branch).
+
+Use fictional data in examples and screenshots. Keep secrets, customer records, local databases, and private deployment details out of contributions.
+
+## License
+
+Agent4 is released under **[AGPL-3.0-only](LICENSE)**. You can use, study, modify, and self-host it, including for your company. Follow the license's source-sharing requirements when distributing a modified version or offering it over a network. Third-party packages retain their own licenses; see [NOTICE](NOTICE).
