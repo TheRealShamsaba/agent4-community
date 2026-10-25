@@ -31,6 +31,22 @@ Explain the user-visible problem, your change and meaningful validation. Add tes
 
 Use fictional companies, `example.com` / `.example` domains, reserved example phone numbers, and synthetic account IDs. Screenshots must come from a fresh local workspace containing only fictional data. Do not import customer data, private deployment code, original company assets, tokens, personal account IDs, or private Git history.
 
+## Protected main branch
+
+Create a branch and open a pull request. The active [Protect main ruleset](https://github.com/TheRealShamsaba/agent4-community/rules/25827805) applies to the default branch with no standing bypass actors, including for maintainers.
+
+Before merging, update the branch with `main`, resolve review conversations, and pass these GitHub Actions checks:
+
+- `verify`: lint, tests, production build, documentation links, source/privacy and secret checks, dependency audits.
+- `fresh-install`: build Docker from empty data, exercise owner setup and the core API workflow, then verify restart and backup.
+- `analyze`: CodeQL analysis.
+
+Use squash or rebase merging to keep history linear. Force pushes and deleting `main` are blocked. Formal approval counts are currently zero so a single maintainer can merge their own documented, passing pull request; maintainers should review outside contributions before merging. Increase the review requirement when the project has additional active reviewers.
+
+## Documentation screenshots
+
+Use a separate, disposable local installation with fictional records and example email addresses. Capture the actual application with the desktop navigation visible; the README's current images are full desktop browser captures under `docs/images/`. Do not use a company deployment, include browser profiles or setup/invitation keys, or seed the demonstration records into normal installations. Inspect every image before committing it, and replace outdated screenshots when the interface changes.
+
 ## Public core and private preferences
 
 Read [the architecture guide](docs/ARCHITECTURE.md). Shared capabilities live here; deployment-specific settings and independent company services stay private. Module switches let a team remove tools from its daily UI without deleting code or data.
