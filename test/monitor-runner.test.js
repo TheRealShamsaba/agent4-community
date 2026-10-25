@@ -71,7 +71,7 @@ test("the SEO audit reads the page, robots.txt, sitemap and the http redirect", 
   assert.equal(report.facts.httpsEnforced, true);
   assert.equal(report.facts.robotsTxt, true);
   assert.ok(report.score >= 95, `score was ${report.score}`);
-  assert.ok(seen.includes("http://example.com/"));
+  assert.equal(seen.filter(address => new URL(address).origin === "http://example.com").length, 1);
 });
 
 async function withRunner(t, overrides = {}) {

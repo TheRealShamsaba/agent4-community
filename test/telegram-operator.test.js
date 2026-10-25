@@ -186,7 +186,7 @@ test("Telegram task formatting escapes user-authored text before enabling HTML",
     });
     const center = operator.taskCenter();
     assert.match(center.messageHtml, /Review &lt;script&gt; &amp; proposal/);
-    assert.doesNotMatch(center.messageHtml, /<script>/);
+    assert.doesNotMatch(center.messageHtml, /<script\b/i);
     const detail = operator.taskDetail(task.id);
     assert.match(detail.messageHtml, /Use &lt;b&gt;their&lt;\/b&gt; wording &amp; ours/);
     const capture = operator.prepareCapture({ type: "add-task", title: "Use <b>safe</b> & clear", dueAt: null });
@@ -369,6 +369,6 @@ test("the closeout carries unresolved overdue work without leaking task HTML", a
     assert.ok(closeout);
     assert.equal(closeout.overdueCount, 1);
     assert.match(closeout.textHtml, /Review &lt;script&gt; &amp; proposal/);
-    assert.doesNotMatch(closeout.textHtml, /<script>/);
+    assert.doesNotMatch(closeout.textHtml, /<script\b/i);
   });
 });

@@ -5,6 +5,7 @@ import { DatabaseSync } from "node:sqlite";
 
 const PASSWORD_BYTES = 64;
 const MIN_PASSWORD_LENGTH = 12;
+const PASSWORD_PREFIX = 'scrypt-131072-8-1$';
 
 function normalizeEmail(value) {
   return String(value || "").trim().toLowerCase();
@@ -15,17 +16,32 @@ function tokenHash(value) {
 }
 
 function passwordHash(password, salt) {
-  return scryptSync(password, salt, PASSWORD_BYTES).toString("hex");
+  // OWASP's scrypt baseline: N=2^17, r=8, p=1 (128 MiB per derivation).
+  const digest = scryptSync(password, salt, PASSWORD_BYTES, { N: 131072, r: 8, p: 1, maxmem: 256 * 1024 * 1024 });
+  return PASSWORD_PREFIX + digest.toString('hex');
 }
 
 function safeEqualHex(left, right) {
   try {
+    if (typeof left !== 'string' || typeof right !== 'string' || !/^[0-9a-f]+$/i.test(left) || !/^[0-9a-f]+$/i.test(right)) return false;
     const leftBuffer = Buffer.from(left, "hex");
     const rightBuffer = Buffer.from(right, "hex");
     return leftBuffer.length === rightBuffer.length && timingSafeEqual(leftBuffer, rightBuffer);
   } catch {
     return false;
   }
+}
+
+function passwordMatches(password, user, computed = '') {
+  if (!user || typeof password !== 'string') return false;
+  if (user.password_hash.startsWith(PASSWORD_PREFIX)) {
+    return safeEqualHex((computed || passwordHash(password, user.password_salt)).slice(PASSWORD_PREFIX.length), user.password_hash.slice(PASSWORD_PREFIX.length));
+  }
+  // Read-only compatibility for the first preview's stored hashes. Successful
+  // login immediately replaces this value with the stronger version above.
+  if (!/^[a-f0-9]{128}$/i.test(user.password_hash)) return false;
+  const legacy = scryptSync(password, user.password_salt, PASSWORD_BYTES, { N: 16384, r: 8, p: 1 }).toString('hex');
+  return safeEqualHex(legacy, user.password_hash);
 }
 
 function publicUser(row) {
@@ -163,7 +179,21 @@ export function createAuthStore(databasePath) {
     const user = selectUserByEmail.get(normalizeEmail(email));
     if (typeof password !== 'string' || password.length > 200) return null;
     const computed = passwordHash(password, user?.password_salt || 'agent4-unavailable-account');
-    return user && safeEqualHex(computed, user.password_hash) ? publicUser(user) : null;
+    if (!passwordMatches(password, user, computed)) return null;
+    if (!user.password_hash.startsWith(PASSWORD_PREFIX)) {
+      const upgraded = database.prepare('UPDATE agent4_users SET password_hash=? WHERE id=? AND password_hash=?').run(computed, user.id, user.password_hash);
+      if (!upgraded.changes) return null; // Another process changed the password.
+    }
+    return publicUser(user);
+  }
+
+  function createAuthenticatedSession(email, password, options = {}) {
+    database.exec('BEGIN IMMEDIATE');
+    try {
+      const user = authenticate(email, password);
+      const session = user ? createSession(user.id, options) : null;
+      database.exec('COMMIT'); return session;
+    } catch (error) { database.exec('ROLLBACK'); throw error; }
   }
 
   function findUserByTelegramId(telegramUserId) {
@@ -223,9 +253,9 @@ export function createAuthStore(databasePath) {
 
   function changePassword(userId, currentPassword, nextPassword) {
     const user = selectUserById.get(String(userId || ""));
-    if (!user || typeof currentPassword !== "string" || !safeEqualHex(passwordHash(currentPassword, user.password_salt), user.password_hash)) return null;
+    if (!user || typeof currentPassword !== "string" || !passwordMatches(currentPassword, user)) return null;
     assertPassword(nextPassword);
-    if (safeEqualHex(passwordHash(nextPassword, user.password_salt), user.password_hash)) throw new Error("Choose a new password you are not already using.");
+    if (passwordMatches(nextPassword, user)) throw new Error("Choose a new password you are not already using.");
     const salt = randomBytes(16).toString("hex");
     database.exec("BEGIN IMMEDIATE");
     try {
@@ -338,6 +368,7 @@ export function createAuthStore(databasePath) {
     createUser,
     ensureBootstrap,
     authenticate,
+    createAuthenticatedSession,
     findUserByTelegramId,
     linkTelegramUser,
     createSession,

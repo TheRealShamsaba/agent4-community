@@ -1,3 +1,4 @@
+import { DatabaseSync } from "node:sqlite";
 import assert from "node:assert/strict";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -53,4 +54,27 @@ test("auth store supports bootstrap login, expiring sessions, and single-use inv
     store.close();
     await rm(directory, { recursive: true, force: true });
   }
+});
+
+// This digest belongs only to the synthetic password/salt below. It is never
+// seeded into a real installation or used as a default account.
+test('legacy preview hashes upgrade on login without changing credentials or locking out backups', async () => {
+  const directory = await mkdtemp(path.join(tmpdir(), 'agent4-password-upgrade-'));
+  const file = path.join(directory, 'agent4.sqlite');
+  const store = createAuthStore(file);
+  const db = new DatabaseSync(file);
+  try {
+    const owner = store.ensureBootstrap({ email: 'owner@example.com', name: 'Owner', password: 'legacy preview test passphrase' });
+    const legacyDigest = '06a211eb5de36348cdaee995e11bdc7cad38f8951fcf2c6faef2afcd04fd3952e2e208a91f3638d6dffb4f87fa41f9a6fd4b399d865517311c5ee2e954b2784a';
+    db.prepare('UPDATE agent4_users SET password_hash=?,password_salt=? WHERE id=?').run(legacyDigest, '0123456789abcdef0123456789abcdef', owner.id);
+    assert.equal(store.authenticate('owner@example.com', 'incorrect passphrase'), null);
+    assert.equal(db.prepare('SELECT password_hash FROM agent4_users WHERE id=?').get(owner.id).password_hash, legacyDigest);
+    const session = store.createAuthenticatedSession('owner@example.com', 'legacy preview test passphrase');
+    assert.equal(session.user.id, owner.id);
+    assert.match(db.prepare('SELECT password_hash FROM agent4_users WHERE id=?').get(owner.id).password_hash, /^scrypt-131072-8-1\$/);
+    assert.equal(store.getSession(session.token).id, owner.id);
+    assert.equal(store.changePassword(owner.id, 'legacy preview test passphrase', 'a new strong preview passphrase').id, owner.id);
+    assert.equal(store.getSession(session.token), null);
+    assert.equal(store.authenticate('owner@example.com', 'a new strong preview passphrase').id, owner.id);
+  } finally { db.close(); store.close(); await rm(directory, { recursive: true, force: true }); }
 });

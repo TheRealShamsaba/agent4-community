@@ -21,7 +21,7 @@ for (const file of files) {
     line++;
     if (/(?:\/Users\/|\/home\/)[^\s]+/.test(text)) failures.push(`${file}:${line}: personal machine path`);
     for (const email of text.matchAll(/[a-zA-Z0-9._%+-]+@([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g)) {
-      if (!exampleDomain(email[1].toLowerCase()) && !email[1].toLowerCase().endsWith('users.noreply.github.com') && email[0] !== 'local@agent4.dev') failures.push(`${file}:${line}: use an example email address`);
+      if (!exampleDomain(email[1].toLowerCase()) && email[1].toLowerCase() !== 'users.noreply.github.com' && email[0] !== 'local@agent4.dev') failures.push(`${file}:${line}: use an example email address`);
     }
   }
 }

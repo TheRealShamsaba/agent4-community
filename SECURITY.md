@@ -12,7 +12,7 @@ There is no paid support commitment or guaranteed response time. Verified fixes 
 
 - First-owner setup requires a random host-generated key and closes permanently once an account exists.
 - Team registration requires an owner-issued, expiring, single-use invitation. Pending invitations can be revoked.
-- Passwords use scrypt; session and invitation bearer tokens are stored hashed. Browser sessions use HttpOnly and SameSite=Strict cookies, plus Secure cookies for configured HTTPS origins.
+- New password hashes use versioned scrypt with N=131072, r=8, p=1; legacy preview hashes upgrade on successful login. [Parameter guidance](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html). Session and invitation bearer tokens are stored hashed. Browser sessions use HttpOnly and SameSite=Strict cookies, plus Secure cookies for configured HTTPS origins.
 - Unsafe browser requests require the exact configured Origin and the session's CSRF token.
 - Login throttling persists in SQLite across restarts. Local host-side recovery revokes account sessions.
 - Proxy headers are untrusted by default. Authentication cannot be disabled through configuration.

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Raise password hashing to the current scrypt baseline and upgrade earlier preview hashes on successful login.
+- Make password verification and session creation atomic with respect to password recovery.
+- Use cryptographic recording identifiers, constant log format strings, and exact email-domain checks.
+
 ## 0.1.0 — Community preview
 
 - Introduce Agent4 with an original falcon identity and a clean, empty workspace.

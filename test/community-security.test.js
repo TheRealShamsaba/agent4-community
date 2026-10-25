@@ -133,7 +133,7 @@ test('an explicitly disabled transcription service rejects audio uploads', async
   assert.equal((await rejected.json()).error.code, 'transcription_disabled');
 });
 
-test('password changes revoke old live event streams before another room update is delivered', { timeout: 5000 }, async t => {
+test('password changes revoke old live event streams before another room update is delivered', { timeout: 20000 }, async t => {
   const w = await workspace(t); const owner = await w.setup();
   const stream = await w.request('/api/rooms/company-room/events', undefined, owner);
   const reader = stream.body.getReader(); await reader.read();

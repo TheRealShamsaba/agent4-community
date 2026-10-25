@@ -78,7 +78,7 @@ test("recovers a deterministic duplicate with GET after Google returns 409", asy
   const calls = [];
   const fetchImpl = async (url, options) => {
     calls.push({ url, options });
-    if (url.includes("oauth2.googleapis.com")) return json({ access_token: "access-one", expires_in: 3600 });
+    if (new URL(url).origin === "https://oauth2.googleapis.com") return json({ access_token: "access-one", expires_in: 3600 });
     if (options.method === "POST") return json({ error: { message: "duplicate" } }, 409);
     return json({ id: googleEventId("same-action"), summary: "Partner meeting" });
   };
@@ -163,7 +163,7 @@ test("refreshes once and retries a 401 without changing the event id", async () 
   let token = 0;
   const fetchImpl = async (url, options) => {
     calls.push({ url, options });
-    if (url.includes("oauth2.googleapis.com")) {
+    if (new URL(url).origin === "https://oauth2.googleapis.com") {
       token += 1;
       return json({ access_token: `access-${token}`, expires_in: 3600 });
     }

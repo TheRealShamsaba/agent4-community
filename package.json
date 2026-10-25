@@ -15,7 +15,7 @@
     "hq:build": "npm --prefix hq run build && node scripts/build-ui.js",
     "dev": "npm --prefix hq run dev",
     "lint": "eslint src test hq/src scripts",
-    "test": "node --test",
+    "test": "node --test --test-concurrency=4",
     "verify": "npm run lint && npm test && npm run hq:build && npm run docs:check && npm run privacy:check",
     "docs:check": "node scripts/check-docs.js",
     "privacy:check": "node scripts/check-public-source.js",

@@ -116,7 +116,9 @@ function chunkKey(sessionId, index) {
 }
 
 function newSessionId() {
-  return globalThis.crypto?.randomUUID?.() || `film-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID();
+  if (!globalThis.crypto?.getRandomValues) throw new Error('Secure recording recovery requires HTTPS or localhost.');
+  return [...globalThis.crypto.getRandomValues(new Uint8Array(16))].map(byte => byte.toString(16).padStart(2, '0')).join('');
 }
 
 /* Open a recording session and throw away whatever an older one left behind.

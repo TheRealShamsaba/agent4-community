@@ -1177,12 +1177,11 @@ export function createHqServer(config, dependencies = {}) {
           sendJson(response, 429, { error: { code: "login_limited", message: "Too many sign-in attempts. Try again later." } });
           return;
         }
-        const user = authStore.authenticate(input.email, input.password);
-        if (!user) {
+        const session = authStore.createAuthenticatedSession(input.email, input.password, { ttlHours: config.runtime.agent4SessionHours || 24 * 7 });
+        if (!session) {
           sendJson(response, 401, { error: { code: "invalid_credentials", message: "Email or password is incorrect." } });
           return;
         }
-        const session = authStore.createSession(user.id, { ttlHours: config.runtime.agent4SessionHours || 24 * 7 });
         sendJson(response, 200, { authenticated: true, actor: session.user, csrfToken: session.csrfToken }, {
           "set-cookie": sessionCookie(session.token, {
             maxAge: Math.floor((new Date(session.expiresAt).getTime() - Date.now()) / 1000),
@@ -3084,7 +3083,8 @@ export function createHqServer(config, dependencies = {}) {
       // log gets the whole thing, because an unexpected error that nobody ever
       // sees is a bug that never gets fixed.
       // A client page address is a credential, so it never reaches a log.
-      console.error(`HQ request failed: ${request.method} ${String(request.url).split("?")[0].replace(/\/c\/[^/?#]+/, "/c/[link]").replace(/\/invites\/[^/]+/, "/invites/[token]")}`, error);
+      const safePath = String(request.url).split("?")[0].replace(/\/c\/[^/?#]+/, "/c/[link]").replace(/\/invites\/[^/]+/, "/invites/[token]");
+      console.error("HQ request failed:", request.method, safePath, error);
       sendJson(response, 500, { error: { code: "server_error", message: "The HQ server encountered an unexpected error." } });
     }
   });
