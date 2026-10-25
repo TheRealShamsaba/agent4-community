@@ -3,7 +3,7 @@ import { mkdtemp } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
-import { analyseSeo, auditSeo, checkSite, createMonitorRunner } from "../src/monitor-runner.js";
+import { analyseSeo, auditSeo, checkSite, createMonitorRunner, probeCertificate } from "../src/monitor-runner.js";
 import { createMonitorStore } from "../src/monitor-store.js";
 
 const GOOD_PAGE = `<!doctype html><html lang="en"><head>
@@ -138,4 +138,8 @@ test("a paused site is not checked", async (t) => {
   store.updateSite(site.id, { paused: true });
   await runner.tick();
   assert.equal(calls, 0);
+});
+
+test('certificate checks never connect to loopback or mapped private addresses', async () => {
+  for (const address of ['127.0.0.1','::1','::ffff:127.0.0.1','169.254.169.254']) assert.equal(await probeCertificate(address), null);
 });

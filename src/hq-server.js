@@ -930,7 +930,12 @@ export function createHqServer(config, dependencies = {}) {
         : {})
     };
     const payload = `event: ${safeEvent.type}\ndata: ${JSON.stringify(safeEvent)}\n\n`;
-    listeners.forEach((listener) => listener.response.write(payload));
+    listeners.forEach((listener) => {
+      if (authRequired && !authStore.getSession(listener.token)) {
+        listener.response.end(); listeners.delete(listener); return;
+      }
+      listener.response.write(payload);
+    });
   }
 
   function broadcastPresence(roomId) {
@@ -959,7 +964,7 @@ export function createHqServer(config, dependencies = {}) {
       "x-content-type-options": "nosniff"
     });
     response.write(`event: ready\ndata: ${JSON.stringify({ type: "ready", actor })}\n\n`);
-    const listener = { actor, clientId, response };
+    const listener = { actor, clientId, response, token: parseCookies(request)[SESSION_COOKIE] };
     const listeners = roomListeners.get(roomId) || new Set();
     listeners.add(listener);
     roomListeners.set(roomId, listeners);
@@ -969,7 +974,10 @@ export function createHqServer(config, dependencies = {}) {
       roomPresence.set(roomId, sessions);
     }
     broadcastPresence(roomId);
-    const heartbeat = setInterval(() => response.write(": heartbeat\n\n"), 25_000);
+    const heartbeat = setInterval(() => {
+      if (authRequired && !authStore.getSession(listener.token)) { response.end(); return; }
+      response.write(': heartbeat\n\n');
+    }, 25_000);
     request.once("close", () => {
       clearInterval(heartbeat);
       listeners.delete(listener);

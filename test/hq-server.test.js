@@ -1956,7 +1956,7 @@ test("Agent4 chat says plainly when no model is connected", async () => {
     assert.equal(response.status, 503);
     const body = await response.json();
     assert.equal(body.error.code, "model_not_configured");
-    assert.match(body.error.message, /AGENT4_OPENAI_API_KEY/);
+    assert.match(body.error.message, /OPENAI_API_KEY/);
   } finally {
     server.close();
     await once(server, "close");

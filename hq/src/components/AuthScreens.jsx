@@ -162,9 +162,9 @@ export function TeamPanel({ open, actor, members, onInvite, onRevoke, onChangePa
       </div> : null}
       <section className="team-panel__access" aria-label="Access policy">
         <strong>{isOwner ? "What members can access" : "Your access"}</strong>
-        <p><span>Shared with the team</span> Locker Room, Companies and Tasks</p>
-        <p><span>Private to each person</span> Home calendar, Content and Film Room recordings, transcripts and notes</p>
-        <p><span>Owner only</span> Pipeline, Money, Paperwork, invites, removals and deletion of companies, projects, sheets or tasks</p>
+        <p><span>Shared with the team</span> Canvas, Clients, projects and Tasks</p>
+        <p><span>Private to each person</span> Your calendar and meeting recordings, transcripts and notes</p>
+        <p><span>Owner only</span> Money, Paperwork, Sites, client share links, invites, removals and deletion of companies, projects, sheets or tasks</p>
       </section>
       {isOwner && inviteUrl ? (
         <div className="team-panel__invite"><strong>Private invite ready</strong><small>Single use · expires in 7 days</small><p>{inviteUrl}</p><button type="button" onClick={() => copyText(inviteUrl)}><Copy size={15} /> Copy invite link</button><button type="button" onClick={() => { setInviteUrl(""); setName(""); setEmail(""); }}>Invite someone else</button></div>

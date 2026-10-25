@@ -132,3 +132,17 @@ test('an explicitly disabled transcription service rejects audio uploads', async
   assert.equal(rejected.status, 503);
   assert.equal((await rejected.json()).error.code, 'transcription_disabled');
 });
+
+test('password changes revoke old live event streams before another room update is delivered', { timeout: 5000 }, async t => {
+  const w = await workspace(t); const owner = await w.setup();
+  const stream = await w.request('/api/rooms/company-room/events', undefined, owner);
+  const reader = stream.body.getReader(); await reader.read();
+  const changed = await w.request('/api/auth/password', { currentPassword: 'a long unique owner passphrase', nextPassword: 'a new long owner passphrase' }, owner);
+  assert.equal(changed.status, 200);
+  const next = { cookie: changed.headers.get('set-cookie').split(';')[0], csrfToken: (await changed.json()).csrfToken };
+  const saved = await w.request('/api/rooms/company-room', { baseVersion: 0, label: 'Private new update', state: { localObjects: [], layout: {}, edges: [] } }, next, { method: 'PUT' });
+  assert.equal(saved.status, 200);
+  let remaining = '';
+  while (true) { const part = await reader.read(); if (part.done) break; remaining += Buffer.from(part.value).toString('utf8'); }
+  assert.equal(remaining.includes('room.updated'), false); reader.releaseLock();
+});

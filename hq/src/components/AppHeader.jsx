@@ -143,9 +143,9 @@ export function Header({
         <details ref={mobileActionsRef} className="header-mobile-actions" onKeyDown={(event) => { if (event.key === "Escape") { event.currentTarget.open = false; event.currentTarget.querySelector("summary")?.focus(); } }}>
           <summary aria-label="Menu" title={actor.name}><MoreHorizontal size={20} /></summary>
           <div onClick={(event) => { if (event.target.closest("button")) event.currentTarget.closest("details").open = false; }}>
-            <button type="button" onClick={onRefreshSnapshot}><RefreshCw size={16} /> Refresh HQ{snapshotAt ? <small>{relativeTime(snapshotAt)}</small> : null}</button>
-            {authRequired ? <button type="button" onClick={onOpenTeam}><ShieldCheck size={16} /> {actor.role === "owner" ? "Team & account" : "Account settings"}</button> : null}
-            {authRequired ? <button type="button" onClick={onLogout}><LogOut size={16} /> Sign out</button> : null}
+            <button type="button" aria-label="Refresh Agent4" onClick={onRefreshSnapshot}><RefreshCw size={16} /> Refresh HQ{snapshotAt ? <small>{relativeTime(snapshotAt)}</small> : null}</button>
+            {authRequired ? <button type="button" aria-label={actor.role === "owner" ? "Team access" : "Account settings"} onClick={onOpenTeam}><ShieldCheck size={16} /> {actor.role === "owner" ? "Team access" : "Account settings"}</button> : null}
+            {authRequired ? <button type="button" aria-label="Sign out" onClick={onLogout}><LogOut size={16} /> Sign out</button> : null}
           </div>
         </details>
       </div>

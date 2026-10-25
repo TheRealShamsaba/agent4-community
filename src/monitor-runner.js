@@ -1,8 +1,9 @@
 import * as cheerio from "cheerio";
 import { clearInterval, setInterval } from "node:timers";
 import { connect } from "node:tls";
+import { lookup } from "node:dns/promises";
 import robotsParser from "robots-parser";
-import { assertPublicUrl, fetchWithTimeout, mapLimit } from "./util.js";
+import { assertPublicUrl, fetchWithTimeout, isPrivateIp, mapLimit } from "./util.js";
 
 /* The checking half of site monitoring: is it up, is the certificate about to
    lapse, and does the page do the basics search engines look for. Everything
@@ -48,11 +49,16 @@ async function readBody(response) {
 }
 
 /** Days until the certificate on this host expires, or null when it cannot be read. */
-export function probeCertificate(hostname, { timeoutMs = 5000 } = {}) {
+export async function probeCertificate(hostname, { timeoutMs = 5000 } = {}) {
+  let addresses;
+  try {
+    addresses = await lookup(hostname.replace(/^\[|\]$/g, ''), { all: true, verbatim: true });
+    if (!addresses.length || addresses.some(item => isPrivateIp(item.address))) return null;
+  } catch { return null; }
   return new Promise((resolve) => {
     let settled = false;
     const finish = (value) => { if (!settled) { settled = true; resolve(value); } };
-    const socket = connect({ host: hostname, port: 443, servername: hostname, timeout: timeoutMs }, () => {
+    const socket = connect({ host: addresses[0].address, port: 443, servername: hostname, timeout: timeoutMs }, () => {
       const certificate = socket.getPeerCertificate();
       socket.end();
       const expires = certificate?.valid_to ? Date.parse(certificate.valid_to) : NaN;

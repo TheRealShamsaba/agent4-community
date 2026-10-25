@@ -30,7 +30,9 @@ export function WorkspaceSettings() {
     try { await authRequest(`/invites/${invite.id}`, { method: 'DELETE' }); setInvites(current => current.filter(i => i.id !== invite.id)); }
     catch (cause) { setError(cause.message); } finally { setBusy(false); }
   }
-  return <details className="team-panel__security workspace-settings">
+  return <>
+    {invites.length ? <section className="pending-invites"><h3>Pending invitations</h3><p>Creating another invite for an email replaces its previous link.</p>{invites.map(invite => <div key={invite.id}><span><strong>{invite.name}</strong><small>{invite.email} · expires {new Date(invite.expiresAt).toLocaleDateString()}</small></span><button type="button" disabled={busy} aria-label={`Revoke invite for ${invite.name}`} onClick={() => revoke(invite)}><Trash2 size={15} /></button></div>)}</section> : null}
+  <details className="team-panel__security workspace-settings">
     <summary><Settings2 size={16} /><span><strong>Customize this workspace</strong><small>Choose your name and the tools your team needs</small></span></summary>
     {settings ? <form onSubmit={save}>
       <label>Workspace name<input required maxLength={80} value={settings.name} onChange={e => { setSaved(false); setSettings(s => ({ ...s, name: e.target.value })); }} /></label>
@@ -42,7 +44,7 @@ export function WorkspaceSettings() {
       <button disabled={busy}>{busy ? <LoaderCircle className="is-spinning" size={15} /> : <Check size={15} />} Save workspace</button>
       {saved ? <p role="status" className="team-panel__success">Workspace updated.</p> : null}
     </form> : <p>Loading workspace settings…</p>}
-    {invites.length ? <section className="pending-invites"><h3>Pending invitations</h3><p>Creating another invite for an email replaces its previous link.</p>{invites.map(invite => <div key={invite.id}><span><strong>{invite.name}</strong><small>{invite.email} · expires {new Date(invite.expiresAt).toLocaleDateString()}</small></span><button type="button" disabled={busy} aria-label={`Revoke invite for ${invite.name}`} onClick={() => revoke(invite)}><Trash2 size={15} /></button></div>)}</section> : null}
+
     {error ? <p role="alert" className="team-panel__error">{error}</p> : null}
-  </details>;
+  </details></>;
 }
