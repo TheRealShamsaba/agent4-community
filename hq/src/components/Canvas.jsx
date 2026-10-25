@@ -71,7 +71,7 @@ export function Canvas() {
     {!state.localObjects.length && !busy ? <div className="canvas-empty"><h2>Good ideas need somewhere to land.</h2><p>Add your first note. Keep a plan, a useful link, or a question for the team.</p></div> : null}
     <div className="canvas-notes">{state.localObjects.map(note => <article className={`canvas-note tone-${note.tone}`} key={note.id}>
       <div><input aria-label="Note title" maxLength={240} value={note.title} onChange={e => patch(note.id, { title: e.target.value })} /><button aria-label={`Delete ${note.title}`} onClick={() => { setState(s => ({ ...s, localObjects: s.localObjects.filter(n => n.id !== note.id) })); setDirty(true); }}><Trash2 size={15} /></button></div>
-      <textarea aria-label={`Content for ${note.title}`} maxLength={50000} value={note.body || ''} placeholder="Write it down…" onChange={e => patch(note.id, { body: e.target.value })} />
+      <textarea rows={6} aria-label={`Content for ${note.title}`} maxLength={50000} value={note.body || ''} placeholder="Write it down…" onChange={e => patch(note.id, { body: e.target.value })} />
       <footer><select aria-label="Note color" value={note.tone} onChange={e => patch(note.id, { tone: e.target.value })}><option value="yellow">Yellow</option><option value="blue">Blue</option><option value="mint">Mint</option><option value="pink">Pink</option></select><small>{note.updatedByName || note.createdByName || 'Your draft'}</small></footer>
     </article>)}</div>
   </main>;

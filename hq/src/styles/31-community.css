@@ -38,3 +38,11 @@
 .canvas-note input { font-weight: 700; font-size: 17px; }.canvas-note textarea { margin-top: 16px; resize: vertical; min-height: 140px; line-height: 1.7; font-size: 14px; }
 .canvas-note button { background: transparent; border: 0; color: inherit; opacity: .6; }.canvas-note footer { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; gap: 8px; }.canvas-note select { background: #fff5; color: #29251e; border: 0; border-radius: 4px; padding: 5px; }.canvas-note small { font-size: 10px; opacity: .65; }
 @media(max-width:850px) { .setup-screen { grid-template-columns: minmax(0,420px); gap: 36px; padding: 36px 20px; }.setup-story h1 { font-size: 38px; }.setup-story > .agent4-avatar { width: 56px; height: 56px; margin-bottom: 16px; }.setup-story p { font-size: 14px; }.setup-promise { margin-top: 16px; }.canvas-page { padding: 28px 16px 140px; }.team-panel { max-height: calc(100dvh - 120px); } }
+/* Canvas owns its scrolling just like the other full-height app sections. */
+.room--home > .canvas-page { position: absolute; top: 58px; right: 0; bottom: 0; left: 0; width: 100%; overflow-y: auto; touch-action: pan-y; overscroll-behavior: contain; }
+.canvas-note textarea { font-family: inherit; }
+@media(max-width:759px) {
+  .room--home > .canvas-page { top: var(--hq-header-height); bottom: var(--hq-nav-height); padding-bottom: 32px; }
+  .place-nav { grid-auto-rows: minmax(0, 1fr); align-content: stretch; }
+  .place-nav__tier { min-height: 0; height: 100%; }
+}
