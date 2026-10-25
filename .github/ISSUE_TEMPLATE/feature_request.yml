@@ -1,0 +1,16 @@
+name: Suggest an improvement
+description: A small change that would help your team.
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+      description: Describe the work, the confusing step, or the tool you currently have to pay for.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: How could Agent4 help?
+    validations:
+      required: true

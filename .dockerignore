@@ -1,0 +1,17 @@
+.git
+.env
+.env.*
+.secrets
+node_modules
+hq/node_modules
+hq/dist
+data
+public/hq.html
+.artifacts
+artifacts
+OPEN_SOURCE_AUDIT.md
+*.sqlite*
+*.db
+*.pem
+*.key
+.DS_Store

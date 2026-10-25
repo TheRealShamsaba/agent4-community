@@ -1,0 +1,31 @@
+name: agent4
+services:
+  agent4:
+    build: .
+    image: agent4-community:local
+    init: true
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      AGENT4_HOST: 0.0.0.0
+      AGENT4_PORT: 8782
+      AGENT4_DATA_DIR: /app/data
+      AGENT4_SETUP_TOKEN_FILE: /run/secrets/setup_token
+    ports:
+      - "127.0.0.1:${AGENT4_HOST_PORT:-8782}:8782"
+    volumes:
+      - agent4-data:/app/data
+    secrets:
+      - setup_token
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    read_only: true
+    tmpfs:
+      - /tmp:size=256m,mode=1777
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+volumes:
+  agent4-data:
+secrets:
+  setup_token:
+    file: ./.secrets/setup-token

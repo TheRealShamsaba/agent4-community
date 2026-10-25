@@ -1,0 +1,65 @@
+name: Verify Agent4
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            hq/package-lock.json
+      - run: npm ci --ignore-scripts
+      - run: npm --prefix hq ci --ignore-scripts
+      - run: npm run verify
+      - run: npm audit && npm --prefix hq audit
+      - run: npm run sbom
+      - name: Scan history and exact public source
+        run: npm run security:secrets
+      - name: Check installer syntax
+        run: sh -n agent4.sh && sh -n scripts/scan-secrets.sh
+  fresh-install:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24'
+      - name: Prepare isolated localhost install
+        run: |
+          cp .env.example .env
+          sed -i 's/localhost:8782/localhost:18782/; s/AGENT4_HOST_PORT=8782/AGENT4_HOST_PORT=18782/' .env
+      - name: Build and start from empty data
+        run: ./agent4.sh > /tmp/agent4-install.log 2>&1
+      - name: Exercise first-use API workflow
+        env:
+          AGENT4_SMOKE_TEST: 'true'
+          AGENT4_SMOKE_URL: http://localhost:18782
+        run: node scripts/smoke.js
+      - name: Verify restart and backup
+        run: |
+          docker compose restart --timeout 20 agent4
+          docker compose up -d --wait agent4
+          ./agent4.sh backup
+      - name: Show sanitized application logs on failure
+        if: failure()
+        run: docker compose logs --tail=80 agent4
+      - name: Remove disposable installation
+        if: always()
+        run: docker compose down -v
