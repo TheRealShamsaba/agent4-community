@@ -45,7 +45,7 @@ Use squash or rebase merging to keep history linear. Force pushes and deleting `
 
 ## Documentation screenshots
 
-Use a separate, disposable local installation with fictional records and example email addresses. Capture the actual application with the desktop navigation visible; the README's current images are full 1920 × 1080 browser captures under `docs/images/`. Do not use a company deployment, include browser profiles or setup/invitation keys, or seed the demonstration records into normal installations. Inspect every image before committing it, and replace outdated screenshots when the interface changes.
+Use a separate, disposable local installation with fictional records and example email addresses. Capture the actual application with the desktop navigation visible; the README's current images are full desktop browser captures under `docs/images/`. Do not use a company deployment, include browser profiles or setup/invitation keys, or seed the demonstration records into normal installations. Inspect every image before committing it, and replace outdated screenshots when the interface changes.
 
 ## Public core and private preferences
 

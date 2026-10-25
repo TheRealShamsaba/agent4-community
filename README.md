@@ -16,7 +16,7 @@ It is built for founders, independent studios, and small teams who want a useful
 
 ![Agent4 Home: today's work, the next client follow-up, and upcoming commitments in a complete desktop view.](docs/images/home-desktop.jpg)
 
-*Actual app screenshots at 1920 × 1080. Northstar Studio, its people, clients, and work are fictional examples created for this documentation. New installations start empty.*
+*Full desktop screenshots from the running application. Northstar Studio, its people, clients, and work are fictional examples created for this documentation. New installations start empty.*
 
 [What's included](#whats-included) · [Install](#install-agent4) · [Your first workspace](#your-first-workspace) · [Customize](#make-it-fit-your-team) · [Hosting & backups](#hosting-updates-and-backups) · [Contribute](#contribute)
 
