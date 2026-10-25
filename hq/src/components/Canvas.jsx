@@ -11,6 +11,7 @@ export function Canvas() {
   const [dirty, setDirty] = useState(false);
   const [busy, setBusy] = useState(true);
   const [error, setError] = useState('');
+  const clientId = useRef(`canvas-${globalThis.crypto.randomUUID()}`);
   const dirtyRef = useRef(false);
   dirtyRef.current = dirty;
   unsaved = dirty;
@@ -32,9 +33,10 @@ export function Canvas() {
   }, []);
   // Notify on shared changes without ever replacing this person's draft.
   useEffect(() => {
-    const events = new EventSource(`/api/rooms/${ROOM_ID}/events`);
+    const events = new EventSource(`/api/rooms/${ROOM_ID}/events?clientId=${clientId.current}`);
     const update = event => {
       const body = JSON.parse(event.data);
+      if (body.clientId === clientId.current) return;
       if (body.room?.version > version) {
         if (dirtyRef.current) setError('A teammate saved a newer canvas. Download your draft, then reload to see their changes.');
         else { setState(body.room.state); setVersion(body.room.version); }
@@ -50,7 +52,7 @@ export function Canvas() {
   async function save() {
     setBusy(true); setError('');
     try {
-      const response = await fetch(`/api/rooms/${ROOM_ID}`, { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ baseVersion: version, label: 'Canvas notes updated', state }) });
+      const response = await fetch(`/api/rooms/${ROOM_ID}`, { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ baseVersion: version, clientId: clientId.current, label: 'Canvas notes updated', state }) });
       const body = await response.json();
       if (!response.ok) throw new Error(response.status === 409 ? 'A teammate saved first. Download your draft, then reload before making changes.' : body.error?.message || 'Could not save. Your draft is still here.');
       setState(body.room.state); setVersion(body.room.version); setDirty(false);

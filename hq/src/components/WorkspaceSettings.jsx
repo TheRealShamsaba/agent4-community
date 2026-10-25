@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Check, Copy, LoaderCircle, Settings2, Trash2 } from 'lucide-react';
+import { Check, LoaderCircle, Settings2, Trash2 } from 'lucide-react';
 import { authRequest } from '../api.js';
-import { copyText } from '../clipboard.js';
 
 export function WorkspaceSettings() {
   const [settings, setSettings] = useState(null);

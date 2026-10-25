@@ -5,7 +5,7 @@ import { randomBytes } from 'node:crypto';
 if (process.env.AGENT4_SMOKE_TEST !== 'true') throw new Error('Set AGENT4_SMOKE_TEST=true only for a fresh, disposable test installation.');
 const base = process.env.AGENT4_SMOKE_URL || 'http://localhost:18782';
 const token = (await readFile('.secrets/setup-token', 'utf8')).trim();
-const password = randomBytes(24).toString('hex');
+const password = process.env.AGENT4_SMOKE_PASSWORD || randomBytes(24).toString('hex');
 const post = (route, body, cookie = '', csrfToken = '') => fetch(base + route, { method: 'POST', headers: { origin: base, 'content-type': 'application/json', cookie, 'x-csrf-token': csrfToken }, body: JSON.stringify(body) });
 assert.equal((await fetch(base + '/api/tasks')).status, 401);
 const first = await post('/api/auth/setup', { token, workspace: 'Example team', name: 'Example owner', email: 'owner@example.com', password });

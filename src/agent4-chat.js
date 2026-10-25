@@ -25,7 +25,7 @@ export function publicAgentError(error) {
     return { status: 503, code: "model_offline", message: "Agent4 cannot reach Ollama. Start Ollama, then try again." };
   }
   if (/API_KEY|api key|is required/i.test(message) && /openai|api[_ ]key/i.test(message)) {
-    return { status: 503, code: "model_not_configured", message: "Agent4's model is not connected on this server yet. It needs an AI key (AGENT4_OPENAI_API_KEY) or a running Ollama." };
+    return { status: 503, code: "model_not_configured", message: "Agent4's model is not connected on this server yet. It needs an AI key (OPENAI_API_KEY) or a running Ollama." };
   }
   if (/timed out/i.test(message)) {
     return { status: 504, code: "model_timeout", message: "Agent4 took too long. The model may still be loading; try once more." };

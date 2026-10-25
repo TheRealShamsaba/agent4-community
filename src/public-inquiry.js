@@ -302,10 +302,9 @@ export function inquiryMessage({ inquiry, company, created }) {
 
 export function clientAddress(request) {
   const socketAddress = request.socket?.remoteAddress || "unknown";
-  const behindLocalProxy = /^(::1|127\.|::ffff:127\.)/.test(socketAddress);
-  // Only the proxy on this machine is believed about who is really calling;
-  // from anywhere else the header is just something the caller typed.
-  const forwarded = request.agent4TrustProxy && behindLocalProxy ? String(request.headers["x-real-ip"] || "").trim() : "";
+  // Trust is an explicit deployment choice. The configured reverse proxy must
+  // overwrite this header and the app port must remain on a protected network.
+  const forwarded = request.agent4TrustProxy ? String(request.headers["x-real-ip"] || "").trim() : "";
   return /^[0-9a-fA-F:.]{3,45}$/.test(forwarded) ? forwarded : socketAddress;
 }
 

@@ -124,3 +124,11 @@ test('password recovery revokes sessions and login throttles survive store resta
   await w.restart();
   assert.equal((await w.request('/api/auth/login', { email: 'missing@example.com', password: 'incorrect' })).status, 429);
 });
+
+test('an explicitly disabled transcription service rejects audio uploads', async t => {
+  const w = await workspace(t); const owner = await w.setup();
+  w.config.runtime.voiceTranscriptionEnabled = false;
+  const rejected = await w.request('/api/meetings', { title: 'Keep this audio local' }, owner);
+  assert.equal(rejected.status, 503);
+  assert.equal((await rejected.json()).error.code, 'transcription_disabled');
+});

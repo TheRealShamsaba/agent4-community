@@ -92,7 +92,7 @@ export function createTelegramOperator({
   plannerStore,
   scoutStore,
   membersProvider = () => [],
-  timeZone = "Europe/Istanbul",
+  timeZone = "UTC",
   morningBriefAt = "08:30",
   weeklyResetAt = "18:00",
   now = () => new Date()

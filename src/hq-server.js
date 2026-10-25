@@ -814,6 +814,7 @@ export function createHqServer(config, dependencies = {}) {
   });
   const authRequired = Boolean(config.runtime.agent4AuthRequired);
   const gatewayConfig = agent4GatewayConfig(config);
+  gatewayConfig.company = { ...config.company, name: settingsStore.get().name };
   const notifyMeetingReady = dependencies.notifyMeetingReady || (
     config.runtime.telegramBotToken && config.runtime.telegramOwnerChatId
       ? (meeting) => sendText(config, meetingReadyMessage(meeting), {
@@ -892,7 +893,7 @@ export function createHqServer(config, dependencies = {}) {
     tempRoot: config.runtime.meetingAudioRoot || path.join(config.runtime.root, "data", "meeting-audio"),
     notifyComplete: notifyMeetingReady
   });
-  Promise.resolve(meetingService.recoverPending?.()).catch((error) => {
+  Promise.resolve(config.runtime.voiceTranscriptionEnabled === false ? undefined : meetingService.recoverPending?.()).catch((error) => {
     // Durable meeting rows remain visible if recovery cannot start. Keep the
     // server available and let the owner retry instead of crashing Home Court,
     // but say why on the log so a stuck upload is not a silent mystery.
@@ -1137,7 +1138,7 @@ export function createHqServer(config, dependencies = {}) {
       }
       if (request.method === 'POST' && requestUrl.pathname === '/api/auth/setup') {
         if (authStore.hasUsers()) { sendJson(response, 409, { error: { code: 'setup_complete', message: 'This workspace already has an owner. Sign in instead.' } }); return; }
-        if (!authStore.attemptLogin(request.socket.remoteAddress || '', 'setup')) { sendJson(response, 429, { error: { code: 'setup_limited', message: 'Too many setup attempts. Try again in 15 minutes.' } }); return; }
+        if (!authStore.attemptLogin(clientAddress(request), 'setup')) { sendJson(response, 429, { error: { code: 'setup_limited', message: 'Too many setup attempts. Try again in 15 minutes.' } }); return; }
         try {
           const input = await readJson(request);
           if (!matchesSecret(input.token, config.runtime.setupToken)) { sendJson(response, 403, { error: { code: 'setup_token_required', message: 'Use the private setup link printed by the installer.' } }); return; }
@@ -1147,8 +1148,8 @@ export function createHqServer(config, dependencies = {}) {
           if (!user) { sendJson(response, 409, { error: { code: 'setup_complete', message: 'The owner account already exists.' } }); return; }
           // Database state is authoritative. An interrupted file cleanup can never
           // reopen setup or create another owner.
-          try { if (config.runtime.setupTokenFile) await writeFile(config.runtime.setupTokenFile, ''); } catch { console.warn('Setup completed; remove .secrets/setup-token on the host.'); }
-          if (input.workspace) settingsStore.update({ name: input.workspace });
+          try { if (config.runtime.setupTokenFile) await writeFile(config.runtime.setupTokenFile, ''); } catch { console.warn('Setup completed. You may empty .secrets/setup-token on the host; keep the file present for Compose.'); }
+          if (input.workspace) { settingsStore.update({ name: input.workspace }); gatewayConfig.company.name = input.workspace.trim(); }
           const session = authStore.createSession(user.id, { ttlHours: config.runtime.agent4SessionHours || 168 });
           sendJson(response, 201, { authenticated: true, actor: user, csrfToken: session.csrfToken, settings: settingsStore.get() }, {
             'set-cookie': sessionCookie(session.token, { maxAge: 604800, secure: requestIsSecure(request, config) })
@@ -1164,7 +1165,7 @@ export function createHqServer(config, dependencies = {}) {
           sendJson(response, 400, { error: { code: "invalid_login", message: error.message } });
           return;
         }
-        if (!authStore.attemptLogin(request.socket.remoteAddress || "", input.email)) {
+        if (!authStore.attemptLogin(clientAddress(request), input.email)) {
           sendJson(response, 429, { error: { code: "login_limited", message: "Too many sign-in attempts. Try again later." } });
           return;
         }
@@ -1264,6 +1265,7 @@ export function createHqServer(config, dependencies = {}) {
           if (actor.role !== 'owner') { sendJson(response, 403, { error: { code: 'owner_required', message: 'Only the owner can customize this workspace.' } }); return; }
           try {
             const settings = settingsStore.update(await readJson(request));
+            gatewayConfig.company.name = settings.name;
             if (settings.modules.monitor) monitorRunner.start?.(); else monitorRunner.stop?.();
             sendJson(response, 200, { settings });
           }
@@ -2146,6 +2148,12 @@ export function createHqServer(config, dependencies = {}) {
           return;
         }
 
+        if (config.runtime.voiceTranscriptionEnabled === false && (
+          (request.method === 'POST' && requestUrl.pathname === '/api/meetings') ||
+          (audioRoute && !['GET','HEAD'].includes(request.method))
+        )) {
+          sendJson(response, 503, { error: { code: 'transcription_disabled', message: 'Audio transcription is off. Connect your own transcription service in .env before uploading a recording.' } }); return;
+        }
         if (request.method === "POST" && requestUrl.pathname === "/api/meetings") {
           try {
             const limitMessage = agentLimit(actor);

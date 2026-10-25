@@ -2,6 +2,7 @@ import { randomBytes } from 'node:crypto';
 import { chmod, copyFile, mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { APP_ROOT, loadConfig } from '../src/config.js';
+process.umask(0o077);
 process.chdir(APP_ROOT);
 await mkdir('.secrets', { recursive: true, mode: 0o700 });
 await chmod('.secrets', 0o700);

@@ -482,7 +482,7 @@ export function App({ snapshot, isLive = true }) {
   }
 
   function openMoneyPlace(company = null) {
-    if (settings.modules.money === false) { setWarning({ message: "This tool is turned off. The owner can enable it in workspace settings." }); return; }
+    if (settings.modules.money === false) { setWarning({ title: "This tool is turned off. ", body: "The owner can enable it in workspace settings." }); return; }
     if (!leaveFilmRoom("money")) return;
     setQuickAddOpen(false);
     setPaletteOpen(false);
@@ -597,7 +597,7 @@ export function App({ snapshot, isLive = true }) {
   }
 
   function openTasksPlace({ scope = "mine", create = false, context = null, taskId = "" } = {}) {
-    if (settings.modules.tasks === false) { setWarning({ message: "This tool is turned off. The owner can enable it in workspace settings." }); return; }
+    if (settings.modules.tasks === false) { setWarning({ title: "This tool is turned off. ", body: "The owner can enable it in workspace settings." }); return; }
     if (!leaveFilmRoom("tasks")) return;
     setQuickAddOpen(false);
     setPaletteOpen(false);
@@ -606,7 +606,7 @@ export function App({ snapshot, isLive = true }) {
   }
 
   function openFilmPlace({ create = false, meetingId = "" } = {}) {
-    if (settings.modules.film === false) { setWarning({ message: "This tool is turned off. The owner can enable it in workspace settings." }); return; }
+    if (settings.modules.film === false) { setWarning({ title: "This tool is turned off. ", body: "The owner can enable it in workspace settings." }); return; }
     setQuickAddOpen(false);
     setPaletteOpen(false);
     /* The key is the only thing that restarts Film Room from scratch, and
@@ -621,7 +621,7 @@ export function App({ snapshot, isLive = true }) {
      this agent's file, so the handoff stops here: the prop below is the whole
      App-side wiring, and a company page only has to call it with its own id. */
   function openPaperworkPlace(companyId = "", docId = "") {
-    if (settings.modules.paperwork === false) { setWarning({ message: "This tool is turned off. The owner can enable it in workspace settings." }); return; }
+    if (settings.modules.paperwork === false) { setWarning({ title: "This tool is turned off. ", body: "The owner can enable it in workspace settings." }); return; }
     if (!leaveFilmRoom("paperwork")) return;
     setQuickAddOpen(false);
     setPaletteOpen(false);
@@ -630,7 +630,7 @@ export function App({ snapshot, isLive = true }) {
   }
 
   function openWorkspacePlace(companyId = "", projectId = "", sheetId = "") {
-    if (settings.modules.workspaces === false) { setWarning({ message: "This tool is turned off. The owner can enable it in workspace settings." }); return; }
+    if (settings.modules.workspaces === false) { setWarning({ title: "This tool is turned off. ", body: "The owner can enable it in workspace settings." }); return; }
     if (!leaveFilmRoom("workspaces")) return;
     setQuickAddOpen(false);
     setPaletteOpen(false);
